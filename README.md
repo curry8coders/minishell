@@ -1,2 +1,2 @@
 # minishell-42school
-42shool 
+42school 
