@@ -1,0 +1,6 @@
+*.o
+*.a
+.DS_Store
+.obj
+compile_commands.json
+.cache
