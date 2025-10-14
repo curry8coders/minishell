@@ -6,7 +6,7 @@
 #    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/10/14 16:59:58 by ichikawahik      ###   ########.fr        #
+#    Updated: 2025/10/14 19:50:17 by ichikawahik      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,6 +46,6 @@ endif
 ifeq ($(OS),Darwin)
 	# command for macOS
 	RLDIR = $(shell brew --prefix readline)
-	INCLUDES += -I$(RLDIR)/INCLUDES
-	LIBS += -I$(RLDIR)/LIBS
+	INCLUDES += -I$(RLDIR)/include
+	LIBS += -L$(RLDIR)/lib
 endif
