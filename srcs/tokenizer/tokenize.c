@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:57:17 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/10/21 17:49:02 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/10/24 18:52:00 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,21 @@ t_token *word(char **rest, char *line)
 
 	while (*line && !is_metacharacter(*line))
 		line++;
+	{
+		if (*line == SIGNAL_QUOTE_CHAR)
+		{
+			line++;
+			while (*line && *line != SIGNAL_QUOTE_CHAR)
+			{
+				if (*line == '\0')
+					todo("Unclosed single quote");
+				line++;
+			}
+			line++;
+		}
+		else
+			line++;
+	}
 	word = strndup(start, line - start);
 	if (word == NULL)
 		fatal_error("strndup");
