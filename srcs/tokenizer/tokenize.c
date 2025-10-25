@@ -6,12 +6,14 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:57:17 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/10/24 18:52:00 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/10/25 17:29:41 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "tokenize.h"
-#include "minishell.h"
+#include <string.h>
+
+#include <stdlib.h>>
+#include "../../includes/minishell.h"
 
 t_token *new_token(char *word, t_token_kind kind)
 {
@@ -100,10 +102,10 @@ t_token *word(char **rest, char *line)
 	while (*line && !is_metacharacter(*line))
 		line++;
 	{
-		if (*line == SIGNAL_QUOTE_CHAR)
+		if (*line == SINGLE_QUOTE_CHAR)
 		{
 			line++;
-			while (*line && *line != SIGNAL_QUOTE_CHAR)
+			while (*line && *line != SINGLE_QUOTE_CHAR)
 			{
 				if (*line == '\0')
 					todo("Unclosed single quote");
@@ -119,6 +121,17 @@ t_token *word(char **rest, char *line)
 		fatal_error("strndup");
 	*rest = line;
 	return (new_token(word, TK_WORD));
+}
+
+bool	syntax_error = false;
+
+void	takenize_error(const char *location, char **rest, char *line)
+{
+	syntax_error = true;
+	dprint(STDERR_FILENO, "minishell: syntax error near %s\n", location);
+	while (*line)
+		line++;
+	*rest = line;
 }
 
 t_token *tokenize(char *line)
@@ -141,4 +154,23 @@ t_token *tokenize(char *line)
 	}
 	tok = tok->next;
 	return (head.next);
+}
+
+void	interpret(char *line, int *stat_loc)
+{
+	t_token	*tok;
+	char	*argv;
+	tok = tokenize(line);
+	if (tok->kind == TK_EOF)
+		;
+	else if (syntax_error)
+		*stat_loc = ERROR_TOKENIZE;
+	else
+	{
+		expand(tok);
+		argv = token_list_to_argv(tok);
+		*stat_loc = exec(argv);
+		free_argv(argv);
+	}
+	free_tok(tok);
 }

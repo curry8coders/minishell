@@ -6,12 +6,11 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:54:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/10/24 20:10:18 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/10/25 17:24:57 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include "tokenize.h"
+#include "../../includes/minishell.h"
 
 void	append_char(char **s, char c)
 {
@@ -42,12 +41,12 @@ void	quote_removal(t_token *tok)
 		return ;
 	p = tok->word;
 	new_word = NULL;
-	while (*p == SIGNAL_QUOTE_CHAR)
+	while (*p == SINGLE_QUOTE_CHAR)
 	{
-		if (*p == SIGNAL_QUOTE_CHAR)
+		if (*p == SINGLE_QUOTE_CHAR)
 		{
 		p++;
-		while (*p != SIGNAL_QUOTE_CHAR)
+		while (*p != SINGLE_QUOTE_CHAR)
 		{
 			if (*p == '\0')
 				todo("Unclosed single quote");
