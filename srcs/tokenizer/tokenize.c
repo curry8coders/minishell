@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:57:17 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/10/21 17:49:02 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/10/28 20:26:44 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "tokenize.h"
-#include "minishell.h"
+#include <string.h>
+
+#include <stdlib.h>>
+#include "../../includes/minishell.h"
 
 t_token *new_token(char *word, t_token_kind kind)
 {
@@ -98,7 +100,32 @@ t_token *word(char **rest, char *line)
 	char *word;
 
 	while (*line && !is_metacharacter(*line))
-		line++;
+	{
+		if (*line == SINGLE_QUOTE_CHAR)
+		{
+			line++;
+			while (*line && *line != SINGLE_QUOTE_CHAR)
+			{
+				if (*line == '\0')
+					todo("Unclosed single quote");
+				line++;
+			}
+			line++;
+		}
+		else if (*line == DOUBLE_QUOTE_CHAR)
+		{
+			line++;
+			while (*line != DOUBLE_QUOTE_CHAR)
+			{
+				if (*line == '\0')
+					todo("Unclosed double quote");
+				line++;
+			}
+			line++;
+		}
+		else
+			line++;
+	}
 	word = strndup(start, line - start);
 	if (word == NULL)
 		fatal_error("strndup");
@@ -122,8 +149,30 @@ t_token *tokenize(char *line)
 		else if (is_word(line))
 			tok->next = word(&line, line);
 		else
-			assert_error("Unexpected character");
+			assert_error("Unexpected Token");
 	}
-	tok = tok->next;
+	tok->next = new_token(NULL, TK_EOF);
 	return (head.next);
+}
+
+char	**tail_recursive(t_token *tok, int nargs, char **argv)
+{
+	if (tok == NULL || tok->kind == TK_EOF)
+		return (argv);
+	argv = reallocf(argv, (nargs + 2) * sizeof(char *));
+	argv[nargs] = strdup(tok->word);
+	if (argv[nargs] == NULL)
+		fatal_error("strdup");
+	argv[nargs + 1] = NULL;
+	return (tail_recursive(tok->next, nargs + 1, argv));
+}
+
+char	**token_list_to_argv(t_token *tok)
+{
+	char **argv;
+	
+	argv = calloc(1, sizeof(char *));
+	if (argv == NULL)
+		fatal_error("calloc");
+	return (tail_recursive(tok, 0, argv));
 }

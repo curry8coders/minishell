@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
+#    By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/10/15 12:19:22 by ichikawahik      ###   ########.fr        #
+#    Updated: 2025/10/25 17:18:45 by hichikaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ OS := $(shell uname -s)
 ifeq ($(OS),Darwin)
 	# command for macOS
 	RLDIR = $(shell brew --prefix readline)
-	INCLUDES = -I$(RLDIR)/include
+	INCLUDES = -I$(RLDIR)/includes
 	LDFLAGS = -L$(RLDIR)/lib
 endif
 
