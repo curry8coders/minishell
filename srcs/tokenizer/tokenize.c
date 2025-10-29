@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:57:17 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/10/25 17:29:41 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/10/28 20:26:44 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ t_token *word(char **rest, char *line)
 	char *word;
 
 	while (*line && !is_metacharacter(*line))
-		line++;
 	{
 		if (*line == SINGLE_QUOTE_CHAR)
 		{
@@ -113,6 +112,17 @@ t_token *word(char **rest, char *line)
 			}
 			line++;
 		}
+		else if (*line == DOUBLE_QUOTE_CHAR)
+		{
+			line++;
+			while (*line != DOUBLE_QUOTE_CHAR)
+			{
+				if (*line == '\0')
+					todo("Unclosed double quote");
+				line++;
+			}
+			line++;
+		}
 		else
 			line++;
 	}
@@ -121,17 +131,6 @@ t_token *word(char **rest, char *line)
 		fatal_error("strndup");
 	*rest = line;
 	return (new_token(word, TK_WORD));
-}
-
-bool	syntax_error = false;
-
-void	takenize_error(const char *location, char **rest, char *line)
-{
-	syntax_error = true;
-	dprint(STDERR_FILENO, "minishell: syntax error near %s\n", location);
-	while (*line)
-		line++;
-	*rest = line;
 }
 
 t_token *tokenize(char *line)
@@ -150,27 +149,30 @@ t_token *tokenize(char *line)
 		else if (is_word(line))
 			tok->next = word(&line, line);
 		else
-			assert_error("Unexpected character");
+			assert_error("Unexpected Token");
 	}
-	tok = tok->next;
+	tok->next = new_token(NULL, TK_EOF);
 	return (head.next);
 }
 
-void	interpret(char *line, int *stat_loc)
+char	**tail_recursive(t_token *tok, int nargs, char **argv)
 {
-	t_token	*tok;
-	char	*argv;
-	tok = tokenize(line);
-	if (tok->kind == TK_EOF)
-		;
-	else if (syntax_error)
-		*stat_loc = ERROR_TOKENIZE;
-	else
-	{
-		expand(tok);
-		argv = token_list_to_argv(tok);
-		*stat_loc = exec(argv);
-		free_argv(argv);
-	}
-	free_tok(tok);
+	if (tok == NULL || tok->kind == TK_EOF)
+		return (argv);
+	argv = reallocf(argv, (nargs + 2) * sizeof(char *));
+	argv[nargs] = strdup(tok->word);
+	if (argv[nargs] == NULL)
+		fatal_error("strdup");
+	argv[nargs + 1] = NULL;
+	return (tail_recursive(tok->next, nargs + 1, argv));
+}
+
+char	**token_list_to_argv(t_token *tok)
+{
+	char **argv;
+	
+	argv = calloc(1, sizeof(char *));
+	if (argv == NULL)
+		fatal_error("calloc");
+	return (tail_recursive(tok, 0, argv));
 }
