@@ -3,23 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:54:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/10/25 17:24:57 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/10/31 21:32:20 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "../../includes/minishell.h"
+
+#include <string.h>
 
 void	append_char(char **s, char c)
 {
-	size_t size;
-	char *new;
+	size_t	size;
+	char	*new;
 
 	size = 2;
 	if (*s)
-		size = strlen(*s);
+		size += strlen(*s);
 	new = malloc(size);
 	if (new == NULL)
 		fatal_error("malloc");
@@ -32,37 +35,77 @@ void	append_char(char **s, char c)
 	*s = new;
 }
 
-void	quote_removal(t_token *tok)
+void	remove_single_quote(char **dst, char **rest, char *p)
 {
-	char *new_word;
-	char *p;
+	if (*p == SINGLE_QUOTE_CHAR)
+	{
+		// skip quote
+		p++;
+		while (*p != SINGLE_QUOTE_CHAR)
+		{
+			if (*p == '\0')
+				assert_error("Unclosed single quote");
+			append_char(dst, *p++);
+		}
+		// skip quote
+		p++;
+		*rest = p;
+	}
+	else
+		assert_error("Expected single quote");
+}
+
+void	remove_double_quote(char **dst, char **rest, char *p)
+{
+	if (*p == DOUBLE_QUOTE_CHAR)
+	{
+		// skip quote
+		p++;
+		while (*p != DOUBLE_QUOTE_CHAR)
+		{
+			if (*p == '\0')
+				assert_error("Unclosed double quote");
+			append_char(dst, *p++);
+		}
+		// skip quote
+		p++;
+		*rest = p;
+	}
+	else
+		assert_error("Expected double quote");
+}
+
+void	remove_quote(t_token *tok)
+{
+	char	*new_word;
+	char	*p;
 
 	if (tok == NULL || tok->kind != TK_WORD || tok->word == NULL)
 		return ;
 	p = tok->word;
 	new_word = NULL;
-	while (*p == SINGLE_QUOTE_CHAR)
+	while (*p && !is_metacharacter(*p))
 	{
 		if (*p == SINGLE_QUOTE_CHAR)
-		{
-		p++;
-		while (*p != SINGLE_QUOTE_CHAR)
-		{
-			if (*p == '\0')
-				todo("Unclosed single quote");
-			append_char(&new_word, *p++);
-		}
-		p++;
-		}
+			remove_single_quote(&new_word, &p, p);
+		else if (*p == DOUBLE_QUOTE_CHAR)
+			remove_double_quote(&new_word, &p, p);
 		else
 			append_char(&new_word, *p++);
 	}
 	free(tok->word);
 	tok->word = new_word;
-	quote_removal(tok->next);
+	remove_quote(tok->next);
+}
+void	expand_quote_removal(t_node *node)
+{
+	if (node == NULL)
+		return ;
+	remove_quote(node->args);
+	expand_quote_removal(node->next);
 }
 
-void expand(t_token *tok)
+void	expand(t_node *node)
 {
-	quote_removal(tok);
+	expand_quote_removal(node);
 }
