@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/10/25 17:25:17 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/10/31 21:20:25 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,20 @@ struct s_token
 {
 	char			*word;
 	t_token_kind	kind;
-	t_token		*next;
+	t_token			*next;
 };
 
+enum e_node_kind {
+	ND_SIMPLE_CMD,
+};
+typedef enum e_node_kind	t_node_kind;
+
+typedef struct s_node	t_node;
+struct s_node {
+	t_token 	*args;
+	t_node_kind kind;
+	t_node 		*next;
+};
 
 // tokenize.c
 #define	SINGLE_QUOTE_CHAR '\''
@@ -61,12 +72,18 @@ t_token *operator(char **rest, char *line);
 t_token *word(char **rest, char *line);
 
 // expand.c
-void	append_char(char**s, char c);
-void	quote_removal(t_token *tok);
-void	expand(t_token tok);
+void	expand(t_node *node);
 
 // destructor.c
+void	free_node(t_node *node);
 void	free_tok(t_token *tok);
 void	free_argv(char **argv);
+
+// parse.c
+t_node *parse(t_token *tok);
+bool at_eof(t_token *tok);
+t_node *new_node(t_node_kind kind);
+void append_tok(t_node **tokens, t_token *tok);
+t_token *tokdup(t_token *tok);
 
 #endif
