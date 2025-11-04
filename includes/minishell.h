@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/10/31 21:20:25 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/04 15:50:39 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,27 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+# define ERROR_TOKENIZE 258
+# define ERROR_PARSE 258
+# define SINGLE_QUOTE_CHAR '\''
+# define DOUBLE_QUOTE_CHAR '"'
+
+typedef struct s_token		t_token;
+typedef enum e_token		t_token_kind;
+typedef enum e_node_kind	t_node_kind;
+typedef struct s_node		t_node;
+
 // error.c
-#define ERROR_TOKENIZE 258
 extern bool syntax_error;
-
-void	fatal_error(const char *msg);
-void	assert_error(const char *msg);
-void	err_exit(const char *location, const char *msg, int status);
-void	todo(const char *msg);
+void	fatal_error(const char *msg) __attribute__((noreturn));
+void	assert_error(const char *msg) __attribute__((noreturn));
+void	err_exit(const char *location, const char *msg, int status) __attribute__((noreturn));
+void	todo(const char *msg) __attribute__((noreturn));
 void	tokenize_error(const char *location, char **rest, char *line);
+void	parse_error(const char *location, t_token **rest, t_token *tok);
+void	xperror(const char *location);
 
+//tokenize.c
 typedef struct s_token t_token;
 enum e_token_kind
 {
@@ -36,6 +47,7 @@ enum e_token_kind
 };
 typedef enum e_token_kind t_token_kind;
 
+// `word` is zero terminated string.
 struct s_token
 {
 	char			*word;
@@ -55,10 +67,7 @@ struct s_node {
 	t_node 		*next;
 };
 
-// tokenize.c
-#define	SINGLE_QUOTE_CHAR '\''
-#define	DOUBLE_QUOTE_CHAR '"'
-
+// token.c
 t_token	*tokenize(char *line);
 char	**token_list_to_argv(t_token *tok);
 t_token *new_token(char *word, t_token_kind kind);
