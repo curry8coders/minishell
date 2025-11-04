@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:57:17 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/04 17:53:44 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/04 18:12:32 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,9 +157,17 @@ t_token *tokenize(char *line)
 
 char	**tail_recursive(t_token *tok, int nargs, char **argv)
 {
+	char	**new_argv;
+
 	if (tok == NULL || tok->kind == TK_EOF)
 		return (argv);
-	argv = reallocf(argv, (nargs + 2) * sizeof(char *));
+	new_argv = realloc(argv, (nargs + 2) * sizeof(char *));
+	if (new_argv == NULL)
+	{
+		free(argv);
+		fatal_error("realloc");
+	}
+	argv = new_argv;
 	argv[nargs] = strdup(tok->word);
 	if (argv[nargs] == NULL)
 		fatal_error("strdup");

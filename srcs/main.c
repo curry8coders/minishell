@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:10:51 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/04 17:53:25 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/04 18:12:03 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <limits.h>
+#include <sys/wait.h>
 
 #include <stdio.h>
 #include <readline/readline.h>
@@ -35,11 +36,17 @@ char	*search_path(const char *filename)
 		bzero(path, PATH_MAX);
 		end = strchr(value, ':');
 		if (end)
+		{
 			strncpy(path, value, end - value);
+			path[end - value] = '\0';
+		}
 		else
-			strlcpy(path, value, PATH_MAX);
-		strlcat(path, "/", PATH_MAX);
-		strlcat(path, filename, PATH_MAX);
+		{
+			strncpy(path, value, PATH_MAX - 1);
+			path[PATH_MAX - 1] = '\0';
+		}
+		strncat(path, "/", PATH_MAX - strlen(path) - 1);
+		strncat(path, filename, PATH_MAX - strlen(path) - 1);
 		if (access(path, X_OK) == 0)
 		{
 			char	*dup;

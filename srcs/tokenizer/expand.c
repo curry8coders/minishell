@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:54:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/04 17:33:32 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/04 18:12:55 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,12 @@ void	append_char(char **s, char c)
 	if (new == NULL)
 		fatal_error("malloc");
 	if (*s)
-		strlcpy(new, *s, size);
+	{
+		strncpy(new, *s, size - 1);
+		new[size - 1] = '\0';
+	}
+	else
+		new[0] = '\0';
 	new[size - 2] = c;
 	new[size - 1] = '\0';
 	if (*s)
