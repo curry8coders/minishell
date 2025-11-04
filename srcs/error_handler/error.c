@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/25 16:28:23 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/04 15:31:04 by hichikaw         ###   ########.fr       */
+/*   Created: 2025/11/04 17:35:46 by ichikawahik       #+#    #+#             */
+/*   Updated: 2025/11/04 17:35:50 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 #define ERROR_PREFIX "minishell: "
 

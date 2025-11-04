@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/04 15:50:39 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/04 17:54:36 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # define DOUBLE_QUOTE_CHAR '"'
 
 typedef struct s_token		t_token;
-typedef enum e_token		t_token_kind;
 typedef enum e_node_kind	t_node_kind;
 typedef struct s_node		t_node;
 
@@ -37,7 +36,6 @@ void	parse_error(const char *location, t_token **rest, t_token *tok);
 void	xperror(const char *location);
 
 //tokenize.c
-typedef struct s_token t_token;
 enum e_token_kind
 {
 	TK_WORD,
@@ -58,7 +56,6 @@ struct s_token
 enum e_node_kind {
 	ND_SIMPLE_CMD,
 };
-typedef enum e_node_kind	t_node_kind;
 
 typedef struct s_node	t_node;
 struct s_node {
@@ -92,7 +89,7 @@ void	free_argv(char **argv);
 t_node *parse(t_token *tok);
 bool at_eof(t_token *tok);
 t_node *new_node(t_node_kind kind);
-void append_tok(t_node **tokens, t_token *tok);
+void append_tok(t_token **tokens, t_token *tok);
 t_token *tokdup(t_token *tok);
 
 #endif

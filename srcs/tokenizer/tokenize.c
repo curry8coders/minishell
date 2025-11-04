@@ -6,14 +6,14 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:57:17 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/10/28 20:26:44 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/04 17:53:44 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
 
-#include <stdlib.h>>
-#include "../../includes/minishell.h"
+#include <stdlib.h>
+#include "minishell.h"
 
 t_token *new_token(char *word, t_token_kind kind)
 {

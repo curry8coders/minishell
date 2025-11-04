@@ -6,7 +6,7 @@
 #    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/10/31 21:17:05 by ichikawahik      ###   ########.fr        #
+#    Updated: 2025/11/04 17:50:39 by ichikawahik      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,14 +16,14 @@
 
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
+CFLAGS = -Wall -Wextra -Werror -Iincludes
 LIBS = -lreadline
 SRCS = srcs/main.c\
-	   srcs/error.c\
-	   srcs/tokenize.c\
-	   srcs/destructor.c\
-	   srcs/expand.c\
-	   srcs/parse.c\
+       srcs/error_handler/error.c\
+       srcs/tokenizer/tokenize.c\
+       srcs/destructor.c\
+       srcs/tokenizer/expand.c\
+       srcs/parser/parse.c
 
 OBJS = $(SRCS:%.c=%.o)
 
@@ -57,8 +57,8 @@ test: all
 OS := $(shell uname -s)
 
 ifeq ($(OS),Darwin)
-	# command for macOS
-	RLDIR = $(shell brew --prefix readline)
-	INCLUDES = -I$(RLDIR)/includes
-	LDFLAGS = -L$(RLDIR)/lib
+    # command for macOS
+    RLDIR = $(shell brew --prefix readline)
+    CFLAGS += -I$(RLDIR)/include
+    LDFLAGS = -L$(RLDIR)/lib
 endif

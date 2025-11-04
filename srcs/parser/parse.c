@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/31 20:41:49 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/04 14:18:59 by hichikaw         ###   ########.fr       */
+/*   Created: 2025/11/04 17:36:01 by ichikawahik       #+#    #+#             */
+/*   Updated: 2025/11/04 17:54:13 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 #include <string.h>
 
@@ -28,7 +28,7 @@ t_node *parse(t_token *tok)
 			tok = tok->next;
 		}
 		else
-			parser_error("Unexpected Token", &tok, tok);
+			parse_error("Unexpected Token", &tok, tok);
 	}
 	return (node);
 }

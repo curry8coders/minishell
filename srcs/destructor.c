@@ -6,12 +6,12 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 20:51:03 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/10/31 21:59:12 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/04 17:33:10 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 void free_node(t_node *node)
 {

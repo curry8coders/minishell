@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:10:51 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/10/31 21:58:04 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/04 17:53:25 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 char	*search_path(const char *filename)
 {
@@ -78,7 +78,7 @@ int	exec(char *argv[])
 	{
 		// child process
 		if (strchr(path, '/') == NULL)
-			path = search_path(argv);
+			path = search_path(argv[0]);
 		validate_access(path, argv[0]);
 		execve(path, argv, environ);
 		fatal_error("execve");

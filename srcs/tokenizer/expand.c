@@ -6,12 +6,12 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:54:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/10/31 21:32:20 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/04 17:33:32 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 #include <string.h>
 
