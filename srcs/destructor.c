@@ -24,7 +24,7 @@ void free_node(t_node *node)
 
 void free_tok(t_token *tok)
 {
-	if (tok ==NULL)
+	if (tok == NULL)
 		return ;
 	if (tok->word)
 		free(tok->word);

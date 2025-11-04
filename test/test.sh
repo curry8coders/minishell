@@ -9,7 +9,7 @@ cat <<EOF | gcc -xc -o print_args -
 #include <stdio.h>
 int main(int argc, char **argv) {
 	for (int i = 0; argv[i]; i++)
-		printf("argv[%d] = %s\n), i, argv[i]);
+		printf("argv[%d] = %s\n", i, argv[i]);
 }
 EOF
 
@@ -51,13 +51,13 @@ assert './a.out'
 
 ## no such command
 assert 'a.out'
-asert 'nosuchfile'
+assert 'nosuchfile'
 
 # Tokenize
 ## unquoted word
 assert 'ls /'
 assert 'echo hello	world	'
-assert 'nosuchfile\n\n
+assert 'nosuchfile\n\n'
 
 ## single quote
 assert "./print_args 'hello	world' '42Tokyo'"

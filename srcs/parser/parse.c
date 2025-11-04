@@ -20,7 +20,7 @@ t_node *parse(t_token *tok)
 	t_node *node;
 	
 	node = new_node(ND_SIMPLE_CMD);
-	while(tok && !at_eof(tok))
+	while (tok && !at_eof(tok))
 	{
 		if (tok->kind == TK_WORD)
 		{

@@ -39,6 +39,10 @@ void	append_char(char **s, char c)
 		free(*s);
 	*s = new;
 }
+//Critical performance issue:
+// O(n²) complexity for string building.
+// この実装だと1文字追加するたびに、毎回新しくメモリ確保をしていることになる
+// バッファの概念を導入するとさらに良い rabbitくんより
 
 void	remove_single_quote(char **dst, char **rest, char *p)
 {

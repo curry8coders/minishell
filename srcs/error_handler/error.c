@@ -67,6 +67,10 @@ void	parse_error(const char *location, t_token **rest, t_token *tok)
 	syntax_error = true;
 	perror_prefix();
 	dprintf(STDERR_FILENO, "syntax error near unexpected token `%s' in %s\n", tok->word, location);
+	//note : 
+	// tokenize() 関数で作られる TK_EOF トークンは、wordに
+	// NULLを設定した状態で生成される そこでparse_error()に
+	// EOFトークンが渡されてtok->wordにアクセスするとセグフォー
 	while(tok && !at_eof(tok))
 		tok = tok->next;
 	*rest = tok;
