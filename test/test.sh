@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cat <<EOF | gcc -xc -o a.out -
-#inlcude <stdio.h>
+#include <stdio.h>
 int main() { printf("hello from a.out\n); }
 EOF
 
