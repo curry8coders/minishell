@@ -35,7 +35,6 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LDFLAGS) $(LIBS)
->>>>>>> dev
 
 clean:
 	$(RM) $(OBJS)
@@ -53,7 +52,6 @@ test: all
 ##########################
 # Platform Compatibility #
 ##########################
->>>>>>> dev
 
 #Linux | Darwin
 OS := $(shell uname -s)
