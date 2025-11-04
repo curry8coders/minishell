@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/04 17:54:36 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/04 19:25:17 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ struct s_node {
 	t_node 		*next;
 };
 
-// token.c
+// tokenize.c
 t_token	*tokenize(char *line);
 char	**token_list_to_argv(t_token *tok);
 t_token *new_token(char *word, t_token_kind kind);
