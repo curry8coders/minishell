@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:57:17 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/04 18:12:32 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/04 18:53:33 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ bool consume_blank(char **rest, char *line)
 	{
 		while (*line && is_blank(*line))
 			line++;
+		*rest = line;
 		return (true);
 	}
 	*rest = line;
@@ -65,7 +66,7 @@ bool is_operator(const char *s)
 
 bool is_metacharacter(char c)
 {
-	return (c && strchr("|&;()\t\n", c));
+	return (c && strchr("|&;() \t\n", c));
 }
 
 bool is_word(const char *s)
@@ -145,9 +146,9 @@ t_token *tokenize(char *line)
 		if (consume_blank(&line, line))
 			continue;
 		else if (is_operator(line))
-			tok->next = operator(&line, line);
+			tok = tok->next = operator(&line, line);
 		else if (is_word(line))
-			tok->next = word(&line, line);
+			tok = tok->next = word(&line, line);
 		else
 			assert_error("Unexpected Token");
 	}
