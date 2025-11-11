@@ -1,13 +1,11 @@
-//　全然意味不明。bashで期待通りの挙動にならない。
-
 // gcc myscript.c -o myscript
-// ./myscript > results.log 2 > error.log
+// ./myscript > results.log 2> error.log
 // cat results.log
 // hello
 // cat error.log
 // error
 
-// ↑これが期待している挙動。しかしうまくいかない。
+// ↑これが期待している挙動。
 
 #include <unistd.h>
 
