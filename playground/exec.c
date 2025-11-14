@@ -38,8 +38,9 @@ int	exec_nonbuiltin(t_node *node)
 	if (strchr(path, '/') == NULL) //つまりフルパスではない場合の例外処理 pathには最終的にはフルパスになっていて欲しいということ
 		path = search_path(path);
 	//validate_引数に無効な因子が存在しないか();
-	// コマンドそれ自体が、コマンドの引数チェックを行うため、躊躇わずに渡してもよい ただしこの人は	validate_access(path, argv[0]);
-	// というコマンドでpath=NULL,空文字,'..',ファイル無効,ディレクトリかどうか,実行権限:permission(chmodでやるやつ)の確認をこの時点でしている
+	// コマンドそれ自体が、コマンドの引数チェックを行うため、躊躇わずに渡してもよい ただしこの人は	
+	// validate_access(path, argv[0]);というコマンドで
+	// path=NULL,空文字,'..',ファイル無効,ディレクトリかどうか,実行権限:permission(chmodでやるやつ)の確認をこの時点でしている
 	
 	//execve(const char *file, char *const *argv, char *const *envp);
 	
