@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 17:36:01 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/15 00:44:11 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/15 02:25:42 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,17 @@ void	*redirect_out(t_token **rest, t_token *tok)
 	return (node);
 }
 
+t_node	*redirect_input(t_token **rest, t_token *tok)
+{
+	t_node *node;
+
+	node = new_node(ND_REDIR_IN);
+	node->filename = tokdup(tok->next);
+	node->targetfd = STDIN_FILENO;
+	*rest = tok->next->next;
+	return (node);
+}
+
 void	append_command_element(t_node *command, t_token **rest, t_token *tok)
 {
 	if (tok->kind == TK_WORD)
@@ -57,6 +68,8 @@ void	append_command_element(t_node *command, t_token **rest, t_token *tok)
 	}
 	else if (equal_op(tok, ">") && tok->next->kind == TK_WORD)
 		append_node(&command->redirects, redirect_out(&tok, tok));
+	else if (equal_op(tok, "<") && tok->next->kind == TK_WORD)
+		append_node(&command->redirects, redirect_input(&tok, tok));
 	else
 		todo("append_command_element");
 	*rest = tok;

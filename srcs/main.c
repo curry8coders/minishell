@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:10:51 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/15 00:50:14 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/15 02:42:36 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,8 @@ int	exec_cmd(t_node *node)
 int	exec(t_node *node)
 {
 	int status;
-	open_redir_file(node->redirects);
+	if (open_redir_file(node->redirects) < 0)
+		return (ERROR_OPEN_REDIR);
 	do_redirect(node->redirects);
 	status = exec_cmd(node);
 	reset_redirect(node->redirects);
