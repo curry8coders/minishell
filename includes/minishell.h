@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/15 03:48:34 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/15 04:15:01 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ enum e_node_kind {
 	ND_REDIR_OUT,
 	ND_REDIR_IN,
 	ND_REDIR_APPEND,
+	ND_REDIR_HEREDOC,
 };
 
 typedef struct s_node	t_node;
@@ -75,6 +76,7 @@ struct s_node {
 	// REDIR
 	int			targetfd;
 	t_token		*filename;
+	t_token		*delimiter;
 	int			filefd;
 	int			stashed_targetfd;
 };
