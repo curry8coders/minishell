@@ -43,6 +43,10 @@ enum e_token_kind
 	TK_OP,
 	TK_EOF,
 };
+//列挙子（名前付きの整数定数）で
+//デフォルトでは上から順に0, 1, 2, 3 が順に割り当てられる
+
+
 typedef enum e_token_kind t_token_kind;
 
 // `word` is zero terminated string.
