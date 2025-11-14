@@ -70,6 +70,16 @@ void	validate_access(const char *path, const char *filename)
 	if (access(path, F_OK) < 0)
 		err_exit(filename, "command not found", 127);
 }
+//指定された `path` に実行ファイルが本当に存在するかどうかを検証する
+// accessはシステムコール
+//      int access(const char *path, int mode);
+// mode:
+//未実装:追加で 空文字,'..',ファイル無効,ディレクトリかどうか,実行権限:permission(chmodでやるやつ)の確認をする
+// man accessより
+// X_OK for execute/search permission), or the existence test (F_OK)
+// F_OK：そのパスが「存在するか？」だけを調べる chmodとかでは扱わないフラグ
+
+
 
 int	exec(char *argv[])
 {
@@ -97,10 +107,19 @@ int	exec(char *argv[])
 		return (WEXITSTATUS(wstatus));
 	}
 }
+//fork
+//pid_t fork(void);pidを取得
+//pid==0子プロセスのコードを実行
+//pid>0親プロセスのコード
+//	自分の子プロセスのどれか一つが終了するのを待つ。
+// 	今回の場合、先に`fork()` で作成した子プロセスが終了するのを待つことになる。
+// wait()はシステムコール
+// 親プロセス（シェル）がこの`wait()`を呼び出すと、その場で実行を一時停止する。
+// WEXITSTATUS()は<sys/wait.h>に含まれるマクロ
 
 void interpret(char *line, int *stat_loc)
 {
-	t_token*tok;
+	t_token	*tok;
 	char 	**argv;
 	t_node	*node;
 
@@ -120,6 +139,9 @@ void interpret(char *line, int *stat_loc)
 	}
 	free_tok(tok);
 }
+//*stat_locではメモリアクセス
+//status localtion
+// なぜinterpretでexecが起動されるか
 
 int	main(void)
 {
@@ -141,3 +163,5 @@ int	main(void)
 	}
 	exit (status);
 }
+//interpret(line, &status)は&アドレス渡し
+
