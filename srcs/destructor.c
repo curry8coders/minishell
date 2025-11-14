@@ -6,12 +6,14 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 20:51:03 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/04 17:33:10 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/14 22:53:29 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "minishell.h"
+
+#include <stdio.h>
 
 void free_node(t_node *node)
 {
@@ -19,6 +21,8 @@ void free_node(t_node *node)
 		return ;
 	free_tok(node->args);
 	free_node(node->next);
+	free_tok(node->filename);
+	free_node(node->redirects);
 	free(node);
 }
 

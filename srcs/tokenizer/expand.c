@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:54:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/04 18:12:55 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/14 22:54:57 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,8 @@ void	expand_quote_removal(t_node *node)
 	if (node == NULL)
 		return ;
 	remove_quote(node->args);
+	remove_quote(node->filename);
+	expand_quote_removal(node->redirects);
 	expand_quote_removal(node->next);
 }
 

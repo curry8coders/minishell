@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:57:17 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/04 18:53:33 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/15 00:44:25 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,16 @@ bool startswith(const char *s, const char *keyword)
 	return (memcmp(s, keyword, strlen(keyword)) == 0);
 }
 
-bool is_operator(const char *s)
+/*
+metacharacter
+	  A character that, when unquoted, separates words.  One of the following:
+	  |  & ; ( ) < > space tab
+control operator
+	  A token that performs a control function.  It is one of the following symbols:
+	  || & && ; ;; ( ) | <newline>
+*/
+
+bool is_control_operator(const char *s)
 {
 	static char *const operators[] = {"||", "&", "&&", ";", ";;", "(", ")", "|", "\n"};
 	size_t i = 0;
@@ -64,9 +73,39 @@ bool is_operator(const char *s)
 	return (false);
 }
 
+bool is_redirection_operator(const char *s)
+{
+	static char *const operators[] = {">", "<", ">>", "<<"};
+	size_t i = 0;
+
+	while (i < sizeof(operators) / sizeof(*operators))
+	{
+		if (startswith(s, operators[i]))
+			return (true);
+		i++;
+	}
+	return (false);
+}
+/*
+DEFINITIONS
+       The following definitions are used throughout the rest of this document.
+       blank  A space or tab.
+       word   A sequence of characters considered as a single unit by the shell.  Also known as a token.
+       name   A word consisting only of alphanumeric characters and underscores, and beginning with an alphabetic
+              character or an underscore.  Also referred to as an identifier.
+       metacharacter
+              A character that, when unquoted, separates words.  One of the following:
+              |  & ; ( ) < > space tab
+       control operator
+              A token that performs a control function.  It is one of the following symbols:
+              || & && ; ;; ( ) | <newline>
+*/
+
 bool is_metacharacter(char c)
 {
-	return (c && strchr("|&;() \t\n", c));
+	if (is_blank(c))
+		return (true);
+	return (c && strchr("|&;()<>\n", c));
 }
 
 bool is_word(const char *s)
@@ -76,7 +115,8 @@ bool is_word(const char *s)
 
 t_token *operator(char **rest, char *line)
 {
-	static char *const operators[] = {"||", "&", "&&", ";", ";;", "(", ")", "|", "\n"};
+	// Check longer operators first
+	static char *const operators[] = {">>", "<<", "||", "&&", ";;", "<", ">", "&", ";", "(", ")", "|", "\n"};
 	size_t i = 0;
 	char *op;
 	
@@ -145,7 +185,7 @@ t_token *tokenize(char *line)
 	{
 		if (consume_blank(&line, line))
 			continue;
-		else if (is_operator(line))
+		else if (is_metacharacter(*line))
 			tok = tok->next = operator(&line, line);
 		else if (is_word(line))
 			tok = tok->next = word(&line, line);
