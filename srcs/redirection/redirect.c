@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 05:58:26 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/15 02:43:15 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/15 03:47:46 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ int	open_redir_file(t_node *redir)
 		redir->filefd = open(redir->filename->word, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	else if (redir->kind == ND_REDIR_IN)
 		redir->filefd = open(redir->filename->word, O_RDONLY);
+	else if (redir->kind == ND_REDIR_APPEND)
+		redir->filefd = open(redir->filename->word, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	else
 		todo("open_redir_file");
 	if (redir->filefd < 0)
@@ -49,7 +51,7 @@ void	do_redirect(t_node *redir)
 {
 	if (redir == NULL)
 		return ;
-	if (redir->kind == ND_REDIR_OUT || redir->kind == ND_REDIR_IN)
+	if (redir->kind == ND_REDIR_OUT || redir->kind == ND_REDIR_IN || redir->kind == ND_REDIR_APPEND)
 	{
 		redir->stashed_targetfd = stashfd(redir->targetfd);
 		dup2(redir->filefd, redir->targetfd);
@@ -65,7 +67,7 @@ void	reset_redirect(t_node *redir)
 	if (redir == NULL)
 		return ;
 	reset_redirect(redir->next);
-	if (redir->kind == ND_REDIR_OUT || redir->kind == ND_REDIR_IN)
+	if (redir->kind == ND_REDIR_OUT || redir->kind == ND_REDIR_IN || redir->kind == ND_REDIR_APPEND)
 	{
 		close(redir->filefd);
 		close(redir->targetfd);

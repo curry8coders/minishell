@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/15 02:15:18 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/15 03:48:34 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ enum e_node_kind {
 	ND_SIMPLE_CMD,
 	ND_REDIR_OUT,
 	ND_REDIR_IN,
+	ND_REDIR_APPEND,
 };
 
 typedef struct s_node	t_node;

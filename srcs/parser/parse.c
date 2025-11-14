@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 17:36:01 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/15 02:25:42 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/15 03:52:07 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,17 @@ t_node	*redirect_input(t_token **rest, t_token *tok)
 	return (node);
 }
 
+t_node *redirect_append(t_token **rest, t_token *tok)
+{
+	t_node *node;
+	
+	node = new_node(ND_REDIR_APPEND);
+	node->filename = tokdup(tok->next);
+	node->targetfd = STDOUT_FILENO;
+	*rest = tok->next->next;
+	return (node);
+}
+
 void	append_command_element(t_node *command, t_token **rest, t_token *tok)
 {
 	if (tok->kind == TK_WORD)
@@ -70,6 +81,8 @@ void	append_command_element(t_node *command, t_token **rest, t_token *tok)
 		append_node(&command->redirects, redirect_out(&tok, tok));
 	else if (equal_op(tok, "<") && tok->next->kind == TK_WORD)
 		append_node(&command->redirects, redirect_input(&tok, tok));
+	else if (equal_op(tok, ">>") && tok->next->kind == TK_WORD)
+		append_node(&command->redirects, redirect_append(&tok, tok));
 	else
 		todo("append_command_element");
 	*rest = tok;
