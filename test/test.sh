@@ -7,7 +7,7 @@ NG=$RED"NG"$RESET
 
 cat <<EOF | gcc -xc -o a.out -
 #include <stdio.h>
-int main() { printf("hello from a.out\n); }
+int main() { printf("hello from a.out\n"); }
 EOF
 
 cat <<EOF | gcc -xc -o print_args -
