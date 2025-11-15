@@ -1,4 +1,9 @@
 #!/bin/bash
+RED="\033[31m"
+GREEN="\033[32m"
+RESET="\033[0m"
+OK=$GREEN"OK"$RESET
+NG=$RED"NG"$RESET
 
 cat <<EOF | gcc -xc -o a.out -
 #include <stdio.h>
@@ -18,12 +23,22 @@ cleanup() {
 }
 
 assert() {
-	printf '%-50s:' "["$1]"
+	COMMAND="$1"
+	shift
+	printf '%-50s:' "[$COMMAND]"
 	# exit status
-	echo -n -e "$1" | bash >cmp 2>&-
+	echo -n -e "$COMMAND" | bash >cmp 2>&-
 	expected=$?
-	echo -n -e "$1" | ./minishell >out 2>&-
+	for arg in "$@"
+	do
+		mv "$arg" "$arg"".cmp"
+	done
+	echo -n -e "$COMMAND" | ./minishell >out 2>&-
 	actual=$?
+	for arg in "$@"
+	do
+		mv "$arg" "$arg"".out"
+	done
 
 	diff cmp out >/dev/null && echo -n '  diff OK' || echo -n '  diff NG'
 
@@ -32,6 +47,12 @@ assert() {
 	else
 		echo -n "  status NG, expected $expected but got $actual"
 	fi
+	for arg in "$@"
+	do
+		echo -n "	[$arg] "
+		diff $arg"".cmp" "$arg"".out" >/dev/null && echo -e -n "$OK" || echo -e -n "$NG"
+		rm -f "$arg"".cmp" "$arg"".out"
+	done
 	echo
 }
 
@@ -72,6 +93,30 @@ assert "echo \"'hello	world'\" \"42Tokyo\""
 ## combination
 assert "echo hello'		world'"
 assert "echo hello' world	'\" 42Tokyo \""
+
+# Redirect
+## Redirecting output
+assert 'echo hello >hello.txt' 'hello.txt'
+assert 'echo hello >f1>f2>f3' 'f1' 'f2' 'f3'
+
+## Redirecting input
+assert 'cat <Makefile' 'Makefile'
+echo hello >f1
+echo world >f2
+echo 42Tokyo >f3
+assert 'cat <f1<f2<f3'
+rm -f f1 f2 f3
+assert 'cat <hoge'
+
+## Apending Redirected output
+assert 'pwd >>pwd.txt' 'pwd.txt'
+assert 'pwd >>pwd.txt \n pwd >>pwd.txt' 'pwd.txt'
+
+## Here Document
+assert 'cat <<EOF\nhello\nworld\nEOF\nNOPRINT'
+assert 'cat <<EOF<<eof\nhello\nworld\nEOF\nNOPRINT'
+assert 'cat <<EOF\nhello\nworld'
+assert 'cat <<E"O"F\nhello\nworld\nEOF\nNOPRINT'
 
 cleanup
 echo 'all OK'
