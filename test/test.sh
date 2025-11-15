@@ -31,13 +31,13 @@ assert() {
 	expected=$?
 	for arg in "$@"
 	do
-		mv "$arg" "$arg"".cmp"
+		mv "$arg" "${arg}.cmp"
 	done
 	echo -n -e "$COMMAND" | ./minishell >out 2>&-
 	actual=$?
 	for arg in "$@"
 	do
-		mv "$arg" "$arg"".out"
+		mv "$arg" "${arg}.out"
 	done
 
 	diff cmp out >/dev/null && echo -n '  diff OK' || echo -n '  diff NG'
@@ -50,8 +50,8 @@ assert() {
 	for arg in "$@"
 	do
 		echo -n "	[$arg] "
-		diff $arg"".cmp" "$arg"".out" >/dev/null && echo -e -n "$OK" || echo -e -n "$NG"
-		rm -f "$arg"".cmp" "$arg"".out"
+		diff "${arg}.cmp" "${arg}.out" >/dev/null && echo -e -n "$OK" || echo -e -n "$NG"
+		rm -f "${arg}.cmp" "${arg}.out"
 	done
 	echo
 }
