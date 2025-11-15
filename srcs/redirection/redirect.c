@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 05:58:26 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/15 04:30:45 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/15 21:37:51 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "minishell.h"
-
 #include <string.h>
+#include <readline/readline.h>
+#include "minishell.h"
 
 int	stashfd(int fd)
 {
@@ -32,7 +32,7 @@ int	stashfd(int fd)
 
 int	read_heredoc(const char *delimiter)
 {
-	int *line;
+	char *line;
 	int pfd[2];
 
 	if (pipe(pfd) < 0)
