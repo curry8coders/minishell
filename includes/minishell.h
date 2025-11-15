@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/04 19:25:17 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/15 04:15:01 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 # define ERROR_TOKENIZE 258
 # define ERROR_PARSE 258
+# define ERROR_OPEN_REDIR 1
 # define SINGLE_QUOTE_CHAR '\''
 # define DOUBLE_QUOTE_CHAR '"'
 
@@ -59,14 +60,35 @@ struct s_token
 
 enum e_node_kind {
 	ND_SIMPLE_CMD,
+	ND_REDIR_OUT,
+	ND_REDIR_IN,
+	ND_REDIR_APPEND,
+	ND_REDIR_HEREDOC,
 };
 
 typedef struct s_node	t_node;
 struct s_node {
-	t_token 	*args;
 	t_node_kind kind;
 	t_node 		*next;
+	// CMD
+	t_token		*args;
+	t_node		*redirects;
+	// REDIR
+	int			targetfd;
+	t_token		*filename;
+	t_token		*delimiter;
+	int			filefd;
+	int			stashed_targetfd;
 };
+
+// Redirectiong output example
+// command			: "echo hello 1> out"
+// targetfd			: 1
+// filename			: "out"
+// filefd			: open("out")
+// stashed_targetfd	: dup(targetfd)
+
+#define ERROR_PARSE 258
 
 // tokenize.c
 t_token	*tokenize(char *line);
@@ -91,9 +113,16 @@ void	free_argv(char **argv);
 
 // parse.c
 t_node *parse(t_token *tok);
+void	append_command_element(t_node *command, t_token **rest, t_token *tok);
 bool at_eof(t_token *tok);
 t_node *new_node(t_node_kind kind);
 void append_tok(t_token **tokens, t_token *tok);
 t_token *tokdup(t_token *tok);
+
+// redirect.c
+int		open_redir_file(t_node *redirects);
+void	do_redirect(t_node *redirects);
+void	reset_redirect(t_node *redirects);
+
 
 #endif

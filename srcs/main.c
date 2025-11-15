@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:10:51 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/04 18:53:33 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/15 02:42:36 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,12 +81,13 @@ void	validate_access(const char *path, const char *filename)
 
 
 
-int	exec(char *argv[])
+int	exec_cmd(t_node *node)
 {
 	extern char **environ;
-	const char *path = argv[0];
+	const char *path;
 	pid_t	pid;
 	int 	wstatus;
+	char	**argv;
 
 	pid = fork();
 	if (pid < 0)
@@ -94,6 +95,8 @@ int	exec(char *argv[])
 	else if (pid == 0)
 	{
 		// child process
+		argv = token_list_to_argv(node->args);
+		path = argv[0];
 		if (strchr(path, '/') == NULL)
 			path = search_path(argv[0]);
 		validate_access(path, argv[0]);
@@ -117,24 +120,37 @@ int	exec(char *argv[])
 // 親プロセス（シェル）がこの`wait()`を呼び出すと、その場で実行を一時停止する。
 // WEXITSTATUS()は<sys/wait.h>に含まれるマクロ
 
+int	exec(t_node *node)
+{
+	int status;
+	if (open_redir_file(node->redirects) < 0)
+		return (ERROR_OPEN_REDIR);
+	do_redirect(node->redirects);
+	status = exec_cmd(node);
+	reset_redirect(node->redirects);
+	return (status);
+}
+
 void interpret(char *line, int *stat_loc)
 {
 	t_token	*tok;
-	char 	**argv;
 	t_node	*node;
 
 	tok = tokenize(line);
-	if (tok->kind == TK_EOF)
+	if (at_eof(tok))
 		;
 	else if (syntax_error)
 		*stat_loc = ERROR_TOKENIZE;
 	else
 	{
 		node = parse(tok);
-		expand(node);
-		argv = token_list_to_argv(node->args);
-		*stat_loc = exec(argv);
-		free_argv(argv);
+		if (syntax_error)
+			*stat_loc = ERROR_PARSE;
+		else
+		{
+			expand(node);
+			*stat_loc = exec(node);
+		}
 		free_node(node);
 	}
 	free_tok(tok);
@@ -164,4 +180,3 @@ int	main(void)
 	exit (status);
 }
 //interpret(line, &status)は&アドレス渡し
-

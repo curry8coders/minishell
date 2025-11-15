@@ -6,7 +6,7 @@
 #    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/11/04 17:50:39 by ichikawahik      ###   ########.fr        #
+#    Updated: 2025/11/15 00:52:49 by ichikawahik      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,8 @@ SRCS = srcs/main.c\
        srcs/tokenizer/tokenize.c\
        srcs/destructor.c\
        srcs/tokenizer/expand.c\
-       srcs/parser/parse.c
+       srcs/parser/parse.c\
+       srcs/redirection/redirect.c
 
 OBJS = $(SRCS:%.c=%.o)
 
