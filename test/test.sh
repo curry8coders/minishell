@@ -5,6 +5,17 @@ RESET="\033[0m"
 OK=$GREEN"OK"$RESET
 NG=$RED"NG"$RESET
 
+# get script directry 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# make tmp directry
+TMP_DIR="$SCRIPT_DIR/tmp"
+mkdir -p "$TMP_DIR"
+
+# set timeout commnad
+TIMEOUT=$(command -v gtimeout || command -v timeout)
+TIMEOUT_SEC=2
+
 cat <<EOF | gcc -xc -o a.out -
 #include <stdio.h>
 int main() { printf("hello from a.out\n"); }
@@ -18,35 +29,45 @@ int main(int argc, char **argv) {
 }
 EOF
 
-cleanup() {
-	rm -f cmp out a.out print_args
-}
+
 
 assert() {
 	COMMAND="$1"
 	shift
 	printf '%-50s:' "[$COMMAND]"
 	# exit status
-	echo -n -e "$COMMAND" | bash >cmp 2>&-
+	echo -n -e "$COMMAND" | $TIMEOUT $TIMEOUT_SEC bash >"$TMP_DIR/cmp" 2>&1
 	expected=$?
 	for arg in "$@"
 	do
-		mv "$arg" "${arg}.cmp"
+		cp "$arg" "${arg}.cmp"
+		# note:mv->cp is this actually correct?
 	done
-	echo -n -e "$COMMAND" | ./minishell >out 2>&-
+	echo -n -e "$COMMAND" | $TIMEOUT $TIMEOUT_SEC ./minishell >"$TMP_DIR/out" 2>&1
 	actual=$?
+	
 	for arg in "$@"
 	do
-		mv "$arg" "${arg}.out"
+		cp "$arg" "${arg}.out"
 	done
+	
+# ハング判定(timeout)
+	if [ "$actual" -eq 124 ]; then
+		echo -e "  ${RED}HANG${RESET} (timeout after ${TIMEOUT_SEC}s)"
+		return
+	fi
+# 124とは？: タイムアウトで終了した場合（SIGTERM）
 
-	diff cmp out >/dev/null && echo -n '  diff OK' || echo -n '  diff NG'
+# diff判定
+	diff "$TMP_DIR/cmp" "$TMP_DIR/out" >/dev/null && echo -n '  diff OK' || echo -n '  diff NG'
 
+# status判定
 	if [ "$actual" = "$expected" ]; then
 		echo -n '  status OK'
 	else
 		echo -n "  status NG, expected $expected but got $actual"
 	fi
+# ファイル判定
 	for arg in "$@"
 	do
 		echo -n "	[$arg] "
@@ -54,6 +75,12 @@ assert() {
 		rm -f "${arg}.cmp" "${arg}.out"
 	done
 	echo
+}
+
+cleanup() {
+	rm -f a.out print_args hello.txt pwd.txt
+	rm -f test_*
+	rm -rf "$TMP_DIR"
 }
 
 # Empty line (EOF)
@@ -120,3 +147,4 @@ assert 'cat <<E"O"F\nhello\nworld\nEOF\nNOPRINT'
 
 cleanup
 echo 'all OK'
+
