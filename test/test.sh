@@ -5,14 +5,14 @@ RESET="\033[0m"
 OK=$GREEN"OK"$RESET
 NG=$RED"NG"$RESET
 
-# get script directry 
+# get script directory 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# make tmp directry
+# make tmp directory
 TMP_DIR="$SCRIPT_DIR/tmp"
 mkdir -p "$TMP_DIR"
 
-# set timeout commnad
+# set timeout command
 TIMEOUT=$(command -v gtimeout || command -v timeout)
 TIMEOUT_SEC=2
 
