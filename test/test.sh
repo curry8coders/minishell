@@ -145,6 +145,10 @@ assert 'cat <<EOF<<eof\nhello\nworld\nEOF\nNOPRINT'
 assert 'cat <<EOF\nhello\nworld'
 assert 'cat <<E"O"F\nhello\nworld\nEOF\nNOPRINT'
 
+# Expand Variable
+assert 'echo $USER'
+assert 'echo $USER$PATH&TERM'
+assert'echo "$USER $PATH $TERM"'
+
 cleanup
 echo 'all OK'
-
