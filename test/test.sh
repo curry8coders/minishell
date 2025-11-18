@@ -29,7 +29,9 @@ int main(int argc, char **argv) {
 }
 EOF
 
-
+cat <<EOF | gcc -xc -o exit42 -
+int main() { return 42; }
+EOF
 
 assert() {
 	COMMAND="$1"
@@ -150,5 +152,10 @@ assert 'echo $USER'
 assert 'echo $USER$PATH&TERM'
 assert'echo "$USER $PATH $TERM"'
 
+# Special Parameter $?
+assert 'echo $?'
+assert 'invalid\necho $?\necho $?'
+assert 'exit42\necho $?\necho $?'
+assert 'exit42\n\necho $?\necho $?'
+
 cleanup
-echo 'all OK'

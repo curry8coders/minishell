@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:54:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/18 17:20:39 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/18 18:03:35 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,37 @@ bool	is_alpha_num_under(char c)
 	return (is_alpha_under(c) || isdigit(c));
 }
 
+bool	is_variable(char *s)
+{
+	return (s[0] == '$' && is_alpha_under(s[1]));
+}
+
+bool	is_special_parameter(char *c)
+{
+	return (s[0] == '$' && s[1] == '?');
+}
+
+void	append_num(char **dst, unsigned int num)
+{
+	if (num == 0)
+	{
+		append_char(dst, '0');
+		return ;
+	}
+	if (num / 10 != 0)
+		append_num(dst, num / 10);
+	append_char(dst, '0' + (num % 10));
+}
+
+void	expand_special_parameter_str(char **dst, char **rest, char *p)
+{
+	if (!is_special_parameter(p))
+		assert_error("Expeted special parameter");
+	p += 2;
+	append_num(dst, last_status);
+	*rest = p;
+}
+
 bool	expand_variable_str(char **dst, char **rest, char *p)
 {
 	char *name;
@@ -181,6 +212,8 @@ void	append_double_quoute(char **dst, char **rest, char *p)
 				assert_error("Unclosed double quote");
 			else if (is_variable(p))
 				expand_variable_str(dst, &p, p);
+			else if (is_special_parameter(p))
+				expand_special_parameter_str(dst, &p, p);
 			else
 				append_char(dst, *p++);
 		}
@@ -211,6 +244,8 @@ void	expand_variable_tok(t_token *tok)
 			append_double_quoute(&new_word, &p, p);
 		else if (is_variable(p))
 			expand_variable_str(&new_word, &p, p);
+		else if (is_special_parameter(p))
+			expand_special_parameter_str(&new_word, &p, p);
 		else
 			append_char(&new_word, *p++);
 	}
