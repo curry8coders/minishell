@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:54:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/18 18:03:35 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/18 19:22:29 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ bool	is_variable(char *s)
 	return (s[0] == '$' && is_alpha_under(s[1]));
 }
 
-bool	is_special_parameter(char *c)
+bool	is_special_parameter(char *s)
 {
 	return (s[0] == '$' && s[1] == '?');
 }
@@ -267,4 +267,26 @@ void	expand(t_node *node)
 {
 	expand_variable(node);
 	expand_quote_removal(node);
+}
+
+char	*expand_heredoc_line(char *line)
+{
+	char	*new_word;
+	char	*p;
+
+	p = line;
+	new_word = calloc(1, sizeof(char));
+	if (new_word == NULL)
+		fatal_error("calloc");
+	while (*p)
+	{
+		if (is_variable(p))
+			expand_variable_str(&new_word, &p, p);
+		else if (is_special_parameter(p))
+			expand_special_parameter_str(&new_word, &p, p);
+		else
+			append_char(&new_word, *p++);
+	}
+	free(line);
+	return(new_word);
 }

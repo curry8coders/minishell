@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 17:36:01 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/15 04:19:29 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/18 19:15:27 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,9 @@ t_node *redirect_heredoc(t_token **rest, t_token *tok)
 
 	node = new_node(ND_REDIR_HEREDOC);
 	node->delimiter = tokdup(tok->next);
+	if (strchr(node->delimiter->word, SINGLE_QUOTE_CHAR == NULL)
+		&& strchr(node->delimiter->word, DOUBLE_QUOTE_CHAR) == NULL)
+		node->is_delim_unquted = true;
 	node->targetfd = STDIN_FILENO;
 	*rest = tok->next->next;
 	return (node);

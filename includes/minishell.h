@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/15 04:15:01 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/18 19:20:39 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ struct s_node {
 	int			targetfd;
 	t_token		*filename;
 	t_token		*delimiter;
+	bool		is_delim_unquoted;
 	int			filefd;
 	int			stashed_targetfd;
 };
@@ -105,6 +106,7 @@ t_token *word(char **rest, char *line);
 
 // expand.c
 void	expand(t_node *node);
+char		*expand_heredoc_line(char *line);
 
 // destructor.c
 void	free_node(t_node *node);

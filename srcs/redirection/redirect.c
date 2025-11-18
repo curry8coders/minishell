@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 05:58:26 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/15 21:37:51 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/18 19:21:21 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	stashfd(int fd)
 	return (stashfd);
 }
 
-int	read_heredoc(const char *delimiter)
+int	read_heredoc(const char *delimiter, bool is_delim_unquoted)
 {
 	char *line;
 	int pfd[2];
@@ -47,6 +47,8 @@ int	read_heredoc(const char *delimiter)
 			free(line);
 			break ;
 		}
+		if (is_delim_unquoted)
+			line = expand_heredoc_line(line);
 		dprintf(pfd[1], "%s\n", line);
 		free(line);
 	}
@@ -54,27 +56,27 @@ int	read_heredoc(const char *delimiter)
 	return (pfd[0]);
 }
 
-int	open_redir_file(t_node *redir)
+int	open_redir_file(t_node *node)
 {
-	if (redir == NULL)
+	if (node == NULL)
 		return (0);
-	if (redir->kind == ND_REDIR_OUT)
-		redir->filefd = open(redir->filename->word, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	else if (redir->kind == ND_REDIR_IN)
-		redir->filefd = open(redir->filename->word, O_RDONLY);
-	else if (redir->kind == ND_REDIR_APPEND)
-		redir->filefd = open(redir->filename->word, O_CREAT | O_WRONLY | O_APPEND, 0644);
-	else if (redir->kind == ND_REDIR_HEREDOC)
-		redir->filefd = read_heredoc(redir->delimiter->word);
+	if (node->kind == ND_REDIR_OUT)
+		node->filefd = open(node->filename->word, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	else if (node->kind == ND_REDIR_IN)
+		node->filefd = open(node->filename->word, O_RDONLY);
+	else if (node->kind == ND_REDIR_APPEND)
+		node->filefd = open(node->filename->word, O_CREAT | O_WRONLY | O_APPEND, 0644);
+	else if (node->kind == ND_REDIR_HEREDOC)
+		node->filefd = read_heredoc(node->delimiter->word, node->is_delim_unquoted);
 	else
 		assert_error("open_redir_file");
-	if (redir->filefd < 0)
+	if (node->filefd < 0)
 	{
-		xperror(redir->filename->word);
+		xperror(node->filename->word);
 		return (-1);
 	}
-	redir->filefd = stashfd(redir->targetfd);
-	return (open_redir_file(redir->next));
+	node->filefd = stashfd(node->targetfd);
+	return (open_redir_file(node->next));
 }
 
 bool	is_redirect(t_node *node)
