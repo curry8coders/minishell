@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:54:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/22 07:02:14 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 07:43:52 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ void	append_num(char **dst, unsigned int num)
 void	expand_special_parameter_str(char **dst, char **rest, char *p)
 {
 	if (!is_special_parameter(p))
-		assert_error("Expeted special parameter");
+		assert_error("Expected special parameter");
 	p += 2;
 	append_num(dst, last_status);
 	*rest = p;
@@ -200,7 +200,7 @@ void	append_single_quote(char **dst, char **rest, char *p)
 		assert_error("Expected single quote");
 }
 
-void	append_double_quoute(char **dst, char **rest, char *p)
+void	append_double_quote(char **dst, char **rest, char *p)
 {
 	if (*p == DOUBLE_QUOTE_CHAR)
 	{
@@ -241,7 +241,7 @@ void	expand_variable_tok(t_token *tok)
 		if (*p == SINGLE_QUOTE_CHAR)
 			append_single_quote(&new_word, &p, p);
 		else if (*p == DOUBLE_QUOTE_CHAR)
-			append_double_quoute(&new_word, &p, p);
+			append_double_quote(&new_word, &p, p);
 		else if (is_variable(p))
 			expand_variable_str(&new_word, &p, p);
 		else if (is_special_parameter(p))
@@ -291,5 +291,5 @@ char	*expand_heredoc_line(char *line)
 			append_char(&new_word, *p++);
 	}
 	free(line);
-	return(new_word);
+	return (new_word);
 }

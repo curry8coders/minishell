@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:10:51 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/22 04:22:18 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 07:36:04 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,6 @@ int	main(void)
 		interpret(line, &last_status);
 		free(line);
 	}
-	exit (last_status);
+	exit(last_status);
 }
 //interpret(line, &status)は&アドレス渡し

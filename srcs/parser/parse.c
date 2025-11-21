@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 17:36:01 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 03:13:30 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 07:37:23 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ bool	at_eof(t_token *tok)
 
 bool	equal_op(t_token *tok, char *op)
 {
-	if(tok->kind != TK_OP)
+	if (tok->kind != TK_OP)
 		return (false);
 	return (strcmp(tok->word, op) == 0);
 }

@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/22 05:16:28 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 07:38:44 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,6 @@ struct s_node {
 // filefd			: open("out")
 // stashed_targetfd	: dup(targetfd)
 
-#define ERROR_PARSE 258
-
 struct s_item {
   char *name;
   char *value;
@@ -115,7 +113,7 @@ struct s_map {
   t_item item_head;
 };
 
-// tokenize.cn
+// tokenize.c
 t_token *tokenize(char *line);
 char **token_list_to_argv(t_token *tok);
 t_token *new_token(char *word, t_token_kind kind);

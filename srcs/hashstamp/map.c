@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 04:24:42 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 05:16:40 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 07:44:11 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ int	map_put(t_map *map, const char *string, bool allow_empty_value)
 	char	*value;
 
 	name_end = strchr(string, '=');
-	// vallue is null
+	// value is null
 	if (name_end == NULL)
 	{
 		if (!allow_empty_value)
