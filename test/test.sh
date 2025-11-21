@@ -29,7 +29,9 @@ int main(int argc, char **argv) {
 }
 EOF
 
-
+cat <<EOF | gcc -xc -o exit42 -
+int main() { return 42; }
+EOF
 
 assert() {
 	COMMAND="$1"
@@ -144,7 +146,22 @@ assert 'cat <<EOF\nhello\nworld\nEOF\nNOPRINT'
 assert 'cat <<EOF<<eof\nhello\nworld\nEOF\nNOPRINT'
 assert 'cat <<EOF\nhello\nworld'
 assert 'cat <<E"O"F\nhello\nworld\nEOF\nNOPRINT'
+assert 'cat <<EOF	\n$USER\n$NO_SUCH_VAR\n$FOO$BAR\nEOF'
+assert 'cat <<"EOF"	\n$USER\n$NO_SUCH_VAR\n$FOO$BAR\nEOF'
+assert 'cat <<EO"F"	\n$USER\n$NO_SUCH_VAR\n$FOO$BAR\nEOF'
+export	EOF='eof'
+assert	'cat <<$EOF			\neof\nEOF\nEOF'
+assert	'cat <<"$EOF		\neof\nEOF\nEOF'
+
+# Expand Variable
+assert 'echo $USER'
+assert 'echo $USER$PATH&TERM'
+assert'echo "$USER $PATH $TERM"'
+
+# Special Parameter $?
+assert 'echo $?'
+assert 'invalid\necho $?\necho $?'
+assert 'exit42\necho $?\necho $?'
+assert 'exit42\n\necho $?\necho $?'
 
 cleanup
-echo 'all OK'
-
