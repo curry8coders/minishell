@@ -6,12 +6,21 @@ RESET="\033[0m"
 OK=$GREEN"OK"$RESET
 NG=$RED"NG"$RESET
 
-# get script directry 
+# get specific directory
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# make tmp directry
+# make tmp directory
 TMP_DIR="$SCRIPT_DIR/tmp"
+rm -rf "$TMP_DIR"
 mkdir -p "$TMP_DIR"
+
+# move to tmp directory
+cd "$TMP_DIR" || exit 1
+
+# make symbolic link
+ln -sf "$PROJECT_ROOT/Makefile" "$TMP_DIR/Makefile"
+ln -sf "$PROJECT_ROOT/minishell" "$TMP_DIR/minishell"
 
 # set timeout commnad
 TIMEOUT=$(command -v gtimeout || command -v timeout)
@@ -35,11 +44,7 @@ int main() { return 42; }
 EOF
 
 print_desc(){
-	esho -e $YELLOW"$1"$RESET
-}
-
-cleanup() {
-	rm -f cmp out a.out print_args exit42 infinite_loop
+	echo -e $YELLOW"$1"$RESET
 }
 
 assert() {
@@ -47,15 +52,15 @@ assert() {
 	shift
 	printf '%-50s:' "[$COMMAND]"
 	# exit status
-	echo -n -e "$COMMAND" | bash >cmp 2>&-
+	echo -n -e "$COMMAND" | bash >"$TMP_DIR/cmp" 2>&-
 	expected=$?
 	for arg in "$@"
 	do
 		mv "$arg" "${arg}.cmp"
 	done
-	echo -n -e "$COMMAND" | ./minishell >out 2>&-
-	actual=$?
 	
+	echo -n -e "$COMMAND" | $TIMEOUT $TIMEOUT_SEC ./minishell >"$TMP_DIR/out" 2>&-
+	actual=$?
 	for arg in "$@"
 	do
 		mv "$arg" "${arg}.out"
@@ -70,6 +75,7 @@ assert() {
 
 # diff判定
 	diff "$TMP_DIR/cmp" "$TMP_DIR/out" >/dev/null && echo -n '  diff OK' || echo -n '  diff NG'
+		echo -n
 
 # status判定
 	if [ "$actual" = "$expected" ]; then
@@ -131,12 +137,11 @@ assert 'echo hello >hello.txt' 'hello.txt'
 assert 'echo hello >f1>f2>f3' 'f1' 'f2' 'f3'
 
 ## Redirecting input
-assert 'cat <Makefile' 'Makefile'
+assert 'cat <Makefile'
 echo hello >f1
 echo world >f2
 echo 42Tokyo >f3
 assert 'cat <f1<f2<f3'
-rm -f f1 f2 f3
 assert 'cat <hoge'
 
 ## Apending Redirected output
@@ -162,7 +167,7 @@ assert 'cat | cat | ls\n\n'
 # Expand Variable
 assert 'echo $USER'
 assert 'echo $USER$PATH&TERM'
-assert'echo "$USER $PATH $TERM"'
+assert 'echo "$USER $PATH $TERM"'
 
 # Special Parameter $?
 assert 'echo $?'
@@ -170,4 +175,8 @@ assert 'invalid\necho $?\necho $?'
 assert 'exit42\necho $?\necho $?'
 assert 'exit42\n\necho $?\necho $?'
 
-cleanup
+# cleanup 
+cd "$PROJECT_ROOT" || exit 1
+rm -rf "$TMP_DIR"
+
+echo "all OK"

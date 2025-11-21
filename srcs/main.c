@@ -42,7 +42,7 @@ void interpret(char *line, int *stat_loc)
 	}
 	free_tok(tok);
 }
-//*stat_locではメモリアクセス
+//*stat_locではメモリアクセスでステータス渡す
 //status localtion
 // なぜinterpretでexecが起動されるか
 
