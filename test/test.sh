@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 RED="\033[31m"
 GREEN="\033[32m"
+YELLOW="\033[33m"
 RESET="\033[0m"
 OK=$GREEN"OK"$RESET
 NG=$RED"NG"$RESET
@@ -33,24 +34,31 @@ cat <<EOF | gcc -xc -o exit42 -
 int main() { return 42; }
 EOF
 
+print_desc(){
+	esho -e $YELLOW"$1"$RESET
+}
+
+cleanup() {
+	rm -f cmp out a.out print_args exit42 infinite_loop
+}
+
 assert() {
 	COMMAND="$1"
 	shift
 	printf '%-50s:' "[$COMMAND]"
 	# exit status
-	echo -n -e "$COMMAND" | $TIMEOUT $TIMEOUT_SEC bash >"$TMP_DIR/cmp" 2>&1
+	echo -n -e "$COMMAND" | bash >cmp 2>&-
 	expected=$?
 	for arg in "$@"
 	do
-		cp "$arg" "${arg}.cmp"
-		# note:mv->cp is this actually correct?
+		mv "$arg" "${arg}.cmp"
 	done
-	echo -n -e "$COMMAND" | $TIMEOUT $TIMEOUT_SEC ./minishell >"$TMP_DIR/out" 2>&1
+	echo -n -e "$COMMAND" | ./minishell >out 2>&-
 	actual=$?
 	
 	for arg in "$@"
 	do
-		cp "$arg" "${arg}.out"
+		mv "$arg" "${arg}.out"
 	done
 	
 # ハング判定(timeout)
@@ -77,12 +85,6 @@ assert() {
 		rm -f "${arg}.cmp" "${arg}.out"
 	done
 	echo
-}
-
-cleanup() {
-	rm -f a.out print_args hello.txt pwd.txt
-	rm -f test_*
-	rm -rf "$TMP_DIR"
 }
 
 # Empty line (EOF)

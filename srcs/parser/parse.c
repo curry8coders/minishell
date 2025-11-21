@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 17:36:01 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/18 22:11:39 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 00:11:30 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 bool	equal_op(t_token *tok, char *o);
 void	append_node(t_node **node, t_node *elm);
 t_node	*pipeline(t_token **rest, t_token *tok);
-t_node	*simple_comand(t_token **rest, t_token *tok);
+t_node	*simple_command(t_token **rest, t_token *tok);
 
 // <pipeline> = <simple_command> ('|' <pipeline>)
 // <simple_command> = <command_element>+
@@ -31,7 +31,7 @@ t_node	*simple_comand(t_token **rest, t_token *tok);
 
 t_node	*parse(t_token *tok)
 {
-	return (pipline(&tok, tok));
+	return (pipeline(&tok, tok));
 }
 
 t_node	*pipeline(t_token **rest, t_token *tok)
@@ -57,7 +57,7 @@ bool	is_control_operator(t_token *tok)
 
 	while (i < sizeof(operators) / sizeof(*operators))
 	{
-		if (statswith(tok->word, operators[i]))
+		if (startswith(tok->word, operators[i]))
 			return (true);
 		i++;
 	}
@@ -115,7 +115,7 @@ t_node *redirect_heredoc(t_token **rest, t_token *tok)
 
 	node = new_node(ND_REDIR_HEREDOC);
 	node->delimiter = tokdup(tok->next);
-	if (strchr(node->delimiter->word, SINGLE_QUOTE_CHAR == NULL)
+	if (strchr(node->delimiter->word, SINGLE_QUOTE_CHAR) == NULL
 		&& strchr(node->delimiter->word, DOUBLE_QUOTE_CHAR) == NULL)
 		node->is_delim_unquoted = true;
 	node->targetfd = STDIN_FILENO;
