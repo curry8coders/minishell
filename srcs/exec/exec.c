@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 07:50:12 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 08:00:07 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,10 @@ pid_t	exec_pipeline(t_node *node)
 		// child process
 		reset_signal();
 		prepare_pipe_child(node);
+		if (node->command == NULL)
+			err_exit(NULL, "command not found", 127);
 		do_redirect(node->command->redirects);
-		if (node->command == NULL || node->command->args == NULL)
+		if (node->command->args == NULL)
 			err_exit(NULL, "command not found", 127);
 		argv = token_list_to_argv(node->command->args);
 		path = argv[0];
