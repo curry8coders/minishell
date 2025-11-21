@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:54:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/22 05:29:28 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 07:02:14 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ void	append_char(char **s, char c)
 	new = malloc(size);
 	if (new == NULL)
 		fatal_error("malloc");
-	if (*s)
-		strlcpy(new, *s, size);
 	if (*s)
 		strlcpy(new, *s, size);
 	new[size - 2] = c;
@@ -251,6 +249,9 @@ void	expand_variable_tok(t_token *tok)
 		else
 			append_char(&new_word, *p++);
 	}
+	free(tok->word);
+	tok->word = new_word;
+	expand_variable_tok(tok->next);
 }
 
 void	expand_variable(t_node *node)

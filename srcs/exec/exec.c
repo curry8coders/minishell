@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 03:43:39 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 07:02:14 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ char	*search_path(const char *filename)
 	char *end;
 
 	value = xgetenv("PATH");
+	if (value == NULL)
+		return (NULL);
 	while (*value)
 	{
 		// /bin:/usr/bin
@@ -135,6 +137,7 @@ int	wait_pipeline(pid_t last_pid)
 	int		status;
 	int		wstatus;
 
+	status = 0;
 	while (1)
 	{
 		wait_result = wait(&wstatus);
