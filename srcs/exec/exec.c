@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 08:00:07 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 08:18:50 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ void	validate_access(const char *path, const char *filename)
 
 pid_t	exec_pipeline(t_node *node)
 {
-//	extern char **environ; ←使わないかも。
 	const char *path;
 	pid_t	pid;
 	char	**argv;
@@ -115,9 +114,9 @@ pid_t	exec_pipeline(t_node *node)
 		prepare_pipe_child(node);
 		if (node->command == NULL)
 			err_exit(NULL, "command not found", 127);
-		do_redirect(node->command->redirects);
 		if (node->command->args == NULL)
 			err_exit(NULL, "command not found", 127);
+		do_redirect(node->command->redirects);
 		argv = token_list_to_argv(node->command->args);
 		path = argv[0];
 		if (strchr(path, '/') == NULL)
