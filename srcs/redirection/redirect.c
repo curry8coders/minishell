@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 05:58:26 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/18 19:21:21 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/18 22:28:58 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,16 @@ int	open_redir_file(t_node *node)
 {
 	if (node == NULL)
 		return (0);
-	if (node->kind == ND_REDIR_OUT)
+	if (node->kind == ND_PIPELINE)
+	{
+		if (open_redir_file(node->command) < 0)
+			return (-1);
+		if (open_redir_file(node->next) < 0)
+			return (-1);
+	}
+	else if (node->kind == ND_SIMPLE_CMD)
+		return (open_redir_file(node->redirects));
+	else if (node->kind == ND_REDIR_OUT)
 		node->filefd = open(node->filename->word, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	else if (node->kind == ND_REDIR_IN)
 		node->filefd = open(node->filename->word, O_RDONLY);

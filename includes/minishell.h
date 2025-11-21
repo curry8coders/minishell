@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/18 19:20:39 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/18 22:22:12 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # define DOUBLE_QUOTE_CHAR '"'
 
 typedef struct s_token		t_token;
+typedef	enum e_token_kind	t_token_kind;
 typedef enum e_node_kind	t_node_kind;
 typedef struct s_node		t_node;
 
@@ -37,6 +38,7 @@ void	parse_error(const char *location, t_token **rest, t_token *tok);
 void	xperror(const char *location);
 
 //tokenize.c
+typedef struct s_token	t_token;
 enum e_token_kind
 {
 	TK_WORD,
@@ -59,6 +61,7 @@ struct s_token
 };
 
 enum e_node_kind {
+	ND_PIPELINE,
 	ND_SIMPLE_CMD,
 	ND_REDIR_OUT,
 	ND_REDIR_IN,
@@ -80,6 +83,10 @@ struct s_node {
 	bool		is_delim_unquoted;
 	int			filefd;
 	int			stashed_targetfd;
+	// PIPELINE
+	int			inpipe[2];
+	int			outpipe[2];
+	t_node		*command;
 };
 
 // Redirectiong output example
@@ -122,9 +129,16 @@ void append_tok(t_token **tokens, t_token *tok);
 t_token *tokdup(t_token *tok);
 
 // redirect.c
-int		open_redir_file(t_node *redirects);
+int		open_redir_file(t_node *node);
 void	do_redirect(t_node *redirects);
 void	reset_redirect(t_node *redirects);
 
+// pipe.c
+void	prepare_pipe(t_node *node);
+void	prepare_pipe_child(t_node *node);
+void	prepare_pipe_parent(t_node *node);
+
+// exec.c
+int		exec(t_node *node);
 
 #endif
