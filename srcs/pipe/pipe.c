@@ -16,10 +16,10 @@ void	prepare_pipe_child(t_node *node)
 {
 	close(node->outpipe[0]);
 	dup2(node->inpipe[0], STDIN_FILENO);
-	if (node->inpipe[0] != STDIN_FILENO);
+	if (node->inpipe[0] != STDIN_FILENO)
 		close(node->inpipe[0]);
 	dup2(node->outpipe[1], STDIN_FILENO);
-	if (node->outpipe[1], STDOUT_FILENO);
+	if (node->outpipe[1] != STDOUT_FILENO)
 		close(node->outpipe[1]);
 }
 

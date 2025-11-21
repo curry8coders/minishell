@@ -6,7 +6,7 @@
 #    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/11/18 22:12:30 by ichikawahik      ###   ########.fr        #
+#    Updated: 2025/11/22 00:02:49 by ichikawahik      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,10 @@
 
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -Iincludes
-LIBS = -lreadline
+RLDIR = $(shell brew --prefix readline)
+INCLUDES = -I includes -I$(RLDIR)/include
+CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
+LIBS = -lreadline -L$(RLDIR)/lib
 SRCS = srcs/main.c\
        srcs/error_handler/error.c\
        srcs/tokenizer/tokenize.c\
@@ -25,8 +27,9 @@ SRCS = srcs/main.c\
        srcs/tokenizer/expand.c\
        srcs/parser/parse.c\
        srcs/redirection/redirect.c\
-	   src/pipe/pipe.c\
-	   src/exec/exec.c
+	   srcs/pipe/pipe.c\
+	   srcs/exec/exec.c\
+	   srcs/signal/signal.c\
 
 OBJS = $(SRCS:%.c=%.o)
 
@@ -37,7 +40,7 @@ OBJS = $(SRCS:%.c=%.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LDFLAGS) $(LIBS)
+	$(CC) $(CFLAGS) $(LIBS) -o $(NAME) $(OBJS)
 
 clean:
 	$(RM) $(OBJS)
@@ -47,6 +50,7 @@ fclean: clean
 
 re: fclean all
 
+# We may delete the following code when we push this project to 42's remote repository.
 test: all
 	./test/test.sh
 
@@ -59,9 +63,13 @@ test: all
 #Linux | Darwin
 OS := $(shell uname -s)
 
+ifeq ($(OS),Linux)
+	# commands for Linux
+endif
+
 ifeq ($(OS),Darwin)
     # command for macOS
     RLDIR = $(shell brew --prefix readline)
-    CFLAGS += -I$(RLDIR)/include
-    LDFLAGS = -L$(RLDIR)/lib
+    INCLUDES += -I$(RLDIR)/include
+    LIBS += -L$(RLDIR)/lib
 endif

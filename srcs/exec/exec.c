@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
-#include "minishell"
+#include "minishell.h"
 
 #include <string.h>
 

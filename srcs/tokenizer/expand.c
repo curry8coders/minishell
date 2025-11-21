@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:54:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/18 20:52:15 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 00:06:04 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,7 @@ bool	expand_variable_str(char **dst, char **rest, char *p)
 		while (*value)
 			append_char(dst, *value++);
 	*rest = p;
+	return (true);
 }
 
 void	append_single_quote(char **dst, char **rest, char *p)
