@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:10:51 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/18 21:54:08 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 04:22:18 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int	main(void)
 	char	*line;
 
 	rl_outstream = stderr;
+	initenv();
 	setup_signal();
 	last_status = 0;
 	while (1)

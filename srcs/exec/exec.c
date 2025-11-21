@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/18 22:10:32 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 03:43:39 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,13 @@ int	exec(t_node *node)
 	
 	if (open_redir_file(node) < 0)
 		return (ERROR_OPEN_REDIR);
-	last_pid = exec_pipeline(node);
-	status = wait_pipeline(last_pid);
+	if (node->next == NULL && is_builtin(node))
+		status = exec_builtin(node);
+	else
+	{
+		last_pid = exec_pipeline(node);
+		status = wait_pipeline(last_pid);
+	}
 	return (status);
 }
 
@@ -42,7 +47,7 @@ char	*search_path(const char *filename)
 	char *value;
 	char *end;
 
-	value = getenv("PATH");
+	value = xgetenv("PATH");
 	while (*value)
 	{
 		// /bin:/usr/bin
@@ -112,7 +117,8 @@ pid_t	exec_pipeline(t_node *node)
 		if (strchr(path, '/') == NULL)
 			path = search_path(argv[0]);
 		validate_access(path, argv[0]);
-		execve(path, argv, environ);
+		execve(path, argv, get_environ(envmap));
+		free_argv(argv);
 		reset_redirect(node->command->redirects);
 		fatal_error("execve");
 	}
