@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/22 07:09:28 by ichikawahik       #+#    #+#             */
+/*   Updated: 2025/11/22 07:09:29 by ichikawahik      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <unistd.h>
 #include "minishell.h"
 
@@ -18,7 +30,7 @@ void	prepare_pipe_child(t_node *node)
 	dup2(node->inpipe[0], STDIN_FILENO);
 	if (node->inpipe[0] != STDIN_FILENO)
 		close(node->inpipe[0]);
-	dup2(node->outpipe[1], STDIN_FILENO);
+	dup2(node->outpipe[1], STDOUT_FILENO);
 	if (node->outpipe[1] != STDOUT_FILENO)
 		close(node->outpipe[1]);
 }

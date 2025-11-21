@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 05:58:26 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/18 22:28:58 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 07:02:14 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	open_redir_file(t_node *node)
 			xperror(node->filename->word);
 		return (-1);
 	}
-	node->filefd = stashfd(node->targetfd);
+	node->stashed_targetfd = stashfd(node->targetfd);
 	return (open_redir_file(node->next));
 }
 
