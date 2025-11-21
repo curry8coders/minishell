@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:54:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/18 19:22:29 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/18 20:52:15 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ void	expand_quote_removal(t_node *node)
 	remove_quote(node->filename);
 	remove_quote(node->delimiter);
 	expand_quote_removal(node->redirects);
+	expand_quote_removal(node->command);
 	expand_quote_removal(node->next);
 }
 

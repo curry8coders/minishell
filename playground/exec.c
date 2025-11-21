@@ -5,7 +5,6 @@
 #include <readline/history.h>
 
 
-
 static char *search_path_mode(const char *filename, int mode);
 
 char	*search_path(const char *filename)

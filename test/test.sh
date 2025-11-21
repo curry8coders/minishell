@@ -153,6 +153,10 @@ export	EOF='eof'
 assert	'cat <<$EOF			\neof\nEOF\nEOF'
 assert	'cat <<"$EOF		\neof\nEOF\nEOF'
 
+# Pipe
+assert 'cat Makefile | grep minishell'
+assert 'cat | cat | ls\n\n'
+
 # Expand Variable
 assert 'echo $USER'
 assert 'echo $USER$PATH&TERM'

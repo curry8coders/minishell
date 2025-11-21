@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 20:51:03 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/15 04:29:22 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/18 20:51:31 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,11 @@ void free_node(t_node *node)
 	if (node == NULL)
 		return ;
 	free_tok(node->args);
-	free_node(node->next);
 	free_tok(node->filename);
-free_tok(node->delimiter);
+	free_tok(node->delimiter);
 	free_node(node->redirects);
+	free_node(node->next);
+	free_node(node->command);
 	free(node);
 }
 
