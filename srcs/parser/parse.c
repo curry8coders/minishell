@@ -6,36 +6,153 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 17:36:01 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/04 17:54:13 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 07:37:23 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "minishell.h"
 
+#include <unistd.h>
 #include <string.h>
 
-t_node *parse(t_token *tok)
+bool	equal_op(t_token *tok, char *o);
+void	append_node(t_node **node, t_node *elm);
+t_node	*pipeline(t_token **rest, t_token *tok);
+t_node	*simple_command(t_token **rest, t_token *tok);
+
+// <pipeline> = <simple_command> ('|' <pipeline>)
+// <simple_command> = <command_element>+
+// <command_element> = <word> | <redirection>
+// <redirection> = '>' <word>
+//				 | '<' <word>
+//				 | '>>' <word>
+//				 | '<<' <word>
+
+t_node	*parse(t_token *tok)
+{
+	return (pipeline(&tok, tok));
+}
+
+t_node	*pipeline(t_token **rest, t_token *tok)
+{
+	t_node	*node;
+
+	node = new_node(ND_PIPELINE);
+	node->inpipe[0] = STDIN_FILENO;
+	node->inpipe[1] = -1;
+	node->outpipe[0] = -1;
+	node->outpipe[1] = STDOUT_FILENO;
+	node->command = simple_command(&tok, tok);
+	if (equal_op(tok, "|"))
+		node->next = pipeline(&tok, tok->next);
+	*rest = tok;
+	return (node);
+}
+
+bool	is_control_operator(t_token *tok)
+{
+	static char *const	operators[] = {"||", "&", "&&", ";", ";;", "(", ")", "|", "\n"};
+	size_t	i = 0;
+
+	while (i < sizeof(operators) / sizeof(*operators))
+	{
+		if (startswith(tok->word, operators[i]))
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+t_node *simple_command(t_token **rest, t_token *tok)
 {
 	t_node *node;
 	
 	node = new_node(ND_SIMPLE_CMD);
-	while (tok && !at_eof(tok))
-	{
-		if (tok->kind == TK_WORD)
-		{
-			append_tok(&node->args, tokdup(tok));
-			tok = tok->next;
-		}
-		else
-			parse_error("Unexpected Token", &tok, tok);
-	}
+	append_command_element(node, &tok, tok);
+	while (tok && !at_eof(tok) && !is_control_operator(tok))
+		append_command_element(node, &tok, tok);
+	*rest = tok;
 	return (node);
+}
+
+void	*redirect_out(t_token **rest, t_token *tok)
+{
+	t_node *node;
+
+	node = new_node(ND_REDIR_OUT);
+	node->filename = tokdup(tok->next);
+	node->targetfd = STDOUT_FILENO;
+	*rest = tok->next->next;
+	return (node);
+}
+
+t_node	*redirect_input(t_token **rest, t_token *tok)
+{
+	t_node *node;
+
+	node = new_node(ND_REDIR_IN);
+	node->filename = tokdup(tok->next);
+	node->targetfd = STDIN_FILENO;
+	*rest = tok->next->next;
+	return (node);
+}
+
+t_node *redirect_append(t_token **rest, t_token *tok)
+{
+	t_node *node;
+	
+	node = new_node(ND_REDIR_APPEND);
+	node->filename = tokdup(tok->next);
+	node->targetfd = STDOUT_FILENO;
+	*rest = tok->next->next;
+	return (node);
+}
+
+t_node *redirect_heredoc(t_token **rest, t_token *tok)
+{
+	t_node *node;
+
+	node = new_node(ND_REDIR_HEREDOC);
+	node->delimiter = tokdup(tok->next);
+	if (strchr(node->delimiter->word, SINGLE_QUOTE_CHAR) == NULL
+		&& strchr(node->delimiter->word, DOUBLE_QUOTE_CHAR) == NULL)
+		node->is_delim_unquoted = true;
+	node->targetfd = STDIN_FILENO;
+	*rest = tok->next->next;
+	return (node);
+}
+
+void	append_command_element(t_node *command, t_token **rest, t_token *tok)
+{
+	if (tok->kind == TK_WORD)
+	{
+		append_tok(&command->args, tokdup(tok));
+		tok = tok->next;
+	}
+	else if (equal_op(tok, ">") && tok->next->kind == TK_WORD)
+		append_node(&command->redirects, redirect_out(&tok, tok));
+	else if (equal_op(tok, "<") && tok->next->kind == TK_WORD)
+		append_node(&command->redirects, redirect_input(&tok, tok));
+	else if (equal_op(tok, ">>") && tok->next->kind == TK_WORD)
+		append_node(&command->redirects, redirect_append(&tok, tok));
+	else if (equal_op(tok, "<<") && tok->next->kind == TK_WORD)
+		append_node(&command->redirects, redirect_heredoc(&tok, tok));
+	else
+		todo("append_command_element");
+	*rest = tok;
 }
 
 bool	at_eof(t_token *tok)
 {
 	return (tok->kind == TK_EOF);
+}
+
+bool	equal_op(t_token *tok, char *op)
+{
+	if (tok->kind != TK_OP)
+		return (false);
+	return (strcmp(tok->word, op) == 0);
 }
 
 t_node	*new_node(t_node_kind kind)
@@ -59,12 +176,22 @@ t_token	*tokdup(t_token *tok)
 	return (new_token(word, tok->kind));
 }
 
-void	append_tok(t_token **tokens, t_token *tok)
+void	append_tok(t_token **tok, t_token *elm)
 {
-	if (*tokens == NULL)
+	if (*tok == NULL)
 	{
-		*tokens = tok;
+		*tok = elm;
 		return ;
 	}
-	append_tok(&(*tokens)->next, tok);
+	append_tok(&(*tok)->next, elm);
+}
+
+void	append_node(t_node **node, t_node *elm)
+{
+	if (*node == NULL)
+	{
+		*node = elm;
+		return ;
+	}
+	append_node(&(*node)->next, elm);
 }
