@@ -311,7 +311,7 @@ assert 'unset nosuch'
 assert 'unset [invalid]'
 assert 'unset hoge fuga'
 assert 'unset hoge nosuch fuga'
-asseet 'unset fuga \n export | echo $fuga'
+assert 'unset fuga \n export | echo $fuga'
 assert 'unset [invalid] fuga \n echo $fuga'
 
 ## env
