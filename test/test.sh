@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
+
+# colors
 RED="\033[31m"
 GREEN="\033[32m"
 YELLOW="\033[33m"
 RESET="\033[0m"
+
 OK=$GREEN"OK"$RESET
 NG=$RED"NG"$RESET
+
+print_desc(){
+	echo -e $YELLOW"$1"$RESET
+}
 
 # get specific directory
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -43,9 +50,7 @@ cat <<EOF | gcc -xc -o exit42 -
 int main() { return 42; }
 EOF
 
-print_desc(){
-	echo -e $YELLOW"$1"$RESET
-}
+
 
 assert() {
 	COMMAND="$1"
@@ -191,6 +196,17 @@ assert 'echo $?'
 assert 'invalid\necho $?\necho $?'
 assert 'exit42\necho $?\necho $?'
 assert 'exit42\n\necho $?\necho $?'
+
+# Signal handling
+# echo "int main() {while (1);}" | cc -xc -o infinity_loop -
+#    `-xc`: 入力がファイルではないため、ソースの言語をC言語と明示
+#   `-o infinite_loop`: 出力される実行可能ファイル名を `infinity_loop` に指定
+#   `-`: ソースコードをファイルからではなく、標準入力から読み込み
+
+
+
+
+
 
 # cleanup 
 cd "$PROJECT_ROOT" || exit 1
