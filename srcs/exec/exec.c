@@ -6,7 +6,11 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
+<<<<<<< Updated upstream
 /*   Updated: 2025/11/22 08:18:50 by ichikawahik      ###   ########.fr       */
+=======
+/*   Updated: 2025/11/22 15:59:55 by ichikawahik      ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +99,26 @@ void	validate_access(const char *path, const char *filename)
 // X_OK for execute/search permission), or the existence test (F_OK)
 // F_OK：そのパスが「存在するか？」だけを調べる chmodとかでは扱わないフラグ
 
+<<<<<<< Updated upstream
+=======
+int	exec_nonbuiltin(t_node *node)
+{
+	char	*path;
+	char	**argv;
+
+	do_redirect(node->command->redirects);
+	argv = token_list_to_argv(node->command->args);
+	path = argv[0];
+	if (strchr(path, '/') == NULL)
+		path = search_path(path);
+	validate_access(path, argv[0]);
+	execve(path, argv, get_environ(envmap));
+	free_argv(argv);
+	reset_redirect(node->command->redirects);
+	fatal_error("execve");
+}
+
+>>>>>>> Stashed changes
 pid_t	exec_pipeline(t_node *node)
 {
 	const char *path;
