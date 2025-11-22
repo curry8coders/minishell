@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/22 07:38:44 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 10:26:40 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,11 @@ void initenv(void);
 char **get_environ(t_map *map);
 
 // builtin.c
-bool is_builtin(t_node *node);
-int exec_builtin(t_node *node);
+bool 	is_builtin(t_node *node);
+int 	exec_builtin(t_node *node);
+
+// builtin_exit.c
+bool	is_numeric(char *s);
+int		builtin_exit(char **argv);
 
 #endif
