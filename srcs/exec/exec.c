@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 13:30:45 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 16:38:48 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,7 @@ void	validate_access(const char *path, const char *filename)
 // X_OK for execute/search permission), or the existence test (F_OK)
 // F_OK：そのパスが「存在するか？」だけを調べる chmodとかでは扱わないフラグ
 
-int	exec_nonbuiltin(t_node *node) __attribute__((noreturn));
-int	exec_builtin(t_node *node)
+int	exec_nonbuiltin(t_node *node)
 {
 	char	*path;
 	char	**argv;
