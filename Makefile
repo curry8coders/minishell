@@ -6,7 +6,11 @@
 #    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
+<<<<<<< Updated upstream
 #    Updated: 2025/11/22 05:15:45 by ichikawahik      ###   ########.fr        #
+=======
+#    Updated: 2025/11/22 15:50:05 by ichikawahik      ###   ########.fr        #
+>>>>>>> Stashed changes
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +34,16 @@ SRCS = srcs/main.c\
 	   srcs/pipe/pipe.c\
 	   srcs/exec/exec.c\
 	   srcs/signal/signal.c\
+<<<<<<< Updated upstream
+=======
+	   srcs/builtin/builtin.c\
+	   srcs/builtin/builtin_exit.c\
+	   srcs/builtin/builtin_export.c\
+	   srcs/builtin/builtin_unset.c\
+	   srcs/builtin/builtin_env.c\
+	   srcs/builtin/builtin_cd.c\
+	   srcs/builtin/builtin_pwd.c\
+>>>>>>> Stashed changes
 	   srcs/hashstamp/map.c\
 	   srcs/hashstamp/env.c\
 	   srcs/builtin/builtin.c\
