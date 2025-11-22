@@ -6,16 +6,25 @@ RESET="\033[0m"
 OK=$GREEN"OK"$RESET
 NG=$RED"NG"$RESET
 
-# get script directry 
+# get specific directory
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# make tmp directry
+# make tmp directoryNG
 TMP_DIR="$SCRIPT_DIR/tmp"
+rm -rf "$TMP_DIR"
 mkdir -p "$TMP_DIR"
+
+# move to tmp directory
+cd "$TMP_DIR" || exit 1
+
+# make symbolic link
+ln -sf "$PROJECT_ROOT/Makefile" "$TMP_DIR/Makefile"
+ln -sf "$PROJECT_ROOT/minishell" "$TMP_DIR/minishell"
 
 # set timeout commnad
 TIMEOUT=$(command -v gtimeout || command -v timeout)
-TIMEOUT_SEC=2
+TIMEOUT_SEC=1
 
 cat <<EOF | gcc -xc -o a.out -
 #include <stdio.h>
@@ -35,27 +44,32 @@ int main() { return 42; }
 EOF
 
 print_desc(){
-	esho -e $YELLOW"$1"$RESET
-}
-
-cleanup() {
-	rm -f cmp out a.out print_args exit42 infinite_loop
+	echo -e $YELLOW"$1"$RESET
 }
 
 assert() {
 	COMMAND="$1"
 	shift
-	printf '%-50s:' "[$COMMAND]"
+	# convert tab and /t and /n
+	DISPLAY_CMD=$(printf '%s' "$COMMAND" | tr '\t\n' '  ')
+	
+	if [ ${#DISPLAY_CMD} -gt 48 ]; then
+		DISPLAY_CMD=$(printf '%.30s...' "$DISPLAY_CMD")
+	fi
+		
+	printf '%-50s :' "[$DISPLAY_CMD]"
+	
+	# printf '%-35s:' "[$COMMAND]"
 	# exit status
-	echo -n -e "$COMMAND" | bash >cmp 2>&-
+	echo -n -e "$COMMAND" | bash >"$TMP_DIR/cmp" 2>&-
 	expected=$?
 	for arg in "$@"
 	do
 		mv "$arg" "${arg}.cmp"
 	done
-	echo -n -e "$COMMAND" | ./minishell >out 2>&-
-	actual=$?
 	
+	echo -n -e "$COMMAND" | $TIMEOUT $TIMEOUT_SEC ./minishell >"$TMP_DIR/out" 2>&-
+	actual=$?
 	for arg in "$@"
 	do
 		mv "$arg" "${arg}.out"
@@ -63,25 +77,34 @@ assert() {
 	
 # ハング判定(timeout)
 	if [ "$actual" -eq 124 ]; then
-		echo -e "  ${RED}HANG${RESET} (timeout after ${TIMEOUT_SEC}s)"
+		echo -e " ${RED}<<HANG>>${RESET} (timeout after ${TIMEOUT_SEC}s)"
 		return
 	fi
 # 124とは？: タイムアウトで終了した場合（SIGTERM）
 
 # diff判定
-	diff "$TMP_DIR/cmp" "$TMP_DIR/out" >/dev/null && echo -n '  diff OK' || echo -n '  diff NG'
-
+	if diff "$TMP_DIR/cmp" "$TMP_DIR/out" >/dev/null; then
+		echo -n -e " diff ${GREEN}OK${RESET}"
+	else
+		echo -n -e " diff ${RED}NG${RESET}"
+	fi
+	
 # status判定
 	if [ "$actual" = "$expected" ]; then
-		echo -n '  status OK'
+		echo -n -e " status ${GREEN}OK${RESET}"
 	else
-		echo -n "  status NG, expected $expected but got $actual"
+		echo -n -e " status ${RED}NG${RESET}, ($expected->$actual)"
 	fi
 # ファイル判定
 	for arg in "$@"
 	do
-		echo -n "	[$arg] "
-		diff "${arg}.cmp" "${arg}.out" >/dev/null && echo -e -n "$OK" || echo -e -n "$NG"
+		echo -n " [$arg:"
+		if diff "${arg}.cmp" "${arg}.out" >/dev/null; then
+			echo -n -e "${GREEN}OK${RESET}"
+		else
+			echo -n -e "${RED}NG${RESET}"
+		fi
+		echo -n "]"
 		rm -f "${arg}.cmp" "${arg}.out"
 	done
 	echo
@@ -131,12 +154,11 @@ assert 'echo hello >hello.txt' 'hello.txt'
 assert 'echo hello >f1>f2>f3' 'f1' 'f2' 'f3'
 
 ## Redirecting input
-assert 'cat <Makefile' 'Makefile'
+assert 'cat <Makefile'
 echo hello >f1
 echo world >f2
 echo 42Tokyo >f3
 assert 'cat <f1<f2<f3'
-rm -f f1 f2 f3
 assert 'cat <hoge'
 
 ## Apending Redirected output
@@ -162,7 +184,7 @@ assert 'cat | cat | ls\n\n'
 # Expand Variable
 assert 'echo $USER'
 assert 'echo $USER$PATH&TERM'
-assert'echo "$USER $PATH $TERM"'
+assert 'echo "$USER $PATH $TERM"'
 
 # Special Parameter $?
 assert 'echo $?'
@@ -170,4 +192,9 @@ assert 'invalid\necho $?\necho $?'
 assert 'exit42\necho $?\necho $?'
 assert 'exit42\n\necho $?\necho $?'
 
-cleanup
+# cleanup 
+cd "$PROJECT_ROOT" || exit 1
+rm -rf "$TMP_DIR"
+
+echo
+echo "Fin."
