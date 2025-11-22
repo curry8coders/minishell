@@ -56,13 +56,12 @@ assert() {
 	shift
 	# convert tab and /t and /n
 	DISPLAY_CMD=$(printf '%s' "$COMMAND" | tr '\t\n' '  ')
-	
 	if [ ${#DISPLAY_CMD} -gt 48 ]; then
 		DISPLAY_CMD="${DISPLAY_CMD}..."
 	fi
-		
 	printf '%-50s :' "[$DISPLAY_CMD]"
 	
+	# bash
 	echo -n -e "$COMMAND" | bash >"$TMP_DIR/cmp" 2>&-
 	expected=$?
 	for arg in "$@"
@@ -70,6 +69,7 @@ assert() {
 		mv "$arg" "${arg}.cmp"
 	done
 	
+	# minishell
 	echo -n -e "$COMMAND" | $TIMEOUT $TIMEOUT_SEC ./minishell >"$TMP_DIR/out" 2>&-
 	actual=$?
 	for arg in "$@"
@@ -77,27 +77,27 @@ assert() {
 		mv "$arg" "${arg}.out"
 	done
 	
-# ハング判定(timeout)
+	# ハング判定(timeout)
 	if [ "$actual" -eq 124 ]; then
 		echo -e " ${RED}<<HANG>>${RESET} (timeout after ${TIMEOUT_SEC}s)"
 		return
 	fi
-# 124とは？: タイムアウトで終了した場合（SIGTERM）
+	## 124とは？: タイムアウトで終了した場合（SIGTERM）
 
-# diff判定
+	# diff
 	if diff "$TMP_DIR/cmp" "$TMP_DIR/out" >/dev/null; then
 		echo -n -e " diff $OK"
 	else
 		echo -n -e " diff $NG"
 	fi
 	
-# status判定
+	# status判定
 	if [ "$actual" = "$expected" ]; then
 		echo -n -e " status $OK"
 	else
 		echo -n -e " status $NG, ($expected->$actual)"
 	fi
-# ファイル判定
+	# ファイル判定
 	for arg in "$@"
 	do
 		echo -n " [$arg:"
@@ -194,15 +194,60 @@ assert 'invalid\necho $?\necho $?'
 assert 'exit42\necho $?\necho $?'
 assert 'exit42\n\necho $?\necho $?'
 
+
 # Signal handling
-# echo "int main() {while (1);}" | cc -xc -o infinity_loop -
-#    `-xc`: 入力がファイルではないため、ソースの言語をC言語と明示
-#   `-o infinite_loop`: 出力される実行可能ファイル名を `infinity_loop` に指定
-#   `-`: ソースコードをファイルからではなく、標準入力から読み込み
+echo "int main() {while (1);}" | cc -xc -o infinite_loop -
+ # `-xc`: 入力がファイルではないため、ソースの言語をC言語と明示
+ # `-o infinite_loop`: 出力される実行可能ファイル名を `infinite_loop` に指定
+ # `-`: ソースコードをファイルからではなく、標準入力から読み込み
+
+## Signal to shell processes
+print_desc "SIGTERM to SHELL"
+(sleep 0.01; pkill -SIGTERM bash;
+ sleep 0.01; pkill -SIGTERM minishell) &
+assert './infinite_loop' 2>/dev/null
+ # 目標:SIGTERMが成功する
+
+print_desc "SIGQUIT to SHELL"
+(sleep 0.01; pkill -SIGQUIT bash; # SIGQUITシグナルを正しく【無視】する
+ sleep 0.01; pkill -SIGTERM bash;
+ sleep 0.01; pkill -SIGQUIT minishell; # SIGQUITシグナルを正しく【無視】する
+ sleep 0.01; pkill -SIGTERM minishell) &
+assert './infinite_loop' 2>/dev/null
+ # SIGQUIT がshellをkillしない
+
+print_desc "SIGINT to SHELL"
+(sleep 0.01; pkill -SIGINT bash; # SIGQUITシグナルを正しく【無視】する
+ sleep 0.01; pkill -SIGTERM bash;
+ sleep 0.01; pkill -SIGINT minishell; # SIGQUITシグナルを正しく【無視】する
+ sleep 0.01; pkill -SIGTERM minishell) &
+assert './infinite_loop' 2>/dev/null
+ # SIGINT がshellをkillしない
 
 
+## Signal to child processes すべて正常に終了・中断すること
+print_desc "SITERM to child process"
+(sleep 0.01; pkill -SIGTERM infinite_loop;
+ sleep 0.01; pkill -SIGTERM infinite_loop) &
+assert './infinite_loop'
+ # 1回目にbash 2回目にminishell の子プロセス がターゲットに
 
+print_desc "SIGQUIT to child process"
+(sleep 0.01; pkill -SIGQUIT infinite_loop;
+ sleep 0.01; pkill -SIGQUIT infinite_loop) &
+assert './infinite_loop'
 
+print_desc "SIGINT to child process"
+(sleep 0.01; pkill -SIGINT infinite_loop;
+ sleep 0.01; pkill -SIGINT infinite_loop) &
+assert './infinite_loop'
+
+print_desc "SIGUSR1 to child process"
+(sleep 0.01; pkill -SIGUSR1 infinite_loop;
+ sleep 0.01; pkill -SIGUSR1 infinite_loop) &
+assert './infinite_loop'
+ #infinite_loopにはSIGUSR1受け取りの動作がないので、
+ #SIGUSR1のデフォルト動作である「プロセスの終了」が実行されることを確認
 
 
 # cleanup 
