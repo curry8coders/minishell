@@ -8,7 +8,6 @@ RESET="\033[0m"
 
 OK=$GREEN"OK"$RESET
 NG=$RED"NG"$RESET
-
 print_desc(){
 	echo -e $YELLOW"$1"$RESET
 }
@@ -59,13 +58,11 @@ assert() {
 	DISPLAY_CMD=$(printf '%s' "$COMMAND" | tr '\t\n' '  ')
 	
 	if [ ${#DISPLAY_CMD} -gt 48 ]; then
-		DISPLAY_CMD=$(printf '%.30s...' "$DISPLAY_CMD")
+		DISPLAY_CMD="${DISPLAY_CMD}..."
 	fi
 		
 	printf '%-50s :' "[$DISPLAY_CMD]"
 	
-	# printf '%-35s:' "[$COMMAND]"
-	# exit status
 	echo -n -e "$COMMAND" | bash >"$TMP_DIR/cmp" 2>&-
 	expected=$?
 	for arg in "$@"
@@ -89,25 +86,25 @@ assert() {
 
 # diff判定
 	if diff "$TMP_DIR/cmp" "$TMP_DIR/out" >/dev/null; then
-		echo -n -e " diff ${GREEN}OK${RESET}"
+		echo -n -e " diff $OK"
 	else
-		echo -n -e " diff ${RED}NG${RESET}"
+		echo -n -e " diff $NG"
 	fi
 	
 # status判定
 	if [ "$actual" = "$expected" ]; then
-		echo -n -e " status ${GREEN}OK${RESET}"
+		echo -n -e " status $OK"
 	else
-		echo -n -e " status ${RED}NG${RESET}, ($expected->$actual)"
+		echo -n -e " status $NG, ($expected->$actual)"
 	fi
 # ファイル判定
 	for arg in "$@"
 	do
 		echo -n " [$arg:"
 		if diff "${arg}.cmp" "${arg}.out" >/dev/null; then
-			echo -n -e "${GREEN}OK${RESET}"
+			echo -n -e "$OK"
 		else
-			echo -n -e "${RED}NG${RESET}"
+			echo -n -e "$NG"
 		fi
 		echo -n "]"
 		rm -f "${arg}.cmp" "${arg}.out"
