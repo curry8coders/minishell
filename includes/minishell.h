@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/22 11:51:06 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 13:36:47 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,9 @@ int		builtin_exit(char **argv);
 
 // builtin_export.c
 int		builtin_export(char **argv);
+
+// builtin_unset.c
+int		builtin_unset(char **argv);
 
 // map.c
 t_item *item_new(char *name, char *value);
