@@ -332,7 +332,6 @@ assert 'cd src'
 assert 'unset HOME\ncd'
 
 assert 'cd \n echo $PWD'
-assert 'cd \n echo $PWD'
 assert 'cd .\n echo $PWD'
 assert 'cd ..\n echo $PWD'
 assert 'cd ///\n echo $PWD'
