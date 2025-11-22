@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/22 14:03:38 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 15:30:52 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,9 @@ int		builtin_env(char **argv);
 
 // builtin_cd.c
 int		builtin_cd(char **argv);
+
+// builtin_pwd.c
+int		builtin_pwd(char **argv);
 
 // map.c
 t_item *item_new(char *name, char *value);

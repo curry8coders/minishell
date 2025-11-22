@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 14:04:45 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 15:06:55 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 15:35:07 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,10 +87,10 @@ char	*resolve_pwd(char *oldpwd, char *path)
 	char	newpwd[PATH_MAX];
 	char 	*dup;
 
-	if (oldpwd == NULL)
-		return (NULL);
-	if (*path == '/')
-		strlcpy(newpwd, oldpwd, PATH_MAX);
+	if (*path == '/' || oldpwd == NULL)
+		strlcpy(newpwd, "/", PATH_MAX);
+	else
+	 	strlcpy(newpwd, oldpwd, PATH_MAX);
 	while (*path)
 	{
 		if (*path == '/')

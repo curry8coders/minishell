@@ -6,7 +6,7 @@
 #    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/11/22 14:03:23 by ichikawahik      ###   ########.fr        #
+#    Updated: 2025/11/22 15:29:43 by ichikawahik      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,8 @@ SRCS = srcs/main.c\
 	   srcs/builtin/builtin_unset.c\
 	   srcs/builtin/builtin_env.c\
 	   srcs/builtin/builtin_cd.c\
+	   #srcs/builtin/builtin_echo.c
+	   srcs/builtin/builtin_pwd.c\
 	   srcs/hashstamp/map.c\
 	   srcs/hashstamp/env.c\
 
