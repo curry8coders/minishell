@@ -194,6 +194,7 @@ assert 'invalid\necho $?\necho $?'
 assert 'exit42\necho $?\necho $?'
 assert 'exit42\n\necho $?\necho $?'
 
+echo
 
 # Signal handling
 echo "int main() {while (1);}" | cc -xc -o infinite_loop -
