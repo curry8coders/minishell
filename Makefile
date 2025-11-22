@@ -6,7 +6,7 @@
 #    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/11/22 10:22:48 by ichikawahik      ###   ########.fr        #
+#    Updated: 2025/11/22 11:48:17 by ichikawahik      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,10 +30,11 @@ SRCS = srcs/main.c\
 	   srcs/pipe/pipe.c\
 	   srcs/exec/exec.c\
 	   srcs/signal/signal.c\
-	   srcs/hashstamp/map.c\
-	   srcs/hashstamp/env.c\
 	   srcs/builtin/builtin.c\
 	   srcs/builtin/builtin_exit.c\
+	   srcs/builtin/builtin_export.c\
+	   srcs/hashstamp/map.c\
+	   srcs/hashstamp/env.c\
 
 OBJS = $(SRCS:%.c=%.o)
 

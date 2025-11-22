@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/22 10:26:40 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 11:51:06 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void err_exit(const char *location, const char *msg, int status)
 void tokenize_error(const char *location, char **rest, char *line);
 void parse_error(const char *location, t_token **rest, t_token *tok);
 void xperror(const char *location);
+void builtin_error(const char *func, const char *name, const char *err);
 
 // tokenize.c
 typedef struct s_token t_token;
@@ -160,6 +161,17 @@ int exec(t_node *node);
 void setup_signal(void);
 void reset_signal(void);
 
+// builtin.c
+bool 	is_builtin(t_node *node);
+int 	exec_builtin(t_node *node);
+
+// builtin_exit.c
+bool	is_numeric(char *s);
+int		builtin_exit(char **argv);
+
+// builtin_export.c
+int		builtin_export(char **argv);
+
 // map.c
 t_item *item_new(char *name, char *value);
 char *item_get_string(t_item *item);
@@ -176,12 +188,5 @@ char *xgetenv(const char *name);
 void initenv(void);
 char **get_environ(t_map *map);
 
-// builtin.c
-bool 	is_builtin(t_node *node);
-int 	exec_builtin(t_node *node);
-
-// builtin_exit.c
-bool	is_numeric(char *s);
-int		builtin_exit(char **argv);
 
 #endif

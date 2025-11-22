@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 08:18:50 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 13:30:45 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,11 +95,27 @@ void	validate_access(const char *path, const char *filename)
 // X_OK for execute/search permission), or the existence test (F_OK)
 // F_OK：そのパスが「存在するか？」だけを調べる chmodとかでは扱わないフラグ
 
+int	exec_nonbuiltin(t_node *node) __attribute__((noreturn));
+int	exec_builtin(t_node *node)
+{
+	char	*path;
+	char	**argv;
+
+	do_redirect(node->command->redirects);
+	argv = token_list_to_argv(node->command->args);
+	path = argv[0];
+	if (strchr(path, '/') == NULL)
+		path = search_path(path);
+	validate_access(path, argv[0]);
+	execve(path, argv, get_environ(envmap));
+	free_argv(argv);
+	reset_redirect(node->command->redirects);
+	fatal_error("execve");
+}
+
 pid_t	exec_pipeline(t_node *node)
 {
-	const char *path;
 	pid_t	pid;
-	char	**argv;
 
 	if (node == NULL)
 		return (-1);
@@ -112,20 +128,10 @@ pid_t	exec_pipeline(t_node *node)
 		// child process
 		reset_signal();
 		prepare_pipe_child(node);
-		if (node->command == NULL)
-			err_exit(NULL, "command not found", 127);
-		if (node->command->args == NULL)
-			err_exit(NULL, "command not found", 127);
-		do_redirect(node->command->redirects);
-		argv = token_list_to_argv(node->command->args);
-		path = argv[0];
-		if (strchr(path, '/') == NULL)
-			path = search_path(argv[0]);
-		validate_access(path, argv[0]);
-		execve(path, argv, get_environ(envmap));
-		free_argv(argv);
-		reset_redirect(node->command->redirects);
-		fatal_error("execve");
+		if (is_builtin(node))
+			exit(exec_builtin(node));
+		else
+		 	exec_nonbuiltin(node);
 	}
 	// parent process
 	prepare_pipe_parent(node);
