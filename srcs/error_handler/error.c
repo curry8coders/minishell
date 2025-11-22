@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 17:35:46 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/04 17:35:50 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 12:20:25 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,13 @@ void	xperror(const char *location)
 {
 	perror_prefix();
 	perror(location);
+}
+
+void	builtin_error(const char *func, const char *name, const char *err)
+{
+	perror_prefix();
+	dprintf(STDERR_FILENO, "%s: ", func);
+	if (name)
+		dprintf(STDERR_FILENO, "%s: ", name);
+	dprintf(STDERR_FILENO, "%s\n", err);
 }

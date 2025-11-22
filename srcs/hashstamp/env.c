@@ -6,11 +6,14 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 03:14:27 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 03:23:35 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 13:54:53 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <sys/syslimits.h>
+#include <unistd.h>
+#include <limits.h>
 #include "minishell.h"
 
 #include <string.h>
@@ -58,9 +61,20 @@ char	**get_environ(t_map *map)
 
 static void	envmap_init(t_map *map, char **ep)
 {
+	char	cwd[PATH_MAX];
+
 	while (*ep)
 	{
 		map_put(map, *ep, false);
 		ep++;
 	}
+	if (map_get(map, "SHLVL") == NULL)
+		map_set(map, "SHLVL", "1");
+	if (map_get(map, "PWD") == NULL)
+	{
+		getcwd(cwd, PATH_MAX);
+		map_set(map, "PWD", cwd);
+	}
+	if (map_get(map, "OLDPWD") == NULL)
+		map_set(map, "OLDPWD", NULL);
 }
