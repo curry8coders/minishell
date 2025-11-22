@@ -250,6 +250,118 @@ assert './infinite_loop'
  #infinite_loopにはSIGUSR1受け取りの動作がないので、
  #SIGUSR1のデフォルト動作である「プロセスの終了」が実行されることを確認
 
+# Manual Debug
+# $ ./minishell
+# $
+# 1. Ctrl-\
+# 2. Ctrl-C
+# 3. Ctrl-D
+#
+# $ ./minishell
+# $ hogehoge
+# 1. Ctrl-\
+# 2. Ctrl-C
+# 3. Ctrl-D
+#
+# $ ./minishell
+# $ cat <<EOF
+# >
+# 1. Ctrl-\
+# 2. Ctrl-C
+# 3. Ctrl-D
+#
+# $ ./minishell
+# $ cat <<EOF
+# > hoge
+# > fuga
+# 1. Ctrl-\
+# 2. Ctrl-C
+# 3. Ctrl-D
+
+# Builtin
+## exit
+assert 'exit'
+assert 'exit 42'
+assert 'exit ""'
+assert 'exit hello'
+assert 'exit 42Tokyo'
+assert 'exit 1 2'
+
+## export
+print_desc "Output of 'export' differs, but it's ok."
+assert 'export'
+assert 'export | grep nosuch | sort'
+assert 'export nosuch\n export | grep nosuch | sort'
+assert 'export nosuch=fuga\n export | grep nosuch | sort'
+assert 'export nosuch=fuga hoge=nosuch\n export | grep nosuch | sort'
+assert 'export [invalid]'
+assert 'export [invalid_nosuch]\n export | grep nosuch | sort'
+assert 'export [invalid]=nosuch\n export | grep nosuch | sort'
+assert 'export [invalid] nosuch hoge=nosuch\n export | grep nosuch | sort'
+assert 'export nosuch [invalid] hoge=nosuch\n export | grep nosuch | sort'
+assert 'export nosuch hoge=nosuch [invalid]\n export | grep nosuch | sort'
+assert 'export nosuch="nosuch2=hoge"\nexport $nosuch\n export | grep nosuch | sort'
+
+## unset
+export hoge fuga=fuga
+assert 'unset'
+assert 'unset hoge'
+assert 'unset fuga'
+assert 'unset nosuch'
+assert 'unset [invalid]'
+assert 'unset hoge fuga'
+assert 'unset hoge nosuch fuga'
+asseet 'unset fuga \n export | echo $fuga'
+assert 'unset [invalid] fuga \n echo $fuga'
+
+## env
+print_desc "Output of 'env' differs, but it's ok."
+assert 'env'
+assert 'env | grep hoge | sort'
+
+## cd
+assert 'cd'
+assert 'cd .'
+assert 'cd ..'
+assert 'cd ///'
+assert 'cd /tmp'
+assert 'cd /tmp/'
+assert 'cd /tmp///'
+assert 'cd /../../../././.././'
+assert 'cd src'
+assert 'unset HOME\ncd'
+
+assert 'cd \n echo $PWD'
+assert 'cd \n echo $PWD'
+assert 'cd .\n echo $PWD'
+assert 'cd ..\n echo $PWD'
+assert 'cd ///\n echo $PWD'
+assert 'cd /tmp\n echo $PWD'
+assert 'cd /tmp/\n echo $PWD'
+assert 'cd /tmp///\n echo $PWD'
+assert 'cd /../../../././.././\n echo $PWD'
+assert 'cd src\n echo $PWD'
+assert 'unset HOME\ncd \n echo $PWD'
+
+## echo
+assert 'echo'
+assert 'echo hello'
+assert 'echo hello "	" world'
+assert 'echo -n'
+assert 'echo -n hello'
+assert 'echo -n hello world'
+assert 'echo hello -n'
+
+## pwd
+assert 'pwd'
+assert 'cd\npwd'
+assert 'cd src\npwd'
+assert 'cd /etc\npwd'
+assert 'cd . \n pwd \n echo $PWD $OLDPWD'
+assert 'cd .. \n pwd \n echo $PWD $OLDPWD'
+assert 'cd /// \n pwd \n echo $PWD $OLDPWD'
+assert 'cd /tmp/// \n pwd \n echo $PWD $OLDPWD'
+assert 'unset PWD\npwd\ncd /etc\npwd'
 
 # cleanup 
 cd "$PROJECT_ROOT" || exit 1
