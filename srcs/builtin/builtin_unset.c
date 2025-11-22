@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 13:39:01 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 13:41:54 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 17:20:24 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ int	builtin_unset(char **argv)
 			builtin_error("unset", argv[i], "not a valid identifier");
 			status = 1;
 		}
-		else
-			status = 0;
 		i++;
 	}
 	return (status);

@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 10:38:10 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 11:05:31 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 17:20:24 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	builtin_exit(char **argv)
 		return (1);
 	}
 	arg = argv[1];
-	if (!is_numeric(arg))
+	if (is_numeric(arg))
 	{
 		errno = 0;
 		res = strtol(arg, &endptr, 10);

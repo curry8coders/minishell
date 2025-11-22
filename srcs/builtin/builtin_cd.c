@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 14:04:45 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 15:35:07 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 17:20:24 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ int	builtin_cd(char **argv)
 	char	*newpwd;
 
 	oldpwd = map_get(envmap, "PWD");
-	map_set(envmap, "OLDPQD", oldpwd);
+	map_set(envmap, "OLDPWD", oldpwd);
 	if (argv[1] == NULL)
 	{
 		home = map_get(envmap, "HOME");
