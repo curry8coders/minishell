@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 05:15:00 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 13:45:31 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 14:04:33 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ int	exec_builtin(t_node *node)
 		status = builtin_unset(argv);
 	else if (strcmp(argv[0], "env") == 0)
 		status = builtin_env(argv);
+	else if (strcmp(argv[0], "cd") == 0)
+		status = builtin_cd(argv);
 	else
 		todo("exec_builtin");
 	free_argv(argv);
@@ -39,7 +41,7 @@ int	exec_builtin(t_node *node)
 bool	is_builtin(t_node *node)
 {
 	const char		*cmd_name;
-	char			*builtin_commands[] = {"exit", "export", "unset", "env"};
+	char			*builtin_commands[] = {"exit", "export", "unset", "env", "cd"};
 	unsigned int	i;
 
 	if (node == NULL || node->command == NULL || node->command->args == NULL || node->command->args->word == NULL)

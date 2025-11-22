@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/22 13:44:48 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/22 14:03:38 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,9 @@ int		builtin_unset(char **argv);
 
 // builtin_env.c
 int		builtin_env(char **argv);
+
+// builtin_cd.c
+int		builtin_cd(char **argv);
 
 // map.c
 t_item *item_new(char *name, char *value);
