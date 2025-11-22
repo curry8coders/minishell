@@ -218,9 +218,9 @@ assert './infinite_loop' 2>/dev/null
  # SIGQUIT がshellをkillしない
 
 print_desc "SIGINT to SHELL"
-(sleep 0.01; pkill -SIGINT bash; # SIGQUITシグナルを正しく【無視】する
+(sleep 0.01; pkill -SIGINT bash; # SIGINTシグナルを正しく【無視】する
  sleep 0.01; pkill -SIGTERM bash;
- sleep 0.01; pkill -SIGINT minishell; # SIGQUITシグナルを正しく【無視】する
+ sleep 0.01; pkill -SIGINT minishell; # SIGINTシグナルを正しく【無視】する
  sleep 0.01; pkill -SIGTERM minishell) &
 assert './infinite_loop' 2>/dev/null
  # SIGINT がshellをkillしない
