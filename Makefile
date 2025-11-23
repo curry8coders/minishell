@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
+#    By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/11/23 16:53:47 by ichikawahik      ###   ########.fr        #
+#    Updated: 2025/11/24 00:21:18 by hichikaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,12 +16,11 @@
 
 NAME = minishell
 CC = cc
-RLDIR = $(shell brew --prefix readline)
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
-INCLUDES = -I includes -I$(RLDIR)/include -I$(LIBFT_DIR)
+INCLUDES = -I includes -I$(LIBFT_DIR)
 CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
-LIBS = -lreadline -L$(RLDIR)/lib $(LIBFT)
+LIBS = -lreadline $(LIBFT)
 SRCS = srcs/main.c\
        srcs/error_handler/error.c\
        srcs/tokenizer/tokenize.c\
@@ -52,7 +51,7 @@ OBJS = $(SRCS:%.c=%.o)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(LIBS) -o $(NAME) $(OBJS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBS)
 
 $(LIBFT):
 	make -C $(LIBFT_DIR) all bonus
@@ -87,5 +86,5 @@ ifeq ($(OS),Darwin)
     # command for macOS
     RLDIR = $(shell brew --prefix readline)
     INCLUDES += -I$(RLDIR)/include
-    LIBS += -L$(RLDIR)/lib
+    LIBS := -L$(RLDIR)/lib $(LIBS)
 endif
