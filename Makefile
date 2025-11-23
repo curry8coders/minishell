@@ -6,7 +6,7 @@
 #    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/11/22 16:37:54 by ichikawahik      ###   ########.fr        #
+#    Updated: 2025/11/23 16:53:47 by ichikawahik      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,9 +17,11 @@
 NAME = minishell
 CC = cc
 RLDIR = $(shell brew --prefix readline)
-INCLUDES = -I includes -I$(RLDIR)/include
+LIBFT_DIR = libft
+LIBFT = $(LIBFT_DIR)/libft.a
+INCLUDES = -I includes -I$(RLDIR)/include -I$(LIBFT_DIR)
 CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
-LIBS = -lreadline -L$(RLDIR)/lib
+LIBS = -lreadline -L$(RLDIR)/lib $(LIBFT)
 SRCS = srcs/main.c\
        srcs/error_handler/error.c\
        srcs/tokenizer/tokenize.c\
@@ -49,14 +51,18 @@ OBJS = $(SRCS:%.c=%.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(LIBFT)
 	$(CC) $(CFLAGS) $(LIBS) -o $(NAME) $(OBJS)
+
+$(LIBFT):
+	make -C $(LIBFT_DIR) all bonus
 
 clean:
 	$(RM) $(OBJS)
 
 fclean: clean
 	$(RM) $(NAME)
+	make -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
