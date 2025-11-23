@@ -62,7 +62,7 @@ assert() {
 	printf '%-50s :' "[$DISPLAY_CMD]"
 	
 	# bash
-	echo -n -e "$COMMAND" | bash >"$TMP_DIR/cmp" 2>&-
+	printf "%b" "$COMMAND" | bash >"$TMP_DIR/cmp" 2>"$TMP_DIR/cmp.err"
 	expected=$?
 	for arg in "$@"
 	do
@@ -70,7 +70,7 @@ assert() {
 	done
 	
 	# minishell
-	echo -n -e "$COMMAND" | $TIMEOUT $TIMEOUT_SEC ./minishell >"$TMP_DIR/out" 2>&-
+	printf "%b" "$COMMAND" | $TIMEOUT $TIMEOUT_SEC ./minishell >"$TMP_DIR/out" 2>"$TMP_DIR/out.err"
 	actual=$?
 	for arg in "$@"
 	do
@@ -84,11 +84,24 @@ assert() {
 	fi
 	## 124とは？: タイムアウトで終了した場合（SIGTERM）
 
-	# diff
+	# diff stdout
 	if diff "$TMP_DIR/cmp" "$TMP_DIR/out" >/dev/null; then
 		echo -n -e " diff $OK"
 	else
 		echo -n -e " diff $NG"
+		echo
+		echo "    ${RED}--- stdout diff ---${RESET}"
+		diff "$TMP_DIR/cmp" "$TMP_DIR/out" | sed 's/^/    /'
+	fi
+
+	# diff stderr
+	if diff "$TMP_DIR/cmp.err" "$TMP_DIR/out.err" >/dev/null; then
+		echo -n -e " err $OK"
+	else
+		echo -n -e " err $NG"
+		echo
+		echo "    ${RED}--- stderr diff ---${RESET}"
+		diff "$TMP_DIR/cmp.err" "$TMP_DIR/out.err" | sed 's/^/    /'
 	fi
 	
 	# status判定
@@ -105,6 +118,9 @@ assert() {
 			echo -n -e "$OK"
 		else
 			echo -n -e "$NG"
+			echo
+			echo "    ${RED}--- file($arg) diff ---${RESET}"
+			diff "${arg}.cmp" "${arg}.out" | sed 's/^/    /'
 		fi
 		echo -n "]"
 		rm -f "${arg}.cmp" "${arg}.out"
@@ -204,48 +220,48 @@ echo "int main() {while (1);}" | cc -xc -o infinite_loop -
 
 ## Signal to shell processes
 print_desc "SIGTERM to SHELL"
-(sleep 0.01; pkill -SIGTERM bash;
- sleep 0.01; pkill -SIGTERM minishell) &
+(sleep 0.1; pkill -SIGTERM bash;
+ sleep 0.1; pkill -SIGTERM minishell) &
 assert './infinite_loop' 2>/dev/null
  # 目標:SIGTERMが成功する
 
 print_desc "SIGQUIT to SHELL"
-(sleep 0.01; pkill -SIGQUIT bash; # SIGQUITシグナルを正しく【無視】する
- sleep 0.01; pkill -SIGTERM bash;
- sleep 0.01; pkill -SIGQUIT minishell; # SIGQUITシグナルを正しく【無視】する
- sleep 0.01; pkill -SIGTERM minishell) &
+(sleep 0.1; pkill -SIGQUIT bash; # SIGQUITシグナルを正しく【無視】する
+ sleep 0.1; pkill -SIGTERM bash;
+ sleep 0.1; pkill -SIGQUIT minishell; # SIGQUITシグナルを正しく【無視】する
+ sleep 0.1; pkill -SIGTERM minishell) &
 assert './infinite_loop' 2>/dev/null
  # SIGQUIT がshellをkillしない
 
 print_desc "SIGINT to SHELL"
-(sleep 0.01; pkill -SIGINT bash; # SIGINTシグナルを正しく【無視】する
- sleep 0.01; pkill -SIGTERM bash;
- sleep 0.01; pkill -SIGINT minishell; # SIGINTシグナルを正しく【無視】する
- sleep 0.01; pkill -SIGTERM minishell) &
+(sleep 0.1; pkill -SIGINT bash; # SIGINTシグナルを正しく【無視】する
+ sleep 0.1; pkill -SIGTERM bash;
+ sleep 0.1; pkill -SIGINT minishell; # SIGINTシグナルを正しく【無視】する
+ sleep 0.1; pkill -SIGTERM minishell) &
 assert './infinite_loop' 2>/dev/null
  # SIGINT がshellをkillしない
 
 
 ## Signal to child processes すべて正常に終了・中断すること
 print_desc "SITERM to child process"
-(sleep 0.01; pkill -SIGTERM infinite_loop;
- sleep 0.01; pkill -SIGTERM infinite_loop) &
+(sleep 0.1; pkill -SIGTERM infinite_loop;
+ sleep 0.1; pkill -SIGTERM infinite_loop) &
 assert './infinite_loop'
  # 1回目にbash 2回目にminishell の子プロセス がターゲットに
 
 print_desc "SIGQUIT to child process"
-(sleep 0.01; pkill -SIGQUIT infinite_loop;
- sleep 0.01; pkill -SIGQUIT infinite_loop) &
+(sleep 0.1; pkill -SIGQUIT infinite_loop;
+ sleep 0.1; pkill -SIGQUIT infinite_loop) &
 assert './infinite_loop'
 
 print_desc "SIGINT to child process"
-(sleep 0.01; pkill -SIGINT infinite_loop;
- sleep 0.01; pkill -SIGINT infinite_loop) &
+(sleep 0.1; pkill -SIGINT infinite_loop;
+ sleep 0.1; pkill -SIGINT infinite_loop) &
 assert './infinite_loop'
 
 print_desc "SIGUSR1 to child process"
-(sleep 0.01; pkill -SIGUSR1 infinite_loop;
- sleep 0.01; pkill -SIGUSR1 infinite_loop) &
+(sleep 0.1; pkill -SIGUSR1 infinite_loop;
+ sleep 0.1; pkill -SIGUSR1 infinite_loop) &
 assert './infinite_loop'
  #infinite_loopにはSIGUSR1受け取りの動作がないので、
  #SIGUSR1のデフォルト動作である「プロセスの終了」が実行されることを確認
