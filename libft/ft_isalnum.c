@@ -10,15 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_isalpha(int c)
-{
-	return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
-}
-
-int	ft_isdigit(int c)
-{
-	return ('0' <= c && c <= '9');
-}
+#include "libft.h"
 
 int	ft_isalnum(int c)
 {

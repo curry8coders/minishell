@@ -43,7 +43,7 @@ void todo(const char *msg) __attribute__((noreturn));
 void fatal_error(const char *msg) __attribute__((noreturn));
 void assert_error(const char *msg) __attribute__((noreturn));
 void err_exit(const char *location, const char *msg, int status)
-    __attribute__((noreturn));
+	__attribute__((noreturn));
 void tokenize_error(const char *location, char **rest, char *line);
 void parse_error(const char *location, t_token **rest, t_token *tok);
 void xperror(const char *location);

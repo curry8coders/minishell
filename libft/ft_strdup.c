@@ -12,16 +12,6 @@
 
 #include "libft.h"
 
-//size_t	ft_strlen(const char *c)
-//{
-//	int	i;
-//
-//	i = 0;
-//	while (*c != '\0')
-//		i++;
-//	return (i);
-//}
-
 char	*ft_strcpy(char *dest, const char *src)
 {
 	while (*src++ != '\0')

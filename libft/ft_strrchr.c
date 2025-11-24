@@ -29,21 +29,3 @@ char	*ft_strrchr(const char *s, int c)
 		return ((char *)s);
 	return (last_occurrence);
 }
-
-//#include <string.h>
-//#include <stdio.h>
-//
-//int main(void)
-//{
-//
-//    char test[20] = "123456321";
-//    char *p;
-//
-//    p = strrchr(test,'3');
-//
-//    printf("検索文字が見つかった場所から表示→%s\n",p);
-//
-//
-//
-//    return 0;
-//}
