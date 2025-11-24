@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 15:36:21 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 15:46:51 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/24 00:02:34 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/syslimits.h>
+#include <linux/limits.h>
 #include <unistd.h>
 #include <limits.h>
 #include <sys/stat.h>

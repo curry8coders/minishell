@@ -1,0 +1,10 @@
+CompileFlags:
+    Add:
+        - "-xc"
+        - "-Iincludes"
+        - "Ilibft"
+    Remove:
+        - "-std=c++*"
+Diagnostics:
+    UnusedIncludes: None # 未使用の#includeに対する警告を無効化
+    MissingIncludes: None # 不足している#includeに対する警告を無効化

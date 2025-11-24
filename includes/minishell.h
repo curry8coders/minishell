@@ -6,13 +6,15 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/22 15:30:52 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/23 16:52:16 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 #define MINISHELL_H
 
+#include "libft.h"
+#include <errno.h>
 #include <signal.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -41,7 +43,7 @@ void todo(const char *msg) __attribute__((noreturn));
 void fatal_error(const char *msg) __attribute__((noreturn));
 void assert_error(const char *msg) __attribute__((noreturn));
 void err_exit(const char *location, const char *msg, int status)
-    __attribute__((noreturn));
+	__attribute__((noreturn));
 void tokenize_error(const char *location, char **rest, char *line);
 void parse_error(const char *location, t_token **rest, t_token *tok);
 void xperror(const char *location);
@@ -162,30 +164,30 @@ void setup_signal(void);
 void reset_signal(void);
 
 // builtin.c
-bool 	is_builtin(t_node *node);
-int 	exec_builtin(t_node *node);
+bool is_builtin(t_node *node);
+int exec_builtin(t_node *node);
 
 // builtin_exit.c
-bool	is_numeric(char *s);
-int		builtin_exit(char **argv);
+bool is_numeric(char *s);
+int builtin_exit(char **argv);
 
 // builtin_export.c
-int		builtin_export(char **argv);
+int builtin_export(char **argv);
 
 // builtin_unset.c
-int		builtin_unset(char **argv);
+int builtin_unset(char **argv);
 
 // builtin_env.c
-int		builtin_env(char **argv);
+int builtin_env(char **argv);
 
 // builtin_cd.c
-int		builtin_cd(char **argv);
+int builtin_cd(char **argv);
 
 // builtin_pwd.c
-int		builtin_pwd(char **argv);
+int builtin_pwd(char **argv);
 
 // builtin_echo.c
-int		builtin_echo(char **argv);
+int builtin_echo(char **argv);
 
 // map.c
 t_item *item_new(char *name, char *value);
@@ -202,6 +204,5 @@ void map_printall(t_map *map);
 char *xgetenv(const char *name);
 void initenv(void);
 char **get_environ(t_map *map);
-
 
 #endif

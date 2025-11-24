@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 14:04:45 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 18:38:55 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/24 00:01:51 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <limits.h>
-#include <sys/syslimits.h>
+#include <linux/limits.h>
 #include <unistd.h>
 #include "minishell.h"
 
@@ -88,9 +88,9 @@ char	*resolve_pwd(char *oldpwd, char *path)
 	char 	*dup;
 
 	if (*path == '/' || oldpwd == NULL)
-		strlcpy(newpwd, "/", PATH_MAX);
+		ft_strlcpy(newpwd, "/", PATH_MAX);
 	else
-	 	strlcpy(newpwd, oldpwd, PATH_MAX);
+	 	ft_strlcpy(newpwd, oldpwd, PATH_MAX);
 	while (*path)
 	{
 		if (*path == '/')
@@ -125,10 +125,10 @@ int	builtin_cd(char **argv)
 			builtin_error("cd", NULL, "HOME not set");
 			return (1);
 		}
-		strlcpy(path, home, PATH_MAX);
+		ft_strlcpy(path, home, PATH_MAX);
 	}
 	else
-		strlcpy(path, argv[1], PATH_MAX);
+		ft_strlcpy(path, argv[1], PATH_MAX);
 	if (chdir(path) < 0)
 	{
 		builtin_error("cd", NULL, "chdir");

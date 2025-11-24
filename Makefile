@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
+#    By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/11/22 16:37:54 by ichikawahik      ###   ########.fr        #
+#    Updated: 2025/11/24 00:21:18 by hichikaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,10 +16,11 @@
 
 NAME = minishell
 CC = cc
-RLDIR = $(shell brew --prefix readline)
-INCLUDES = -I includes -I$(RLDIR)/include
+LIBFT_DIR = libft
+LIBFT = $(LIBFT_DIR)/libft.a
+INCLUDES = -I includes -I$(LIBFT_DIR)
 CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
-LIBS = -lreadline -L$(RLDIR)/lib
+LIBS = -lreadline $(LIBFT)
 SRCS = srcs/main.c\
        srcs/error_handler/error.c\
        srcs/tokenizer/tokenize.c\
@@ -49,14 +50,18 @@ OBJS = $(SRCS:%.c=%.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(LIBS) -o $(NAME) $(OBJS)
+$(NAME): $(OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBS)
+
+$(LIBFT):
+	make -C $(LIBFT_DIR) all bonus
 
 clean:
 	$(RM) $(OBJS)
 
 fclean: clean
 	$(RM) $(NAME)
+	make -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
@@ -81,5 +86,5 @@ ifeq ($(OS),Darwin)
     # command for macOS
     RLDIR = $(shell brew --prefix readline)
     INCLUDES += -I$(RLDIR)/include
-    LIBS += -L$(RLDIR)/lib
+    LIBS := -L$(RLDIR)/lib $(LIBS)
 endif
