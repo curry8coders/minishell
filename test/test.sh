@@ -32,6 +32,12 @@ ln -sf "$PROJECT_ROOT/minishell" "$TMP_DIR/minishell"
 TIMEOUT=$(command -v gtimeout || command -v timeout)
 TIMEOUT_SEC=1
 
+# options
+SHOW_DIFF=false
+if [ "$1" = "--diff" ]; then
+	SHOW_DIFF=true
+fi
+
 cat <<EOF | gcc -xc -o a.out -
 #include <stdio.h>
 int main() { printf("hello from a.out\n"); }
@@ -89,9 +95,11 @@ assert() {
 		echo -n -e " diff $OK"
 	else
 		echo -n -e " diff $NG"
-		echo
-		echo "    ${RED}--- stdout diff ---${RESET}"
-		diff "$TMP_DIR/cmp" "$TMP_DIR/out" | sed 's/^/    /'
+		if [ "$SHOW_DIFF" = true ]; then
+			echo
+			echo "    ${RED}--- stdout diff ---${RESET}"
+			diff "$TMP_DIR/cmp" "$TMP_DIR/out" | sed 's/^/    /'
+		fi
 	fi
 
 	# diff stderr
@@ -99,9 +107,11 @@ assert() {
 		echo -n -e " err $OK"
 	else
 		echo -n -e " err $NG"
-		echo
-		echo "    ${RED}--- stderr diff ---${RESET}"
-		diff "$TMP_DIR/cmp.err" "$TMP_DIR/out.err" | sed 's/^/    /'
+		if [ "$SHOW_DIFF" = true ]; then
+			echo
+			echo "    ${RED}--- stderr diff ---${RESET}"
+			diff "$TMP_DIR/cmp.err" "$TMP_DIR/out.err" | sed 's/^/    /'
+		fi
 	fi
 	
 	# status判定
@@ -294,6 +304,8 @@ assert './infinite_loop'
 # 2. Ctrl-C
 # 3. Ctrl-D
 
+echo
+
 # Builtin
 ## exit
 assert 'exit'
@@ -302,6 +314,8 @@ assert 'exit ""'
 assert 'exit hello'
 assert 'exit 42Tokyo'
 assert 'exit 1 2'
+
+echo
 
 ## export
 print_desc "Output of 'export' differs, but it's ok."
@@ -318,6 +332,8 @@ assert 'export nosuch [invalid] hoge=nosuch\n export | grep nosuch | sort'
 assert 'export nosuch hoge=nosuch [invalid]\n export | grep nosuch | sort'
 assert 'export nosuch="nosuch2=hoge"\nexport $nosuch\n export | grep nosuch | sort'
 
+echo
+
 ## unset
 export hoge fuga=fuga
 assert 'unset'
@@ -330,10 +346,14 @@ assert 'unset hoge nosuch fuga'
 assert 'unset fuga \n export | echo $fuga'
 assert 'unset [invalid] fuga \n echo $fuga'
 
+echo
+
 ## env
 print_desc "Output of 'env' differs, but it's ok."
 assert 'env'
 assert 'env | grep hoge | sort'
+
+echo
 
 ## cd
 assert 'cd'
@@ -358,6 +378,8 @@ assert 'cd /../../../././.././\n echo $PWD'
 assert 'cd src\n echo $PWD'
 assert 'unset HOME\ncd \n echo $PWD'
 
+echo
+
 ## echo
 assert 'echo'
 assert 'echo hello'
@@ -366,6 +388,8 @@ assert 'echo -n'
 assert 'echo -n hello'
 assert 'echo -n hello world'
 assert 'echo hello -n'
+
+echo
 
 ## pwd
 assert 'pwd'

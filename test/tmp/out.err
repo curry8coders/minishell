@@ -1,6 +1,0 @@
-minishell$ exit42
-minishell: exit42: command not found
-minishell$ 
-minishell$ echo $?
-minishell$ echo $?
-minishell$ 
