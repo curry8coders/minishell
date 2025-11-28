@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/28 22:51:16 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/29 04:59:43 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_map t_map;
 typedef struct s_item t_item;
 
 extern int last_status;
-extern bool syntax_error;
+extern bool g_syntax_error;
 extern bool readline_interrupted;
 extern volatile sig_atomic_t sig;
 extern t_map *envmap;

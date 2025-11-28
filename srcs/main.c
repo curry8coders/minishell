@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:10:51 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/22 07:36:04 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/29 04:59:57 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ void interpret(char *line, int *stat_loc)
 	tok = tokenize(line);
 	if (at_eof(tok))
 		;
-	else if (syntax_error)
+	else if (g_syntax_error)
 		*stat_loc = ERROR_TOKENIZE;
 	else
 	{
 		node = parse(tok);
-		if (syntax_error)
+		if (g_syntax_error)
 			*stat_loc = ERROR_PARSE;
 		else
 		{

@@ -6,7 +6,7 @@
 #    By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/11/29 03:21:58 by hichikaw         ###   ########.fr        #
+#    Updated: 2025/11/29 05:19:23 by hichikaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
 LIBS = -lreadline $(LIBFT)
 SRCS = srcs/main.c\
        srcs/error_handler/error.c\
+       srcs/error_handler/error_syntax.c\
        srcs/tokenizer/tokenize.c\
        srcs/destructor.c\
        srcs/tokenizer/expand.c\
