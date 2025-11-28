@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# =================================================================================
+# 
+# =================================================================================
+
 # colors
 RED="\033[31m"
 GREEN="\033[32m"
@@ -32,6 +36,44 @@ ln -sf "$PROJECT_ROOT/minishell" "$TMP_DIR/minishell"
 TIMEOUT=$(command -v gtimeout || command -v timeout)
 TIMEOUT_SEC=1
 
+# =================================================================================
+# Perse Command Line Arangement
+# =================================================================================
+
+# test_(number)
+MAX_TEST_NUM=10
+## Default
+TESTS_TO_RUN=()
+RUN_ALL=true
+
+# options
+SHOW_DIFF=false
+
+for arg in "$@"; do
+	if [ "$arg" = "--all" ]; then
+		RUN_ALL=true
+	elif [ "$1" = "--diff" ]; then
+		SHOW_DIFF=true
+	fi
+	# future options can be added
+done
+
+for arg in "$@"; do
+	if [[ "$arg" == --* ]]; then
+		continue
+	fi
+	TESTS_TO_RUN+=("$arg")
+	RUN_ALL=false
+done
+
+if [ "$RUN_ALL" == true ]; then
+	TESTS_TO_RUN=($(seq 1 "$MAX_TEST_NUM"))
+fi
+
+# =================================================================================
+# 
+# =================================================================================
+
 cat <<EOF | gcc -xc -o a.out -
 #include <stdio.h>
 int main() { printf("hello from a.out\n"); }
@@ -50,6 +92,9 @@ int main() { return 42; }
 EOF
 
 
+# =================================================================================
+# 
+# =================================================================================
 
 assert() {
 	COMMAND="$1"
@@ -89,9 +134,11 @@ assert() {
 		echo -n -e " diff $OK"
 	else
 		echo -n -e " diff $NG"
-		echo
-		echo "    ${RED}--- stdout diff ---${RESET}"
-		diff "$TMP_DIR/cmp" "$TMP_DIR/out" | sed 's/^/    /'
+		if [ "$SHOW_DIFF" = true ]; then
+			echo
+			echo "    ${RED}--- stdout diff ---${RESET}"
+			diff "$TMP_DIR/cmp" "$TMP_DIR/out" | sed 's/^/    /'
+		fi
 	fi
 
 	# diff stderr
@@ -99,9 +146,11 @@ assert() {
 		echo -n -e " err $OK"
 	else
 		echo -n -e " err $NG"
-		echo
-		echo "    ${RED}--- stderr diff ---${RESET}"
-		diff "$TMP_DIR/cmp.err" "$TMP_DIR/out.err" | sed 's/^/    /'
+		if [ "$SHOW_DIFF" = true ]; then
+			echo
+			echo "    ${RED}--- stderr diff ---${RESET}"
+			diff "$TMP_DIR/cmp.err" "$TMP_DIR/out.err" | sed 's/^/    /'
+		fi
 	fi
 	
 	# status判定
@@ -128,144 +177,200 @@ assert() {
 	echo
 }
 
-# Empty line (EOF)
-assert ''
+# =================================================================================
+# 
+# =================================================================================
 
-# Absolute path commands without args
-assert '/bin/pwd'
-assert '/bin/echo'
-assert '/bin/ls'
+# ----------------------------------------1----------------------------------------
+test_1(){
+	# Empty line (EOF)
+	printf "## Empty line (EOF)\n"
+	assert ''
+	echo
+	# Absolute path commands without args
+	printf "## Absolute path commands without args\n"
+	assert '/bin/pwd'
+	assert '/bin/echo'
+	assert '/bin/ls'
+	echo
+	# Search command path without args
+	printf "## Search command path without args\n"
+	assert 'pwd'
+	assert 'echo'
+	assert 'ls'
+	assert './a.out'
+	echo
+	# no such command
+	printf "## no such command\n"
+	assert 'a.out'
+	assert 'nosuchfile'
+	
+	printf '%80' ''  | tr ' ' '1'
+	echo
+}
+# ----------------------------------------1----------------------------------------
 
-# Search command path without args
-assert 'pwd'
-assert 'echo'
-assert 'ls'
-assert './a.out'
+# ----------------------------------------2----------------------------------------
+test_2(){
+	# Tokenize
+	printf "# Tokenize\n"
+	## unquoted word
+	printf "## unquoted word\n"
+	assert 'ls /'
+	assert 'echo hello	world	'
+	assert 'nosuchfile\n\n'
+	echo
+	
+	## single quote
+	printf "## single quote\n"
+	assert "./print_args 'hello	world' '42Tokyo'"
+	assert "echo 'hello	world' '42Tokyo'"
+	assert "echo '\"hello	world\"' '42Tokyo'"
+	echo
+	
+	## double quote
+	printf "## double quote\n"
+	assert './print_args "hello		world" "42Tokyo"'
+	assert 'echo "hello		world" "42Tokyo"'
+	assert "echo \"'hello	world'\" \"42Tokyo\""
+	echo
+	
+	## combination
+	printf "## combination\n"
+	assert "echo hello'		world'"
+	assert "echo hello' world	'\" 42Tokyo \""
+	echo
+}
+# ----------------------------------------2----------------------------------------
 
-## no such command
-assert 'a.out'
-assert 'nosuchfile'
+# ----------------------------------------3----------------------------------------
+test_3(){
+	# redirect
+	ptrintf "# redirect\n"
+	## Redirecting output
+	printf "## Redirecting output\n"
+	assert 'echo hello >hello.txt' 'hello.txt'
+	assert 'echo hello >f1>f2>f3' 'f1' 'f2' 'f3'
+	echo
+	
+	## Redirecting input
+	printf "## Redirecting input\n"
+	assert 'cat <Makefile'
+	echo hello >f1
+	echo world >f2
+	echo 42Tokyo >f3
+	assert 'cat <f1<f2<f3'
+	assert 'cat <hoge'
+	echo
+	
+	## Appending Redirected output
+	printf "## Appending Redirected output\n"
+	assert 'pwd >>pwd.txt' 'pwd.txt'
+	assert 'pwd >>pwd.txt \n pwd >>pwd.txt' 'pwd.txt'
+	echo
+	
+	## Here Document
+	printf "## Here Document\n"
+	assert 'cat <<EOF\nhello\nworld\nEOF\nNOPRINT'
+	assert 'cat <<EOF<<eof\nhello\nworld\nEOF\nNOPRINT'
+	assert 'cat <<EOF\nhello\nworld'
+	assert 'cat <<E"O"F\nhello\nworld\nEOF\nNOPRINT'
+	assert 'cat <<EOF	\n$USER\n$NO_SUCH_VAR\n$FOO$BAR\nEOF'
+	assert 'cat <<"EOF"	\n$USER\n$NO_SUCH_VAR\n$FOO$BAR\nEOF'
+	assert 'cat <<EO"F"	\n$USER\n$NO_SUCH_VAR\n$FOO$BAR\nEOF'
+	export	EOF='eof'
+	assert	'cat <<$EOF			\neof\nEOF\nEOF'
+	assert	'cat <<"$EOF		\neof\nEOF\nEOF'
+	echo
+}
+# ----------------------------------------3----------------------------------------
 
-# Tokenize
-## unquoted word
-assert 'ls /'
-assert 'echo hello	world	'
-assert 'nosuchfile\n\n'
+# ----------------------------------------4----------------------------------------
+test_4(){
+	# Pipe
+	printf "# Pipe\n"
+	assert 'cat Makefile | grep minishell'
+	assert 'cat | cat | ls\n\n'
+	echo
+	
+	# Expand Variable
+	printf "# Expand Variable\n"
+	assert 'echo $USER'
+	assert 'echo $USER$PATH&TERM'
+	assert 'echo "$USER $PATH $TERM"'
+	echo
+	
+	# Special Parameter $?
+	printf "# Special Parameter $?\n"
+	assert 'echo $?'
+	assert 'invalid\necho $?\necho $?'
+	assert 'exit42\necho $?\necho $?'
+	assert 'exit42\n\necho $?\necho $?'
+	echo
+}
+	
+# ----------------------------------------4----------------------------------------
 
-## single quote
-assert "./print_args 'hello	world' '42Tokyo'"
-assert "echo 'hello	world' '42Tokyo'"
-assert "echo '\"hello	world\"' '42Tokyo'"
-
-## double quote
-assert './print_args "hello		world" "42Tokyo"'
-assert 'echo "hello		world" "42Tokyo"'
-assert "echo \"'hello	world'\" \"42Tokyo\""
-
-## combination
-assert "echo hello'		world'"
-assert "echo hello' world	'\" 42Tokyo \""
-
-# Redirect
-## Redirecting output
-assert 'echo hello >hello.txt' 'hello.txt'
-assert 'echo hello >f1>f2>f3' 'f1' 'f2' 'f3'
-
-## Redirecting input
-assert 'cat <Makefile'
-echo hello >f1
-echo world >f2
-echo 42Tokyo >f3
-assert 'cat <f1<f2<f3'
-assert 'cat <hoge'
-
-## Apending Redirected output
-assert 'pwd >>pwd.txt' 'pwd.txt'
-assert 'pwd >>pwd.txt \n pwd >>pwd.txt' 'pwd.txt'
-
-## Here Document
-assert 'cat <<EOF\nhello\nworld\nEOF\nNOPRINT'
-assert 'cat <<EOF<<eof\nhello\nworld\nEOF\nNOPRINT'
-assert 'cat <<EOF\nhello\nworld'
-assert 'cat <<E"O"F\nhello\nworld\nEOF\nNOPRINT'
-assert 'cat <<EOF	\n$USER\n$NO_SUCH_VAR\n$FOO$BAR\nEOF'
-assert 'cat <<"EOF"	\n$USER\n$NO_SUCH_VAR\n$FOO$BAR\nEOF'
-assert 'cat <<EO"F"	\n$USER\n$NO_SUCH_VAR\n$FOO$BAR\nEOF'
-export	EOF='eof'
-assert	'cat <<$EOF			\neof\nEOF\nEOF'
-assert	'cat <<"$EOF		\neof\nEOF\nEOF'
-
-# Pipe
-assert 'cat Makefile | grep minishell'
-assert 'cat | cat | ls\n\n'
-
-# Expand Variable
-assert 'echo $USER'
-assert 'echo $USER$PATH&TERM'
-assert 'echo "$USER $PATH $TERM"'
-
-# Special Parameter $?
-assert 'echo $?'
-assert 'invalid\necho $?\necho $?'
-assert 'exit42\necho $?\necho $?'
-assert 'exit42\n\necho $?\necho $?'
-
-echo
-
-# Signal handling
-echo "int main() {while (1);}" | cc -xc -o infinite_loop -
- # `-xc`: 入力がファイルではないため、ソースの言語をC言語と明示
- # `-o infinite_loop`: 出力される実行可能ファイル名を `infinite_loop` に指定
- # `-`: ソースコードをファイルからではなく、標準入力から読み込み
-
-## Signal to shell processes
-print_desc "SIGTERM to SHELL"
-(sleep 0.1; pkill -SIGTERM bash;
- sleep 0.1; pkill -SIGTERM minishell) &
-assert './infinite_loop' 2>/dev/null
- # 目標:SIGTERMが成功する
-
-print_desc "SIGQUIT to SHELL"
-(sleep 0.1; pkill -SIGQUIT bash; # SIGQUITシグナルを正しく【無視】する
- sleep 0.1; pkill -SIGTERM bash;
- sleep 0.1; pkill -SIGQUIT minishell; # SIGQUITシグナルを正しく【無視】する
- sleep 0.1; pkill -SIGTERM minishell) &
-assert './infinite_loop' 2>/dev/null
- # SIGQUIT がshellをkillしない
-
-print_desc "SIGINT to SHELL"
-(sleep 0.1; pkill -SIGINT bash; # SIGINTシグナルを正しく【無視】する
- sleep 0.1; pkill -SIGTERM bash;
- sleep 0.1; pkill -SIGINT minishell; # SIGINTシグナルを正しく【無視】する
- sleep 0.1; pkill -SIGTERM minishell) &
-assert './infinite_loop' 2>/dev/null
- # SIGINT がshellをkillしない
-
-
-## Signal to child processes すべて正常に終了・中断すること
-print_desc "SITERM to child process"
-(sleep 0.1; pkill -SIGTERM infinite_loop;
- sleep 0.1; pkill -SIGTERM infinite_loop) &
-assert './infinite_loop'
- # 1回目にbash 2回目にminishell の子プロセス がターゲットに
-
-print_desc "SIGQUIT to child process"
-(sleep 0.1; pkill -SIGQUIT infinite_loop;
- sleep 0.1; pkill -SIGQUIT infinite_loop) &
-assert './infinite_loop'
-
-print_desc "SIGINT to child process"
-(sleep 0.1; pkill -SIGINT infinite_loop;
- sleep 0.1; pkill -SIGINT infinite_loop) &
-assert './infinite_loop'
-
-print_desc "SIGUSR1 to child process"
-(sleep 0.1; pkill -SIGUSR1 infinite_loop;
- sleep 0.1; pkill -SIGUSR1 infinite_loop) &
-assert './infinite_loop'
- #infinite_loopにはSIGUSR1受け取りの動作がないので、
- #SIGUSR1のデフォルト動作である「プロセスの終了」が実行されることを確認
-
+# ----------------------------------------5----------------------------------------
+test_5(){
+	# Signal
+	printf "# Signal\n"
+	echo "int main() {while (1);}" | cc -xc -o infinite_loop -
+	 # `-xc`: 入力がファイルではないため、ソースの言語をC言語と明示
+	 # `-o infinite_loop`: 出力される実行可能ファイル名を `infinite_loop` に指定
+	 # `-`: ソースコードをファイルからではなく、標準入力から読み込み
+	
+	## Signal to shell processes
+	print_desc "SIGTERM to SHELL"
+	(sleep 0.1; pkill -SIGTERM bash;
+	 sleep 0.1; pkill -SIGTERM minishell) &
+	assert './infinite_loop' 2>/dev/null
+	 ###目標:SIGTERMが成功する
+	
+	print_desc "SIGQUIT to SHELL"
+	(sleep 0.1; pkill -SIGQUIT bash; # SIGQUITシグナルを正しく【無視】する
+	 sleep 0.1; pkill -SIGTERM bash;
+	 sleep 0.1; pkill -SIGQUIT minishell; # SIGQUITシグナルを正しく【無視】する
+	 sleep 0.1; pkill -SIGTERM minishell) &
+	assert './infinite_loop' 2>/dev/null
+	 ### SIGQUIT がshellをkillしない
+	
+	print_desc "SIGINT to SHELL"
+	(sleep 0.1; pkill -SIGINT bash; # SIGINTシグナルを正しく【無視】する
+	 sleep 0.1; pkill -SIGTERM bash;
+	 sleep 0.1; pkill -SIGINT minishell; # SIGINTシグナルを正しく【無視】する
+	 sleep 0.1; pkill -SIGTERM minishell) &
+	assert './infinite_loop' 2>/dev/null
+	 ### SIGINT がshellをkillしない
+	
+	
+	## Signal to child processes すべて正常に終了・中断すること
+	print_desc "SITERM to child process"
+	(sleep 0.1; pkill -SIGTERM infinite_loop;
+	 sleep 0.1; pkill -SIGTERM infinite_loop) &
+	assert './infinite_loop'
+	 # 1回目にbash 2回目にminishell の子プロセス がターゲットに
+	
+	print_desc "SIGQUIT to child process"
+	(sleep 0.1; pkill -SIGQUIT infinite_loop;
+	 sleep 0.1; pkill -SIGQUIT infinite_loop) &
+	assert './infinite_loop'
+	
+	print_desc "SIGINT to child process"
+	(sleep 0.1; pkill -SIGINT infinite_loop;
+	 sleep 0.1; pkill -SIGINT infinite_loop) &
+	assert './infinite_loop'
+	
+	print_desc "SIGUSR1 to child process"
+	(sleep 0.1; pkill -SIGUSR1 infinite_loop;
+	 sleep 0.1; pkill -SIGUSR1 infinite_loop) &
+	assert './infinite_loop'
+	 #infinite_loopにはSIGUSR1受け取りの動作がないので、
+	 #SIGUSR1のデフォルト動作である「プロセスの終了」が実行されることを確認
+	echo
+}
+# ----------------------------------------5----------------------------------------
+ 
 # Manual Debug
 # $ ./minishell
 # $
@@ -294,93 +399,142 @@ assert './infinite_loop'
 # 2. Ctrl-C
 # 3. Ctrl-D
 
-# Builtin
-## exit
-assert 'exit'
-assert 'exit 42'
-assert 'exit ""'
-assert 'exit hello'
-assert 'exit 42Tokyo'
-assert 'exit 1 2'
+# ----------------------------------------6---------------------------------------- 
+test_6(){
+	# Builtin
+	printf "# Builtin\n"
+	## exit
+	printf "## exit"
+	assert 'exit'
+	assert 'exit 42'
+	assert 'exit ""'
+	assert 'exit hello'
+	assert 'exit 42Tokyo'
+	assert 'exit 1 2'
+	echo
+	
+	## export
+	printf "## export\n"
+	print_desc "Output of 'export' differs, but it's ok."
+	assert 'export'
+	assert 'export | grep nosuch | sort'
+	assert 'export nosuch\n export | grep nosuch | sort'
+	assert 'export nosuch=fuga\n export | grep nosuch | sort'
+	assert 'export nosuch=fuga hoge=nosuch\n export | grep nosuch | sort'
+	assert 'export [invalid]'
+	assert 'export [invalid_nosuch]\n export | grep nosuch | sort'
+	assert 'export [invalid]=nosuch\n export | grep nosuch | sort'
+	assert 'export [invalid] nosuch hoge=nosuch\n export | grep nosuch | sort'
+	assert 'export nosuch [invalid] hoge=nosuch\n export | grep nosuch | sort'
+	assert 'export nosuch hoge=nosuch [invalid]\n export | grep nosuch | sort'
+	assert 'export nosuch="nosuch2=hoge"\nexport $nosuch\n export | grep nosuch | sort'
+	echo
+}
+# ----------------------------------------6---------------------------------------- 
 
-## export
-print_desc "Output of 'export' differs, but it's ok."
-assert 'export'
-assert 'export | grep nosuch | sort'
-assert 'export nosuch\n export | grep nosuch | sort'
-assert 'export nosuch=fuga\n export | grep nosuch | sort'
-assert 'export nosuch=fuga hoge=nosuch\n export | grep nosuch | sort'
-assert 'export [invalid]'
-assert 'export [invalid_nosuch]\n export | grep nosuch | sort'
-assert 'export [invalid]=nosuch\n export | grep nosuch | sort'
-assert 'export [invalid] nosuch hoge=nosuch\n export | grep nosuch | sort'
-assert 'export nosuch [invalid] hoge=nosuch\n export | grep nosuch | sort'
-assert 'export nosuch hoge=nosuch [invalid]\n export | grep nosuch | sort'
-assert 'export nosuch="nosuch2=hoge"\nexport $nosuch\n export | grep nosuch | sort'
+# ----------------------------------------7---------------------------------------- 
+test_7(){
+	## unset
+	printf "# unset\n"
+	export hoge fuga=fuga
+	assert 'unset'
+	assert 'unset hoge'
+	assert 'unset fuga'
+	assert 'unset nosuch'
+	assert 'unset [invalid]'
+	assert 'unset hoge fuga'
+	assert 'unset hoge nosuch fuga'
+	assert 'unset fuga \n export | echo $fuga'
+	assert 'unset [invalid] fuga \n echo $fuga'
+	echo
+}
+# ----------------------------------------7---------------------------------------- 
 
-## unset
-export hoge fuga=fuga
-assert 'unset'
-assert 'unset hoge'
-assert 'unset fuga'
-assert 'unset nosuch'
-assert 'unset [invalid]'
-assert 'unset hoge fuga'
-assert 'unset hoge nosuch fuga'
-assert 'unset fuga \n export | echo $fuga'
-assert 'unset [invalid] fuga \n echo $fuga'
+# ----------------------------------------8---------------------------------------- 
+test_8(){
+	## env
+	printf "## env\n"
+	print_desc "Output of 'env' differs, but it's ok."
+	assert 'env'
+	assert 'env | grep hoge | sort'
+	echo
+}
 
-## env
-print_desc "Output of 'env' differs, but it's ok."
-assert 'env'
-assert 'env | grep hoge | sort'
+# ----------------------------------------8---------------------------------------- 
 
-## cd
-assert 'cd'
-assert 'cd .'
-assert 'cd ..'
-assert 'cd ///'
-assert 'cd /tmp'
-assert 'cd /tmp/'
-assert 'cd /tmp///'
-assert 'cd /../../../././.././'
-assert 'cd src'
-assert 'unset HOME\ncd'
+# ----------------------------------------9---------------------------------------- 
+test_9(){
+	## cd
+	printf "## cd\n"
+	assert 'cd'
+	assert 'cd .'
+	assert 'cd ..'
+	assert 'cd ///'
+	assert 'cd /tmp'
+	assert 'cd /tmp/'
+	assert 'cd /tmp///'
+	assert 'cd /../../../././.././'
+	assert 'cd src'
+	assert 'unset HOME\ncd'
+	echo
+	
+	assert 'cd \n echo $PWD'
+	assert 'cd .\n echo $PWD'
+	assert 'cd ..\n echo $PWD'
+	assert 'cd ///\n echo $PWD'
+	assert 'cd /tmp\n echo $PWD'
+	assert 'cd /tmp/\n echo $PWD'
+	assert 'cd /tmp///\n echo $PWD'
+	assert 'cd /../../../././.././\n echo $PWD'
+	assert 'cd src\n echo $PWD'
+	assert 'unset HOME\ncd \n echo $PWD'
+	echo
+}
+# ----------------------------------------9---------------------------------------- 
 
-assert 'cd \n echo $PWD'
-assert 'cd .\n echo $PWD'
-assert 'cd ..\n echo $PWD'
-assert 'cd ///\n echo $PWD'
-assert 'cd /tmp\n echo $PWD'
-assert 'cd /tmp/\n echo $PWD'
-assert 'cd /tmp///\n echo $PWD'
-assert 'cd /../../../././.././\n echo $PWD'
-assert 'cd src\n echo $PWD'
-assert 'unset HOME\ncd \n echo $PWD'
+# ----------------------------------------10---------------------------------------- 
+test_10(){
+	## echo
+	printf "## echo\n"
+	assert 'echo'
+	assert 'echo hello'
+	assert 'echo hello "	" world'
+	assert 'echo -n'
+	assert 'echo -n hello'
+	assert 'echo -n hello world'
+	assert 'echo hello -n'
+	echo
+	
+	## pwd
+	printf "## pwd\n"
+	assert 'pwd'
+	assert 'cd\npwd'
+	assert 'cd src\npwd'
+	assert 'cd /etc\npwd'
+	assert 'cd . \n pwd \n echo $PWD $OLDPWD'
+	assert 'cd .. \n pwd \n echo $PWD $OLDPWD'
+	assert 'cd /// \n pwd \n echo $PWD $OLDPWD'
+	assert 'cd /tmp/// \n pwd \n echo $PWD $OLDPWD'
+	assert 'unset PWD\npwd\ncd /etc\npwd'
+	echo
+}
+# ----------------------------------------10---------------------------------------- 
+ 
+# =================================================================================
+# 
+# =================================================================================
+ 
+for test_num in "${TESTS_TO_RUN[@]}"; do
+	if type "test_$test_num" >/dev/null 2>&1; then
+		test_$test_num
+	else
+		echo -e "${RED}ERROR: $test_num doesn't exist"
+	fi
+done
 
-## echo
-assert 'echo'
-assert 'echo hello'
-assert 'echo hello "	" world'
-assert 'echo -n'
-assert 'echo -n hello'
-assert 'echo -n hello world'
-assert 'echo hello -n'
-
-## pwd
-assert 'pwd'
-assert 'cd\npwd'
-assert 'cd src\npwd'
-assert 'cd /etc\npwd'
-assert 'cd . \n pwd \n echo $PWD $OLDPWD'
-assert 'cd .. \n pwd \n echo $PWD $OLDPWD'
-assert 'cd /// \n pwd \n echo $PWD $OLDPWD'
-assert 'cd /tmp/// \n pwd \n echo $PWD $OLDPWD'
-assert 'unset PWD\npwd\ncd /etc\npwd'
 
 # cleanup 
 cd "$PROJECT_ROOT" || exit 1
 rm -rf "$TMP_DIR"
 
-echo
 echo "Fin."
