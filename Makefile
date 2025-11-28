@@ -51,7 +51,7 @@ OBJS = $(SRCS:%.c=%.o)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBS)
+	$(CC) $(OBJS) $(LIBFT) $(CFLAGS) -lreadline -o $(NAME)
 
 $(LIBFT):
 	make -C $(LIBFT_DIR) all bonus
