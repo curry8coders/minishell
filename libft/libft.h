@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 01:36:44 by hichikaw          #+#    #+#             */
-/*   Updated: 2024/11/17 16:35:35 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/29 03:35:13 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,10 @@ void				ft_lstclear(t_list **lst, void (*del)(void *));
 void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
+
+// add more functions as needed
+char				*ft_strcat(char *dst, const char *src);
+char				*ft_strncat(char *dst, const char *src, size_t n);
+int					ft_strcmp(const char *s1, const char *s2);
 
 #endif
