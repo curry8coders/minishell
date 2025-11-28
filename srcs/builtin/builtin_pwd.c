@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 15:36:21 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/24 00:02:34 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/28 20:23:25 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@
 
 bool	equal_inode(const char *path1, const char *path2)
 {
-	struct stat st1;
-	struct stat st2;
+	struct stat	st1;
+	struct stat	st2;
 
 	memset(&st1, 0, sizeof(st1));
 	memset(&st2, 0, sizeof(st2));
@@ -39,7 +39,7 @@ int	builtin_pwd(char **argv)
 	char	cwd[PATH_MAX];
 
 	(void)argv;
-	pwd = xgetenv("PWD");
+	pwd = getenv("PWD");
 	if (pwd == NULL || !equal_inode(pwd, "."))
 	{
 		if (getcwd(cwd, PATH_MAX) == NULL)

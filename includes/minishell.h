@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/23 16:52:16 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/28 22:51:16 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,12 @@ int builtin_env(char **argv);
 
 // builtin_cd.c
 int builtin_cd(char **argv);
+
+// builtin_cd_utils.c
+void delete_last_elm(char *path);
+void append_path_elm(char *dst, char **rest, char *src);
+void process_path_element(char *newpwd, char **path);
+char *resolve_pwd(char *oldpwd, char *path);
 
 // builtin_pwd.c
 int builtin_pwd(char **argv);

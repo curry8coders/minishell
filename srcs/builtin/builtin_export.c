@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 11:54:25 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 12:00:44 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/26 04:05:06 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	print_allenv(void)
 		if (cur->value)
 			printf("declare -x %s=\"%s\"\n", cur->name, cur->value);
 		else
-		 	printf("declare -x %s\n", cur->name);
+			printf("declare -x %s\n", cur->name);
 		cur = cur->next;
 	}
 }
