@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/29 04:59:43 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/29 09:29:01 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,11 @@ void prepare_pipe_parent(t_node *node);
 
 // exec.c
 int exec(t_node *node);
+
+// exec_utils.c
+char *search_path(const char *filename);
+void validate_access(const char *path, const char *filename);
+int get_exit_status(int wstatus);
 
 // signal.c
 void setup_signal(void);

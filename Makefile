@@ -6,7 +6,7 @@
 #    By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/11/29 05:19:23 by hichikaw         ###   ########.fr        #
+#    Updated: 2025/11/29 09:11:05 by hichikaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,7 @@ SRCS = srcs/main.c\
        srcs/redirection/redirect.c\
 	   srcs/pipe/pipe.c\
 	   srcs/exec/exec.c\
+	   srcs/exec/exec_utils.c\
 	   srcs/signal/signal.c\
 	   srcs/builtin/builtin.c\
 	   srcs/builtin/builtin_exit.c\
