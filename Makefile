@@ -6,7 +6,7 @@
 #    By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/11/29 09:11:05 by hichikaw         ###   ########.fr        #
+#    Updated: 2025/11/29 14:56:43 by hichikaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,8 @@ SRCS = srcs/main.c\
 	   srcs/builtin/builtin_pwd.c\
 	   srcs/builtin/builtin_echo.c\
 	   srcs/hashstamp/map.c\
+	   srcs/hashstamp/map_utils.c\
+	   srcs/hashstamp/map_item.c\
 	   srcs/hashstamp/env.c\
 
 OBJS = $(SRCS:%.c=%.o)

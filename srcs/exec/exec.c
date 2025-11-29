@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/29 09:29:01 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/29 11:25:19 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	exec_nonbuiltin(t_node *node)
 	if (strchr(path, '/') == NULL)
 		path = search_path(path);
 	validate_access(path, argv[0]);
-	execve(path, argv, get_environ(envmap));
+	execve(path, argv, get_environ(g_envmap));
 	free_argv(argv);
 	reset_redirect(node->command->redirects);
 	fatal_error("execve");

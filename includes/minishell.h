@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/29 09:29:01 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/29 14:59:29 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ extern int last_status;
 extern bool g_syntax_error;
 extern bool readline_interrupted;
 extern volatile sig_atomic_t sig;
-extern t_map *envmap;
+extern t_map *g_envmap;
 
 // error.c
 void todo(const char *msg) __attribute__((noreturn));
@@ -132,6 +132,8 @@ t_token *word(char **rest, char *line);
 // expand.c
 void expand(t_node *node);
 char *expand_heredoc_line(char *line);
+bool is_alpha_under(char c);
+bool is_alpha_num_under(char c);
 
 // destructor.c
 void free_node(t_node *node);
@@ -201,15 +203,23 @@ int builtin_pwd(char **argv);
 int builtin_echo(char **argv);
 
 // map.c
-t_item *item_new(char *name, char *value);
-char *item_get_string(t_item *item);
 t_map *map_new(void);
 char *map_get(t_map *map, const char *name);
-int map_put(t_map *map, const char *string, bool allow_empty_value);
 int map_set(t_map *map, const char *name, const char *value);
 int map_unset(t_map *map, const char *name);
+
+// map_utils.c
+bool is_identifier(const char *s);
+t_item *item_new(char *name, char *value);
+char *item_get_string(t_item *item);
+int map_put(t_map *map, const char *string, bool allow_empty_value);
 size_t map_len(t_map *map, bool count_null_value);
 void map_printall(t_map *map);
+
+// map_item.c
+void update_existing_item(t_item *cur, const char *value);
+t_item *create_new_item(const char *name, const char *value);
+void parse_name_value(const char *string, char **name, char **value);
 
 // env.c
 char *xgetenv(const char *name);

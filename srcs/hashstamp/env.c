@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 03:14:27 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/24 00:04:24 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/29 14:38:20 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,21 @@
 
 #include <string.h>
 
-t_map	*envmap;
+t_map	*g_envmap;
 
 static void	envmap_init(t_map *map, char **ep);
 
 char	*xgetenv(const char *name)
 {
-	return (map_get(envmap, name));
+	return (map_get(g_envmap, name));
 }
 
 void	initenv(void)
 {
-	extern char **environ;
+	extern char	**environ;
 
-	envmap = map_new();
-	envmap_init(envmap, environ);
+	g_envmap = map_new();
+	envmap_init(g_envmap, environ);
 }
 
 char	**get_environ(t_map *map)

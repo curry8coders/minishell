@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 14:04:45 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/28 22:50:53 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/29 11:24:25 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	get_target_path(char *path, char **argv)
 
 	if (argv[1] == NULL)
 	{
-		home = map_get(envmap, "HOME");
+		home = map_get(g_envmap, "HOME");
 		if (home == NULL)
 		{
 			builtin_error("cd", NULL, "HOME not set");
@@ -43,8 +43,8 @@ int	builtin_cd(char **argv)
 	char	path[PATH_MAX];
 	char	*newpwd;
 
-	oldpwd = map_get(envmap, "PWD");
-	map_set(envmap, "OLDPWD", oldpwd);
+	oldpwd = map_get(g_envmap, "PWD");
+	map_set(g_envmap, "OLDPWD", oldpwd);
 	if (get_target_path(path, argv) != 0)
 		return (1);
 	if (chdir(path) < 0)
@@ -53,7 +53,7 @@ int	builtin_cd(char **argv)
 		return (1);
 	}
 	newpwd = resolve_pwd(oldpwd, path);
-	map_set(envmap, "PWD", newpwd);
+	map_set(g_envmap, "PWD", newpwd);
 	free(newpwd);
 	return (0);
 }
