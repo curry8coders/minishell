@@ -12,7 +12,6 @@
 
 #include <stdlib.h>
 #include "minishell.h"
-
 #include <string.h>
 #include <ctype.h>
 
@@ -35,16 +34,11 @@ void	append_char(char **s, char c)
 		free(*s);
 	*s = new;
 }
-//Critical performance issue:
-// O(n²) complexity for string building.
-// この実装だと1文字追加するたびに、毎回新しくメモリ確保をしていることになる
-// バッファの概念を導入するとさらに良い rabbitくんより
 
 void	remove_single_quote(char **dst, char **rest, char *p)
 {
 	if (*p == SINGLE_QUOTE_CHAR)
 	{
-		// skip quote
 		p++;
 		while (*p != SINGLE_QUOTE_CHAR)
 		{
@@ -52,7 +46,6 @@ void	remove_single_quote(char **dst, char **rest, char *p)
 				assert_error("Unclosed single quote");
 			append_char(dst, *p++);
 		}
-		// skip quote
 		p++;
 		*rest = p;
 	}
@@ -64,7 +57,6 @@ void	remove_double_quote(char **dst, char **rest, char *p)
 {
 	if (*p == DOUBLE_QUOTE_CHAR)
 	{
-		// skip quote
 		p++;
 		while (*p != DOUBLE_QUOTE_CHAR)
 		{
@@ -72,7 +64,6 @@ void	remove_double_quote(char **dst, char **rest, char *p)
 				assert_error("Unclosed double quote");
 			append_char(dst, *p++);
 		}
-		// skip quote
 		p++;
 		*rest = p;
 	}
@@ -104,6 +95,7 @@ void	remove_quote(t_token *tok)
 	tok->word = new_word;
 	remove_quote(tok->next);
 }
+
 void	expand_quote_removal(t_node *node)
 {
 	if (node == NULL)
@@ -114,26 +106,6 @@ void	expand_quote_removal(t_node *node)
 	expand_quote_removal(node->redirects);
 	expand_quote_removal(node->command);
 	expand_quote_removal(node->next);
-}
-
-bool	is_alpha_under(char c)
-{
-	return (isalpha(c) || c == '_');
-}
-
-bool	is_alpha_num_under(char c)
-{
-	return (is_alpha_under(c) || isdigit(c));
-}
-
-bool	is_variable(char *s)
-{
-	return (s[0] == '$' && is_alpha_under(s[1]));
-}
-
-bool	is_special_parameter(char *s)
-{
-	return (s[0] == '$' && s[1] == '?');
 }
 
 void	append_num(char **dst, unsigned int num)
@@ -159,8 +131,8 @@ void	expand_special_parameter_str(char **dst, char **rest, char *p)
 
 void	expand_variable_str(char **dst, char **rest, char *p)
 {
-	char *name;
-	char *value;
+	char	*name;
+	char	*value;
 
 	name = calloc(1, sizeof(char));
 	if (name == NULL)
@@ -169,7 +141,8 @@ void	expand_variable_str(char **dst, char **rest, char *p)
 		assert_error("Expected dollar sign");
 	p++;
 	if (!is_alpha_under(*p))
-		assert_error("Variable must starts with alphabetic character or underscore.");
+		assert_error(\
+			"Variable must starts with alphabetic character or underscore.");
 	append_char(&name, *p++);
 	while (is_alpha_num_under(*p))
 		append_char(&name, *p++);
@@ -185,7 +158,6 @@ void	append_single_quote(char **dst, char **rest, char *p)
 {
 	if (*p == SINGLE_QUOTE_CHAR)
 	{
-		// skip quote
 		append_char(dst, *p++);
 		while (*p != SINGLE_QUOTE_CHAR)
 		{
@@ -293,3 +265,10 @@ char	*expand_heredoc_line(char *line)
 	free(line);
 	return (new_word);
 }
+
+// void	append_char(char **s, char c)
+//Critical performance issue:
+// O(n²) complexity for string building.
+// この実装だと1文字追加するたびに、毎回新しくメモリ確保をしていることになる
+// バッファの概念を導入するとさらに良い rabbitくんより
+ 

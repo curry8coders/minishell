@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: kenakamu <kenakamu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:57:17 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/15 00:44:25 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/29 12:33:20 by kenakamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 #include <stdlib.h>
 #include "minishell.h"
 
-t_token *new_token(char *word, t_token_kind kind)
+t_token	*new_token(char *word, t_token_kind kind)
 {
-	t_token *tok;
+	t_token	*tok;
 
 	tok = calloc(1, sizeof(*tok));
 	if (tok == NULL)
@@ -27,63 +27,15 @@ t_token *new_token(char *word, t_token_kind kind)
 	return (tok);
 }
 
-bool is_blank(char c)
+// Check longer operators first
+t_token	*operator(char **rest, char *line)
 {
-	return (c == ' ' || c == '\t' || c == '\n');
-}
+	static char *const	operators[] = {">>", "<<", "||", "&&", ";;",
+		"<", ">", "&", ";", "(", ")", "|", "\n"};
+	size_t				i;
+	char				*op;
 
-bool consume_blank(char **rest, char *line)
-{
-	if (is_blank(*line))
-	{
-		while (*line && is_blank(*line))
-			line++;
-		*rest = line;
-		return (true);
-	}
-	*rest = line;
-	return (false);
-}
-
-bool startswith(const char *s, const char *keyword)
-{
-	return (memcmp(s, keyword, strlen(keyword)) == 0);
-}
-
-/*
-DEFINITIONS
-       The following definitions are used throughout the rest of this document.
-       blank  A space or tab.
-       word   A sequence of characters considered as a single unit by the shell.  Also known as a token.
-       name   A word consisting only of alphanumeric characters and underscores, and beginning with an alphabetic
-              character or an underscore.  Also referred to as an identifier.
-       metacharacter
-              A character that, when unquoted, separates words.  One of the following:
-              |  & ; ( ) < > space tab
-       control operator
-              A token that performs a control function.  It is one of the following symbols:
-              || & && ; ;; ( ) | <newline>
-*/
-
-bool is_metacharacter(char c)
-{
-	if (is_blank(c))
-		return (true);
-	return (c && strchr("|&;()<>\n", c));
-}
-
-bool is_word(const char *s)
-{
-	return (*s && !is_metacharacter(*s));
-}
-
-t_token *operator(char **rest, char *line)
-{
-	// Check longer operators first
-	static char *const operators[] = {">>", "<<", "||", "&&", ";;", "<", ">", "&", ";", "(", ")", "|", "\n"};
-	size_t i = 0;
-	char *op;
-	
+	i = 0;
 	while (i < sizeof(operators) / sizeof(*operators))
 	{
 		if (startswith(line, operators[i]))
@@ -99,10 +51,10 @@ t_token *operator(char **rest, char *line)
 	assert_error("Unexpected operator");
 }
 
-t_token *word(char **rest, char *line)
+t_token	*word(char **rest, char *line)
 {
-	const char *start = line;
-	char *word;
+	const char	*start = line;
+	char		*word;
 
 	while (*line && !is_metacharacter(*line))
 	{
@@ -138,21 +90,27 @@ t_token *word(char **rest, char *line)
 	return (new_token(word, TK_WORD));
 }
 
-t_token *tokenize(char *line)
+t_token	*tokenize(char *line)
 {
-	t_token head;
-	t_token *tok;
+	t_token	head;
+	t_token	*tok;
 
 	head.next = NULL;
 	tok = &head;
 	while (*line)
 	{
 		if (consume_blank(&line, line))
-			continue;
+			continue ;
 		else if (is_metacharacter(*line))
-			tok = tok->next = operator(&line, line);
+		{
+			tok->next = operator(&line, line);
+			tok = tok->next;
+		}
 		else if (is_word(line))
-			tok = tok->next = word(&line, line);
+		{
+			tok->next = word(&line, line);
+			tok = tok->next;
+		}
 		else
 			assert_error("Unexpected Token");
 	}
@@ -182,10 +140,26 @@ char	**tail_recursive(t_token *tok, int nargs, char **argv)
 
 char	**token_list_to_argv(t_token *tok)
 {
-	char **argv;
-	
+	char	**argv;
+
 	argv = calloc(1, sizeof(char *));
 	if (argv == NULL)
 		fatal_error("calloc");
 	return (tail_recursive(tok, 0, argv));
 }
+
+/*
+man bash
+DEFINITIONS
+       The following definitions are used throughout the rest of this document.
+       blank  A space or tab.
+       word   A sequence of characters considered as a single unit by the shell.  Also known as a token.
+       name   A word consisting only of alphanumeric characters and underscores, and beginning with an alphabetic
+              character or an underscore.  Also referred to as an identifier.
+       metacharacter
+              A character that, when unquoted, separates words.  One of the following:
+              |  & ; ( ) < > space tab
+       control operator
+              A token that performs a control function.  It is one of the following symbols:
+              || & && ; ;; ( ) | <newline>
+*/

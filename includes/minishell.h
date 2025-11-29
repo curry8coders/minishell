@@ -115,23 +115,31 @@ struct s_item {
 struct s_map {
   t_item item_head;
 };
+ 
+// expand.c
+void expand(t_node *node);
+char *expand_heredoc_line(char *line);
+
+//expand_utils.c
+bool	is_alpha_under(char c);
+bool	is_alpha_num_under(char c);
+bool	is_variable(char *s);
+bool	is_special_parameter(char *s);
 
 // tokenize.c
 t_token *tokenize(char *line);
 char **token_list_to_argv(t_token *tok);
 t_token *new_token(char *word, t_token_kind kind);
-bool is_blank(char c);
-bool consume_blank(char **rest, char *line);
-bool startswith(const char *s, const char *keyword);
-bool is_operator(const char *s);
-bool is_metacharacter(char c);
-bool is_word(const char *s);
-t_token *operator(char **rest, char *line);
-t_token *word(char **rest, char *line);
+bool is_operator(const char *s);//?
+t_token *operator(char **rest, char *line);//?
+t_token *word(char **rest, char *line);//?
 
-// expand.c
-void expand(t_node *node);
-char *expand_heredoc_line(char *line);
+// tokenize_utils.c
+bool	is_blank(char c);
+bool	consume_blank(char **rest, char *line);
+bool	startswith(const char *s, const char *keyword);
+bool	is_metacharacter(char c);
+bool	is_word(const char *s);
 
 // destructor.c
 void free_node(t_node *node);

@@ -21,27 +21,29 @@ LIBFT = $(LIBFT_DIR)/libft.a
 INCLUDES = -I includes -I$(LIBFT_DIR)
 CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
 LIBS = -lreadline $(LIBFT)
-SRCS = srcs/main.c\
-       srcs/error_handler/error.c\
-       srcs/tokenizer/tokenize.c\
-       srcs/destructor.c\
-       srcs/tokenizer/expand.c\
-       srcs/parser/parse.c\
-       srcs/redirection/redirect.c\
-	   srcs/pipe/pipe.c\
-	   srcs/exec/exec.c\
-	   srcs/signal/signal.c\
-	   srcs/builtin/builtin.c\
-	   srcs/builtin/builtin_exit.c\
-	   srcs/builtin/builtin_export.c\
-	   srcs/builtin/builtin_unset.c\
-	   srcs/builtin/builtin_env.c\
-	   srcs/builtin/builtin_cd.c\
-	   srcs/builtin/builtin_cd_utils.c\
-	   srcs/builtin/builtin_pwd.c\
-	   srcs/builtin/builtin_echo.c\
-	   srcs/hashstamp/map.c\
-	   srcs/hashstamp/env.c\
+SRCS =	srcs/main.c\
+		srcs/error_handler/error.c\
+		srcs/tokenizer/expand.c\
+		srcs/tokenizer/expand_utils.c\
+		srcs/tokenizer/tokenize.c\
+		srcs/tokenizer/tokenize_utils.c\
+		srcs/destructor.c\
+		srcs/parser/parse.c\
+		srcs/redirection/redirect.c\
+		srcs/pipe/pipe.c\
+		srcs/exec/exec.c\
+		srcs/signal/signal.c\
+		srcs/builtin/builtin.c\
+		srcs/builtin/builtin_exit.c\
+		srcs/builtin/builtin_export.c\
+		srcs/builtin/builtin_unset.c\
+		srcs/builtin/builtin_env.c\
+		srcs/builtin/builtin_cd.c\
+		srcs/builtin/builtin_cd_utils.c\
+		srcs/builtin/builtin_pwd.c\
+		srcs/builtin/builtin_echo.c\
+		srcs/hashstamp/map.c\
+		srcs/hashstamp/env.c\
 
 OBJS = $(SRCS:%.c=%.o)
 
@@ -55,15 +57,15 @@ $(NAME): $(OBJS) $(LIBFT)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBS)
 
 $(LIBFT):
-	make -C $(LIBFT_DIR) all bonus
+	+$(MAKE) -C $(LIBFT_DIR) all bonus
 
 clean:
 	$(RM) $(OBJS)
-	make -C $(LIBFT_DIR) clean
+	+$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
 	$(RM) $(NAME)
-	make -C $(LIBFT_DIR) fclean
+	+$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
