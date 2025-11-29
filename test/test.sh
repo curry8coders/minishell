@@ -246,7 +246,7 @@ test_2(){
 # ----------------------------------------3----------------------------------------
 test_3(){
 	# redirect
-	ptrintf "# redirect\n"
+	printf "# redirect\n"
 	## Redirecting output
 	printf "## Redirecting output\n"
 	assert 'echo hello >hello.txt' 'hello.txt'
@@ -312,7 +312,103 @@ test_4(){
 # ----------------------------------------4----------------------------------------
 
 # ----------------------------------------5----------------------------------------
+ 
+ 
+# test_5(){
+	
+# 	# Signal
+# 	printf "# Signal\n"
+# 	echo "int main() {while (1);}" | cc -xc -o infinite_loop -
+# 	 # `-xc`: 入力がファイルではないため、ソースの言語をC言語と明示
+# 	 # `-o infinite_loop`: 出力される実行可能ファイル名を `infinite_loop` に指定
+# 	 # `-`: ソースコードをファイルからではなく、標準入力から読み込み
+		
+# 	## Signal to shell processes
+# 	print_desc "SIGTERM to SHELL"
+# 	(sleep 0.1
+# 	 pkill -SIGTERM bash 2>/dev/null
+# 	 pkill -SIGTERM infinite_loop 2>/dev/null
+# 	 sleep 0.1
+# 	 pkill -SIGTERM minishell 2>/dev/null
+# 	 pkill -SIGTERM infinite_loop 2>/dev/null
+# 	 sleep 0.1
+# 	 pkill -SIGTERM bash 2>/dev/null
+# 	 pkill -SIGTERM infinite_loop 2>/dev/null) & BGPID=$!
+# 	assert './infinite_loop' 2>/dev/null
+# 	wait $BGPID 2>/dev/null
+# 	 ###目標:SIGTERMが成功する
+	
+# 	print_desc "SIGQUIT to SHELL"
+# 	(sleep 0.1
+# 	 pkill -SIGQUIT bash 2>/dev/null # SIGQUITシグナルを正しく【無視】する
+# 	 sleep 0.1
+# 	 pkill -SIGTERM bash 2>/dev/null
+# 	 pkill -SIGTERM infinite_loop 2>/dev/null
+# 	 sleep 0.1
+# 	 pkill -SIGQUIT minishell 2>/dev/null # SIGQUITシグナルを正しく【無視】する
+# 	 sleep 0.1
+# 	 pkill -SIGTERM minishell 2>/dev/null
+# 	 pkill -SIGTERM infinite_loop 2>/dev/null) & BGPID=$!
+# 	assert './infinite_loop' 2>/dev/null
+# 	wait $BGPID 2>/dev/null
+# 	 ### SIGQUIT がshellをkillしない
+	
+# 	print_desc "SIGINT to SHELL"
+# 	(sleep 0.1
+# 	 pkill -SIGINT bash 2>/dev/null # SIGINTシグナルを正しく【無視】する
+# 	 sleep 0.1
+# 	 pkill -SIGTERM bash 2>/dev/null
+# 	 pkill -SIGTERM infinite_loop 2>/dev/null
+# 	 sleep 0.1
+# 	 pkill -SIGINT minishell 2>/dev/null # SIGINTシグナルを正しく【無視】する
+# 	 sleep 0.1
+# 	 pkill -SIGTERM minishell 2>/dev/null
+# 	 pkill -SIGTERM infinite_loop 2>/dev/null) & BGPID=$!
+# 	assert './infinite_loop' 2>/dev/null
+# 	wait $BGPID 2>/dev/null
+# 	 ### SIGINT がshellをkillしない
+	
+	
+# 	## Signal to child processes すべて正常に終了・中断すること
+# 	print_desc "SITERM to child process"
+# 	(sleep 0.1
+# 	 pkill -SIGTERM infinite_loop 2>/dev/null
+# 	 sleep 0.1
+# 	 pkill -SIGTERM infinite_loop 2>/dev/null) & BGPID=$!
+# 	assert './infinite_loop'
+# 	wait $BGPID 2>/dev/null
+# 	 # 1回目にbash 2回目にminishell の子プロセス がターゲットに
+	
+# 	print_desc "SIGQUIT to child process"
+# 	(sleep 0.1
+# 	 pkill -SIGQUIT infinite_loop 2>/dev/null
+# 	 sleep 0.1
+# 	 pkill -SIGQUIT infinite_loop 2>/dev/null) & BGPID=$!
+# 	assert './infinite_loop'
+# 	wait $BGPID 2>/dev/null
+	
+# 	print_desc "SIGINT to child process"
+# 	(sleep 0.1
+# 	 pkill -SIGINT infinite_loop 2>/dev/null
+# 	 sleep 0.1
+# 	 pkill -SIGINT infinite_loop 2>/dev/null) & BGPID=$!
+# 	assert './infinite_loop'
+# 	wait $BGPID 2>/dev/null
+	
+# 	print_desc "SIGUSR1 to child process"
+# 	(sleep 0.1
+# 	 pkill -SIGUSR1 infinite_loop 2>/dev/null
+# 	 sleep 0.1
+# 	 pkill -SIGUSR1 infinite_loop 2>/dev/null) & BGPID=$!
+# 	assert './infinite_loop'
+# 	wait $BGPID 2>/dev/null
+# 	 #infinite_loopにはSIGUSR1受け取りの動作がないので、
+# 	 #SIGUSR1のデフォルト動作である「プロセスの終了」が実行されることを確認
+# 	echo
+# }
+# 
 test_5(){
+	#0
 	# Signal
 	printf "# Signal\n"
 	echo "int main() {while (1);}" | cc -xc -o infinite_loop -
@@ -322,53 +418,86 @@ test_5(){
 	
 	## Signal to shell processes
 	print_desc "SIGTERM to SHELL"
-	(sleep 0.1; pkill -SIGTERM bash;
-	 sleep 0.1; pkill -SIGTERM minishell) &
+	(
+		sleep 0.1
+		pkill -SIGTERM bash
+		sleep 0.1
+		pkill -SIGTERM minishell
+	) &
 	assert './infinite_loop' 2>/dev/null
 	 ###目標:SIGTERMが成功する
 	
 	print_desc "SIGQUIT to SHELL"
-	(sleep 0.1; pkill -SIGQUIT bash; # SIGQUITシグナルを正しく【無視】する
-	 sleep 0.1; pkill -SIGTERM bash;
-	 sleep 0.1; pkill -SIGQUIT minishell; # SIGQUITシグナルを正しく【無視】する
-	 sleep 0.1; pkill -SIGTERM minishell) &
+	(
+		sleep 0.1
+		pkill -SIGQUIT bash # SIGQUITシグナルを正しく【無視】する
+		sleep 0.1
+		pkill -SIGTERM bash
+		sleep 0.1
+		pkill -SIGQUIT minishell # SIGQUITシグナルを正しく【無視】する
+		sleep 0.1
+		pkill -SIGTERM minishell
+	) &
 	assert './infinite_loop' 2>/dev/null
 	 ### SIGQUIT がshellをkillしない
 	
 	print_desc "SIGINT to SHELL"
-	(sleep 0.1; pkill -SIGINT bash; # SIGINTシグナルを正しく【無視】する
-	 sleep 0.1; pkill -SIGTERM bash;
-	 sleep 0.1; pkill -SIGINT minishell; # SIGINTシグナルを正しく【無視】する
-	 sleep 0.1; pkill -SIGTERM minishell) &
+	(
+		sleep 0.1
+		pkill -SIGINT bash # SIGINTシグナルを正しく【無視】する
+		sleep 0.1
+		pkill -SIGTERM bash
+		sleep 0.1
+		pkill -SIGINT minishell # SIGINTシグナルを正しく【無視】する
+		sleep 0.1
+		pkill -SIGTERM minishell
+	) &
 	assert './infinite_loop' 2>/dev/null
 	 ### SIGINT がshellをkillしない
 	
 	
 	## Signal to child processes すべて正常に終了・中断すること
 	print_desc "SITERM to child process"
-	(sleep 0.1; pkill -SIGTERM infinite_loop;
-	 sleep 0.1; pkill -SIGTERM infinite_loop) &
+	(
+		sleep 0.1
+		pkill -SIGTERM infinite_loop
+		sleep 0.1
+		pkill -SIGTERM infinite_loop
+	) &
 	assert './infinite_loop'
 	 # 1回目にbash 2回目にminishell の子プロセス がターゲットに
 	
 	print_desc "SIGQUIT to child process"
-	(sleep 0.1; pkill -SIGQUIT infinite_loop;
-	 sleep 0.1; pkill -SIGQUIT infinite_loop) &
+	(
+		sleep 0.1
+		pkill -SIGQUIT infinite_loop
+		sleep 0.1
+		pkill -SIGQUIT infinite_loop
+	) &
 	assert './infinite_loop'
 	
 	print_desc "SIGINT to child process"
-	(sleep 0.1; pkill -SIGINT infinite_loop;
-	 sleep 0.1; pkill -SIGINT infinite_loop) &
+	(
+		sleep 0.1
+		pkill -SIGINT infinite_loop
+		sleep 0.1
+		pkill -SIGINT infinite_loop
+	) &
 	assert './infinite_loop'
 	
 	print_desc "SIGUSR1 to child process"
-	(sleep 0.1; pkill -SIGUSR1 infinite_loop;
-	 sleep 0.1; pkill -SIGUSR1 infinite_loop) &
+	(
+		sleep 0.1
+		pkill -SIGUSR1 infinite_loop
+		sleep 0.1
+		pkill -SIGUSR1 infinite_loop
+	) &
 	assert './infinite_loop'
 	 #infinite_loopにはSIGUSR1受け取りの動作がないので、
 	 #SIGUSR1のデフォルト動作である「プロセスの終了」が実行されることを確認
 	echo
 }
+
 # ----------------------------------------5----------------------------------------
  
 # Manual Debug
@@ -490,7 +619,7 @@ test_9(){
 	assert 'unset HOME\ncd \n echo $PWD'
 	echo
 }
-# ----------------------------------------9---------------------------------------- 
+# ----------------------------------------9----------------------------------------
 
 # ----------------------------------------10---------------------------------------- 
 test_10(){
