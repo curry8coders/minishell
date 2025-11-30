@@ -6,7 +6,7 @@
 #    By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/11/29 14:56:43 by hichikaw         ###   ########.fr        #
+#    Updated: 2025/11/30 19:46:14 by hichikaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,9 @@ SRCS = srcs/main.c\
        srcs/destructor.c\
        srcs/tokenizer/expand.c\
        srcs/parser/parse.c\
+       srcs/parser/parse_redirect.c\
+       srcs/parser/parse_utils.c\
+       srcs/parser/parse_append.c\
        srcs/redirection/redirect.c\
 	   srcs/pipe/pipe.c\
 	   srcs/exec/exec.c\

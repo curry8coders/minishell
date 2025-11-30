@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/29 14:59:29 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/30 19:46:13 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,11 +142,25 @@ void free_argv(char **argv);
 
 // parse.c
 t_node *parse(t_token *tok);
+t_node *simple_command(t_token **rest, t_token *tok);
+bool is_control_operator(t_token *tok);
 void append_command_element(t_node *command, t_token **rest, t_token *tok);
+
+// parse_redirect.c
+t_node *redirect_out(t_token **rest, t_token *tok);
+t_node *redirect_input(t_token **rest, t_token *tok);
+t_node *redirect_append(t_token **rest, t_token *tok);
+t_node *redirect_heredoc(t_token **rest, t_token *tok);
+
+// parse_utils.c
 bool at_eof(t_token *tok);
+bool equal_op(t_token *tok, char *op);
 t_node *new_node(t_node_kind kind);
-void append_tok(t_token **tokens, t_token *tok);
 t_token *tokdup(t_token *tok);
+
+// parse_append.c
+void append_tok(t_token **tokens, t_token *tok);
+void append_node(t_node **node, t_node *elm);
 
 // redirect.c
 int open_redir_file(t_node *node);
