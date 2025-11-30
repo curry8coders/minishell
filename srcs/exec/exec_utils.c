@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 00:00:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/29 09:29:01 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/30 20:56:16 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <linux/limits.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>

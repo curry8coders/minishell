@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 03:14:27 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/29 14:38:20 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/30 20:58:32 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include <linux/limits.h>
-#include <unistd.h>
 #include <limits.h>
+#include <unistd.h>
 #include "minishell.h"
 
 #include <string.h>

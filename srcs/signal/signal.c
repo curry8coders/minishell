@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 21:39:33 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/30 20:20:05 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/30 20:56:33 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include <unistd.h>
 #include <signal.h>
 #include <readline/readline.h>
@@ -40,7 +41,7 @@ void	setup_signal(void)
 	rl_outstream = stderr;
 	if (isatty(STDIN_FILENO))
 		rl_event_hook = check_state;
-	ignore_sig(SIGINT);
+	ignore_sig(SIGQUIT);
 	setup_sigint();
 }
 
