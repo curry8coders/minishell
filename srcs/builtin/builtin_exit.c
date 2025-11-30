@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 10:38:10 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/28 23:47:48 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/30 20:23:52 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ int	builtin_exit(char **argv)
 	char	*endptr;
 
 	if (argv[1] == NULL)
-		exit(last_status);
+		exit(g_last_status);
 	if (argv[2])
 	{
-		builtin_error("exit", NULL, "too many arguments");
+		xperror("exit: too many arguments");
 		return (1);
 	}
 	arg = argv[1];
@@ -51,6 +51,6 @@ int	builtin_exit(char **argv)
 		if (errno == 0 && *endptr == '\0')
 			exit((int)res);
 	}
-	builtin_error("exit", arg, "numeric argument required");
+	xperror("exit: numeric argument required");
 	exit(255);
 }

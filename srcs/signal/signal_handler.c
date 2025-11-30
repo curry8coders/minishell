@@ -1,51 +1,52 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal.c                                           :+:      :+:    :+:   */
+/*   signal_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/21 21:39:33 by ichikawahik       #+#    #+#             */
+/*   Created: 2025/11/30 00:00:00 by hichikaw          #+#    #+#             */
 /*   Updated: 2025/11/30 20:20:05 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
 #include <signal.h>
-#include <readline/readline.h>
 #include "minishell.h"
 
-volatile sig_atomic_t	g_sig = 0;
-
-int	check_state(void)
+void	handler(int signum)
 {
-	if (g_sig == 0)
-		return (0);
-	else if (g_sig == SIGINT)
-	{
-		g_sig = 0;
-		g_readline_interrupted = true;
-		rl_replace_line("", 0);
-		rl_done = 1;
-		return (0);
-	}
-	return (0);
+	g_sig = signum;
 }
 
-void	setup_signal(void)
+void	reset_sig(int signum)
 {
-	extern int	_rl_echo_control_chars;
+	struct sigaction	sa;
 
-	_rl_echo_control_chars = 0;
-	rl_outstream = stderr;
-	if (isatty(STDIN_FILENO))
-		rl_event_hook = check_state;
-	ignore_sig(SIGINT);
-	setup_sigint();
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sa.sa_handler = SIG_DFL;
+	if (sigaction(signum, &sa, NULL) < 0)
+		fatal_error("sigaction");
 }
 
-void	reset_signal(void)
+void	ignore_sig(int signum)
 {
-	reset_sig(SIGQUIT);
-	reset_sig(SIGINT);
+	struct sigaction	sa;
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sa.sa_handler = SIG_IGN;
+	if (sigaction(signum, &sa, NULL) < 0)
+		fatal_error("sigaction");
+}
+
+void	setup_sigint(void)
+{
+	struct sigaction	sa;
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sa.sa_handler = handler;
+	if (sigaction(SIGINT, &sa, NULL) < 0)
+		fatal_error("sigaction");
 }

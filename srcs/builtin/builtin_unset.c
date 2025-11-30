@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 13:39:01 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 13:41:54 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/29 11:25:12 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	builtin_unset(char **argv)
 	i = 1;
 	while (argv[i])
 	{
-		if (map_unset(envmap, argv[i]) < 0)
+		if (map_unset(g_envmap, argv[i]) < 0)
 		{
 			builtin_error("unset", argv[i], "not a valid identifier");
 			status = 1;

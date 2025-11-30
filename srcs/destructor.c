@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   destructor.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 20:51:03 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/18 20:51:31 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/30 20:32:07 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include <stdio.h>
 
-void free_node(t_node *node)
+void	free_node(t_node *node)
 {
 	if (node == NULL)
 		return ;
@@ -28,7 +28,7 @@ void free_node(t_node *node)
 	free(node);
 }
 
-void free_tok(t_token *tok)
+void	free_tok(t_token *tok)
 {
 	if (tok == NULL)
 		return ;
@@ -38,9 +38,9 @@ void free_tok(t_token *tok)
 	free(tok);
 }
 
-void free_argv(char **argv)
+void	free_argv(char **argv)
 {
-	int i;
+	int	i;
 
 	if (argv == NULL)
 		return ;
