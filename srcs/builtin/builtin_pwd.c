@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 15:36:21 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/29 05:39:11 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/30 20:47:20 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <linux/limits.h>
-#include <unistd.h>
 #include <limits.h>
+#include <unistd.h>
 #include <sys/stat.h>
 #include "minishell.h"
 

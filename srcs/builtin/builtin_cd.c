@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 14:04:45 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/29 11:24:25 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/30 20:47:09 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <limits.h>
-#include <linux/limits.h>
 #include <unistd.h>
 #include "minishell.h"
 
