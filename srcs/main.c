@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:10:51 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/30 20:23:52 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/30 20:33:27 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 int	g_last_status;
 
-void interpret(char *line, int *stat_loc)
+void	interpret(char *line, int *stat_loc)
 {
 	t_token	*tok;
 	t_node	*node;
