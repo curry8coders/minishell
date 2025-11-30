@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 21:39:33 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/30 20:56:33 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/30 23:28:14 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,10 @@ void	setup_signal(void)
 	_rl_echo_control_chars = 0;
 	rl_outstream = stderr;
 	if (isatty(STDIN_FILENO))
+	{
 		rl_event_hook = check_state;
-	ignore_sig(SIGQUIT);
+		ignore_sig(SIGQUIT);
+	}
 	setup_sigint();
 }
 
