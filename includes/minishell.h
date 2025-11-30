@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/30 20:03:15 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/30 20:23:52 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ typedef struct s_node t_node;
 typedef struct s_map t_map;
 typedef struct s_item t_item;
 
-extern int last_status;
-extern bool g_syntax_error;
-extern bool g_readline_interrupted;
-extern volatile sig_atomic_t sig;
-extern t_map *g_envmap;
+extern int	g_last_status;
+extern bool	g_syntax_error;
+extern bool	g_readline_interrupted;
+extern volatile sig_atomic_t	g_sig;
+extern t_map	*g_envmap;
 
 // error.c
 void todo(const char *msg) __attribute__((noreturn));
@@ -188,8 +188,15 @@ void validate_access(const char *path, const char *filename);
 int get_exit_status(int wstatus);
 
 // signal.c
+int check_state(void);
 void setup_signal(void);
 void reset_signal(void);
+
+// signal_handler.c
+void handler(int signum);
+void reset_sig(int signum);
+void ignore_sig(int signum);
+void setup_sigint(void);
 
 // builtin.c
 bool is_builtin(t_node *node);

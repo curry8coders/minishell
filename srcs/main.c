@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:10:51 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/29 04:59:57 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/30 20:23:52 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <readline/history.h>
 #include "minishell.h"
 
-int	last_status;
+int	g_last_status;
 
 void interpret(char *line, int *stat_loc)
 {
@@ -53,7 +53,7 @@ int	main(void)
 	rl_outstream = stderr;
 	initenv();
 	setup_signal();
-	last_status = 0;
+	g_last_status = 0;
 	while (1)
 	{
 		line = readline("minishell$ ");
@@ -61,9 +61,9 @@ int	main(void)
 			break ;
 		if (*line)
 			add_history(line);
-		interpret(line, &last_status);
+		interpret(line, &g_last_status);
 		free(line);
 	}
-	exit(last_status);
+	exit(g_last_status);
 }
 //interpret(line, &status)は&アドレス渡し

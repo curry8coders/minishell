@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 10:38:10 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/29 05:36:56 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/30 20:23:52 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	builtin_exit(char **argv)
 	char	*endptr;
 
 	if (argv[1] == NULL)
-		exit(last_status);
+		exit(g_last_status);
 	if (argv[2])
 	{
 		xperror("exit: too many arguments");

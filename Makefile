@@ -6,7 +6,7 @@
 #    By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/11/30 20:03:15 by hichikaw         ###   ########.fr        #
+#    Updated: 2025/11/30 20:20:05 by hichikaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,7 @@ SRCS = srcs/main.c\
 	   srcs/exec/exec.c\
 	   srcs/exec/exec_utils.c\
 	   srcs/signal/signal.c\
+	   srcs/signal/signal_handler.c\
 	   srcs/builtin/builtin.c\
 	   srcs/builtin/builtin_exit.c\
 	   srcs/builtin/builtin_export.c\
