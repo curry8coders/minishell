@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 21:39:33 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 00:27:35 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/30 19:57:30 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	check_state(void)
 	else if (sig == SIGINT)
 	{
 		sig = 0;
-		readline_interrupted = true;
+		g_readline_interrupted = true;
 		rl_replace_line("", 0);
 		rl_done = 1;
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/30 19:46:13 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/30 20:03:15 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct s_item t_item;
 
 extern int last_status;
 extern bool g_syntax_error;
-extern bool readline_interrupted;
+extern bool g_readline_interrupted;
 extern volatile sig_atomic_t sig;
 extern t_map *g_envmap;
 
@@ -163,9 +163,16 @@ void append_tok(t_token **tokens, t_token *tok);
 void append_node(t_node **node, t_node *elm);
 
 // redirect.c
-int open_redir_file(t_node *node);
+int stashfd(int fd);
+bool is_redirect(t_node *node);
 void do_redirect(t_node *redirects);
 void reset_redirect(t_node *redirects);
+
+// redirect_heredoc.c
+int read_heredoc(const char *delimiter, bool is_delim_unquoted);
+
+// redirect_open.c
+int open_redir_file(t_node *node);
 
 // pipe.c
 void prepare_pipe(t_node *node);
