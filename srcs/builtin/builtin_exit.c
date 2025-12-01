@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 10:38:10 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/30 20:23:52 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/01 23:36:30 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,5 @@ int	builtin_exit(char **argv)
 			exit((int)res);
 	}
 	xperror("exit: numeric argument required");
-	exit(255);
+	exit(2);
 }
