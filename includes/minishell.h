@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/30 20:23:52 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/01 21:34:08 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,6 +228,7 @@ char *resolve_pwd(char *oldpwd, char *path);
 int builtin_pwd(char **argv);
 
 // builtin_echo.c
+bool check_only_n_options(char *arg);
 int builtin_echo(char **argv);
 
 // map.c
