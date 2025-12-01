@@ -40,7 +40,7 @@ int	builtin_exit(char **argv)
 		exit(g_last_status);
 	if (argv[2])
 	{
-		xperror("exit: too many arguments");
+		builtin_error("exit", NULL, "too many arguments");
 		return (1);
 	}
 	arg = argv[1];
@@ -51,6 +51,6 @@ int	builtin_exit(char **argv)
 		if (errno == 0 && *endptr == '\0')
 			exit((int)res);
 	}
-	xperror("exit: numeric argument required");
+	builtin_error("exit", NULL, "numeric argument required");
 	exit(255);
 }
