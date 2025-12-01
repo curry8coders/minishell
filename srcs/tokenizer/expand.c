@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:54:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/23 23:38:12 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/30 20:23:52 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ void	expand_special_parameter_str(char **dst, char **rest, char *p)
 	if (!is_special_parameter(p))
 		assert_error("Expected special parameter");
 	p += 2;
-	append_num(dst, last_status);
+	append_num(dst, g_last_status);
 	*rest = p;
 }
 

@@ -3,36 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 03:14:27 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/24 00:04:24 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/30 20:58:32 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include <linux/limits.h>
-#include <unistd.h>
 #include <limits.h>
+#include <unistd.h>
 #include "minishell.h"
 
 #include <string.h>
 
-t_map	*envmap;
+t_map	*g_envmap;
 
 static void	envmap_init(t_map *map, char **ep);
 
 char	*xgetenv(const char *name)
 {
-	return (map_get(envmap, name));
+	return (map_get(g_envmap, name));
 }
 
 void	initenv(void)
 {
-	extern char **environ;
+	extern char	**environ;
 
-	envmap = map_new();
-	envmap_init(envmap, environ);
+	g_envmap = map_new();
+	envmap_init(g_envmap, environ);
 }
 
 char	**get_environ(t_map *map)
