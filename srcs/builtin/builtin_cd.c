@@ -12,7 +12,7 @@
 
 #include <stdlib.h>
 #include <limits.h>
-#include <linux/limits.h>
+#include <limits.h>
 #include <unistd.h>
 #include "minishell.h"
 

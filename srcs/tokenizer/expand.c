@@ -43,7 +43,10 @@ void	remove_single_quote(char **dst, char **rest, char *p)
 		while (*p != SINGLE_QUOTE_CHAR)
 		{
 			if (*p == '\0')
-				assert_error("Unclosed single quote");
+			{
+				tokenize_error("remove_single_quote", rest, p);//beta
+				return ;
+			}
 			append_char(dst, *p++);
 		}
 		p++;
@@ -61,7 +64,10 @@ void	remove_double_quote(char **dst, char **rest, char *p)
 		while (*p != DOUBLE_QUOTE_CHAR)
 		{
 			if (*p == '\0')
-				assert_error("Unclosed double quote");
+			{
+				tokenize_error("remove_double_quote", rest, p);//beta
+				return ;
+			}
 			append_char(dst, *p++);
 		}
 		p++;
@@ -162,7 +168,10 @@ void	append_single_quote(char **dst, char **rest, char *p)
 		while (*p != SINGLE_QUOTE_CHAR)
 		{
 			if (*p == '\0')
-				assert_error("Unclosed single quote");
+			{
+				tokenize_error("append_single_quote", rest, p);//beta
+				return ;
+			}
 			append_char(dst, *p++);
 		}
 		append_char(dst, *p++);
@@ -181,7 +190,10 @@ void	append_double_quote(char **dst, char **rest, char *p)
 		while (*p != DOUBLE_QUOTE_CHAR)
 		{
 			if (*p == '\0')
-				assert_error("Unclosed double quote");
+			{
+				tokenize_error("append_double_quote", rest, p);//beta
+				return ;
+			}
 			else if (is_variable(p))
 				expand_variable_str(dst, &p, p);
 			else if (is_special_parameter(p))
@@ -271,4 +283,3 @@ char	*expand_heredoc_line(char *line)
 // O(n²) complexity for string building.
 // この実装だと1文字追加するたびに、毎回新しくメモリ確保をしていることになる
 // バッファの概念を導入するとさらに良い rabbitくんより
- 

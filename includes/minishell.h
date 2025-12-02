@@ -21,6 +21,7 @@
 
 #define ERROR_TOKENIZE 258
 #define ERROR_PARSE 258
+#define ERROR_EXPAND 258 //`new` please check
 #define ERROR_OPEN_REDIR 1
 #define SINGLE_QUOTE_CHAR '\''
 #define DOUBLE_QUOTE_CHAR '"'
@@ -58,9 +59,8 @@ enum e_token_kind {
   TK_EOF,
 };
 typedef enum e_token_kind t_token_kind;
+//TK_RESERVED未使用
 
-// 列挙子（名前付きの整数定数）で
-// デフォルトでは上から順に0, 1, 2, 3 が順に割り当てられる
 
 // `word` is zero terminated string.
 struct s_token {
@@ -132,7 +132,6 @@ char **token_list_to_argv(t_token *tok);
 t_token *new_token(char *word, t_token_kind kind);
 bool is_operator(const char *s);//?
 t_token *operator(char **rest, char *line);//?
-t_token *word(char **rest, char *line);//?
 
 // tokenize_utils.c
 bool	is_blank(char c);
@@ -140,6 +139,7 @@ bool	consume_blank(char **rest, char *line);
 bool	startswith(const char *s, const char *keyword);
 bool	is_metacharacter(char c);
 bool	is_word(const char *s);
+t_token *word(char **rest, char *line);
 
 // destructor.c
 void free_node(t_node *node);

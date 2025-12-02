@@ -15,6 +15,8 @@
 #include <stdlib.h>
 #include "minishell.h"
 
+extern bool syntax_error;
+
 t_token	*new_token(char *word, t_token_kind kind)
 {
 	t_token	*tok;
@@ -30,7 +32,7 @@ t_token	*new_token(char *word, t_token_kind kind)
 // Check longer operators first
 t_token	*operator(char **rest, char *line)
 {
-	static char *const	operators[] = {">>", "<<", "||", "&&", ";;",
+	static const char *const	operators[] = {">>", "<<", "||", "&&", ";;",
 		"<", ">", "&", ";", "(", ")", "|", "\n"};
 	size_t				i;
 	char				*op;
@@ -51,53 +53,15 @@ t_token	*operator(char **rest, char *line)
 	assert_error("Unexpected operator");
 }
 
-t_token	*word(char **rest, char *line)
-{
-	const char	*start = line;
-	char		*word;
-
-	while (*line && !is_metacharacter(*line))
-	{
-		if (*line == SINGLE_QUOTE_CHAR)
-		{
-			line++;
-			while (*line && *line != SINGLE_QUOTE_CHAR)
-			{
-				if (*line == '\0')
-					todo("Unclosed single quote");
-				line++;
-			}
-			line++;
-		}
-		else if (*line == DOUBLE_QUOTE_CHAR)
-		{
-			line++;
-			while (*line != DOUBLE_QUOTE_CHAR)
-			{
-				if (*line == '\0')
-					todo("Unclosed double quote");
-				line++;
-			}
-			line++;
-		}
-		else
-			line++;
-	}
-	word = strndup(start, line - start);
-	if (word == NULL)
-		fatal_error("strndup");
-	*rest = line;
-	return (new_token(word, TK_WORD));
-}
-
 t_token	*tokenize(char *line)
 {
 	t_token	head;
 	t_token	*tok;
 
+	syntax_error = false;
 	head.next = NULL;
 	tok = &head;
-	while (*line)
+	while (*line && syntax_error == false)
 	{
 		if (consume_blank(&line, line))
 			continue ;

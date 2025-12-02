@@ -56,7 +56,10 @@ void	tokenize_error(const char *location, char **rest, char *line)
 {
 	syntax_error = true;
 	perror_prefix();
-	dprintf(STDERR_FILENO, "syntax error near unexpected character `%c' in %s\n", *line, location);
+	if (*line == '\0')
+		dprintf(STDERR_FILENO, "syntax error: unexpected end of input in %s\n", location);
+	else
+		dprintf(STDERR_FILENO, "syntax error near unexpected character '%c' in %s\n", *line, location);
 	while (*line)
 		line++;
 	*rest = line;

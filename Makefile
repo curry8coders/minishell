@@ -18,9 +18,11 @@ NAME = minishell
 CC = cc
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
+
 INCLUDES = -I includes -I$(LIBFT_DIR)
 CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
 LIBS = -lreadline $(LIBFT)
+
 SRCS =	srcs/main.c\
 		srcs/error_handler/error.c\
 		srcs/tokenizer/expand.c\
@@ -46,6 +48,7 @@ SRCS =	srcs/main.c\
 		srcs/hashstamp/env.c\
 
 OBJS = $(SRCS:%.c=%.o)
+DEPS = $(SRCS:%.c=%.d)
 
 #################
 # General rules #
@@ -55,12 +58,15 @@ all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBS)
-
+	
+%.o: %.c
+	$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+	
 $(LIBFT):
 	+$(MAKE) -C $(LIBFT_DIR) all bonus
 
 clean:
-	$(RM) $(OBJS)
+	$(RM) $(OBJS) $(DEPS)
 	+$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
@@ -74,6 +80,8 @@ test: all
 	./test/test.sh
 
 .PHONY: all clean fclean re test
+
+-include $(DEPS)
 
 ##########################
 # Platform Compatibility #

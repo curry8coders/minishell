@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <linux/limits.h>
+#include <limits.h>
 #include <unistd.h>
 #include <limits.h>
 #include <sys/stat.h>
