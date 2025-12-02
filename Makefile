@@ -9,6 +9,9 @@
 #    Updated: 2025/11/29 03:21:58 by hichikaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+ 
+#Linux | Darwin
+OS := $(shell uname -s)
 
 #############
 # Variables #
@@ -21,6 +24,18 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 INCLUDES = -I includes -I$(LIBFT_DIR)
 CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
+LDFLAGS=
+
+########################
+# Platform Compatibility 
+########################
+ifeq ($(OS),Darwin)
+    # commands for macOS
+    RLDIR = $(shell brew --prefix readline)
+    INCLUDES += -I$(RLDIR)/include
+    LDFLAGS += -L$(RLDIR)/lib $(LIBS)
+endif
+
 LIBS = -lreadline $(LIBFT)
 
 SRCS =	srcs/main.c\
@@ -48,7 +63,6 @@ SRCS =	srcs/main.c\
 		srcs/hashstamp/env.c\
 
 OBJS = $(SRCS:%.c=%.o)
-DEPS = $(SRCS:%.c=%.d)
 
 #################
 # General rules #
@@ -57,10 +71,10 @@ DEPS = $(SRCS:%.c=%.d)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBS)
+	$(CC) -o $(NAME) $(OBJS) $(LDFLAGS) $(LIBS) 
 	
 %.o: %.c
-	$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 	
 $(LIBFT):
 	+$(MAKE) -C $(LIBFT_DIR) all bonus
@@ -77,26 +91,6 @@ re: fclean all
 
 # We may delete the following code when we push this project to 42's remote repository.
 test: all
-	./test/test.sh
+	bash ./test/test.sh
 
 .PHONY: all clean fclean re test
-
--include $(DEPS)
-
-##########################
-# Platform Compatibility #
-##########################
-
-#Linux | Darwin
-OS := $(shell uname -s)
-
-ifeq ($(OS),Linux)
-	# commands for Linux
-endif
-
-ifeq ($(OS),Darwin)
-    # command for macOS
-    RLDIR = $(shell brew --prefix readline)
-    INCLUDES += -I$(RLDIR)/include
-    LIBS := -L$(RLDIR)/lib $(LIBS)
-endif
