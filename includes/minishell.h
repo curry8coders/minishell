@@ -6,7 +6,7 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/28 22:51:16 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/30 20:23:52 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ typedef struct s_node t_node;
 typedef struct s_map t_map;
 typedef struct s_item t_item;
 
-extern int last_status;
-extern bool syntax_error;
-extern bool readline_interrupted;
-extern volatile sig_atomic_t sig;
-extern t_map *envmap;
+extern int	g_last_status;
+extern bool	g_syntax_error;
+extern bool	g_readline_interrupted;
+extern volatile sig_atomic_t	g_sig;
+extern t_map	*g_envmap;
 
 // error.c
 void todo(const char *msg) __attribute__((noreturn));
@@ -141,6 +141,12 @@ bool	is_metacharacter(char c);
 bool	is_word(const char *s);
 t_token *word(char **rest, char *line);
 
+// expand.c
+void expand(t_node *node);
+char *expand_heredoc_line(char *line);
+bool is_alpha_under(char c);
+bool is_alpha_num_under(char c);
+
 // destructor.c
 void free_node(t_node *node);
 void free_tok(t_token *tok);
@@ -148,16 +154,37 @@ void free_argv(char **argv);
 
 // parse.c
 t_node *parse(t_token *tok);
+t_node *simple_command(t_token **rest, t_token *tok);
+bool is_control_operator(t_token *tok);
 void append_command_element(t_node *command, t_token **rest, t_token *tok);
+
+// parse_redirect.c
+t_node *redirect_out(t_token **rest, t_token *tok);
+t_node *redirect_input(t_token **rest, t_token *tok);
+t_node *redirect_append(t_token **rest, t_token *tok);
+t_node *redirect_heredoc(t_token **rest, t_token *tok);
+
+// parse_utils.c
 bool at_eof(t_token *tok);
+bool equal_op(t_token *tok, char *op);
 t_node *new_node(t_node_kind kind);
-void append_tok(t_token **tokens, t_token *tok);
 t_token *tokdup(t_token *tok);
 
+// parse_append.c
+void append_tok(t_token **tokens, t_token *tok);
+void append_node(t_node **node, t_node *elm);
+
 // redirect.c
-int open_redir_file(t_node *node);
+int stashfd(int fd);
+bool is_redirect(t_node *node);
 void do_redirect(t_node *redirects);
 void reset_redirect(t_node *redirects);
+
+// redirect_heredoc.c
+int read_heredoc(const char *delimiter, bool is_delim_unquoted);
+
+// redirect_open.c
+int open_redir_file(t_node *node);
 
 // pipe.c
 void prepare_pipe(t_node *node);
@@ -167,9 +194,21 @@ void prepare_pipe_parent(t_node *node);
 // exec.c
 int exec(t_node *node);
 
+// exec_utils.c
+char *search_path(const char *filename);
+void validate_access(const char *path, const char *filename);
+int get_exit_status(int wstatus);
+
 // signal.c
+int check_state(void);
 void setup_signal(void);
 void reset_signal(void);
+
+// signal_handler.c
+void handler(int signum);
+void reset_sig(int signum);
+void ignore_sig(int signum);
+void setup_sigint(void);
 
 // builtin.c
 bool is_builtin(t_node *node);
@@ -204,15 +243,23 @@ int builtin_pwd(char **argv);
 int builtin_echo(char **argv);
 
 // map.c
-t_item *item_new(char *name, char *value);
-char *item_get_string(t_item *item);
 t_map *map_new(void);
 char *map_get(t_map *map, const char *name);
-int map_put(t_map *map, const char *string, bool allow_empty_value);
 int map_set(t_map *map, const char *name, const char *value);
 int map_unset(t_map *map, const char *name);
+
+// map_utils.c
+bool is_identifier(const char *s);
+t_item *item_new(char *name, char *value);
+char *item_get_string(t_item *item);
+int map_put(t_map *map, const char *string, bool allow_empty_value);
 size_t map_len(t_map *map, bool count_null_value);
 void map_printall(t_map *map);
+
+// map_item.c
+void update_existing_item(t_item *cur, const char *value);
+t_item *create_new_item(const char *name, const char *value);
+void parse_name_value(const char *string, char **name, char **value);
 
 // env.c
 char *xgetenv(const char *name);

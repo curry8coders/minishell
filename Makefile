@@ -6,7 +6,7 @@
 #    By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/11/29 03:21:58 by hichikaw         ###   ########.fr        #
+#    Updated: 2025/11/30 20:20:05 by hichikaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
  
@@ -38,29 +38,40 @@ endif
 
 LIBS = -lreadline $(LIBFT)
 
-SRCS =	srcs/main.c\
-		srcs/error_handler/error.c\
-		srcs/tokenizer/expand.c\
-		srcs/tokenizer/expand_utils.c\
-		srcs/tokenizer/tokenize.c\
+SRCS = srcs/main.c\
+       srcs/error_handler/error.c\
+       srcs/error_handler/error_syntax.c\
+       srcs/tokenizer/tokenize.c\
 		srcs/tokenizer/tokenize_utils.c\
-		srcs/destructor.c\
-		srcs/parser/parse.c\
-		srcs/redirection/redirect.c\
-		srcs/pipe/pipe.c\
-		srcs/exec/exec.c\
-		srcs/signal/signal.c\
-		srcs/builtin/builtin.c\
-		srcs/builtin/builtin_exit.c\
-		srcs/builtin/builtin_export.c\
-		srcs/builtin/builtin_unset.c\
-		srcs/builtin/builtin_env.c\
-		srcs/builtin/builtin_cd.c\
-		srcs/builtin/builtin_cd_utils.c\
-		srcs/builtin/builtin_pwd.c\
-		srcs/builtin/builtin_echo.c\
-		srcs/hashstamp/map.c\
-		srcs/hashstamp/env.c\
+       srcs/destructor.c\
+       srcs/tokenizer/expand.c\
+		srcs/tokenizer/expand_utils.c\
+       srcs/parser/parse.c\
+       srcs/parser/parse_redirect.c\
+       srcs/parser/parse_utils.c\
+       srcs/parser/parse_append.c\
+       srcs/redirection/redirect.c\
+       srcs/redirection/redirect_heredoc.c\
+       srcs/redirection/redirect_open.c\
+	   srcs/pipe/pipe.c\
+	   srcs/exec/exec.c\
+	   srcs/exec/exec_utils.c\
+	   srcs/signal/signal.c\
+	   srcs/signal/signal_handler.c\
+	   srcs/builtin/builtin.c\
+	   srcs/builtin/builtin_exit.c\
+	   srcs/builtin/builtin_export.c\
+	   srcs/builtin/builtin_unset.c\
+	   srcs/builtin/builtin_env.c\
+	   srcs/builtin/builtin_cd.c\
+	   srcs/builtin/builtin_cd_utils.c\
+	   srcs/builtin/builtin_pwd.c\
+	   srcs/builtin/builtin_echo.c\
+	   srcs/hashstamp/map.c\
+	   srcs/hashstamp/map_utils.c\
+	   srcs/hashstamp/map_item.c\
+	   srcs/hashstamp/env.c\
+
 
 OBJS = $(SRCS:%.c=%.o)
 

@@ -321,25 +321,40 @@ test_5(){
 	 # `-`: ソースコードをファイルからではなく、標準入力から読み込み
 	
 	## Signal to shell processes
+	# Kill the parent of infinite_loop IF the parent's name matches the target
+	kill_specific_parent() {
+		local target_name=$1
+		local sig=$2
+		for pid in $(pgrep infinite_loop); do
+			local ppid=$(ps -o ppid= -p "$pid" | tr -d ' ')
+			if [ -n "$ppid" ]; then
+				local pname=$(ps -p "$ppid" -o comm=)
+				if [[ "$pname" == *"$target_name"* ]]; then
+					kill "$sig" "$ppid" 2>/dev/null
+				fi
+			fi
+		done
+	}
+
 	print_desc "SIGTERM to SHELL"
-	(sleep 0.1; pkill -SIGTERM bash;
-	 sleep 0.1; pkill -SIGTERM minishell) &
+	(sleep 0.1; kill_specific_parent bash -SIGTERM;
+	 sleep 0.1; kill_specific_parent minishell -SIGTERM) &
 	assert './infinite_loop' 2>/dev/null
 	 ###目標:SIGTERMが成功する
 	
 	print_desc "SIGQUIT to SHELL"
-	(sleep 0.1; pkill -SIGQUIT bash; # SIGQUITシグナルを正しく【無視】する
-	 sleep 0.1; pkill -SIGTERM bash;
-	 sleep 0.1; pkill -SIGQUIT minishell; # SIGQUITシグナルを正しく【無視】する
-	 sleep 0.1; pkill -SIGTERM minishell) &
+	(sleep 0.1; kill_specific_parent bash -SIGQUIT; # SIGQUITシグナルを正しく【無視】する
+	 sleep 0.1; kill_specific_parent bash -SIGTERM;
+	 sleep 0.1; kill_specific_parent minishell -SIGQUIT; # SIGQUITシグナルを正しく【無視】する
+	 sleep 0.1; kill_specific_parent minishell -SIGTERM) &
 	assert './infinite_loop' 2>/dev/null
 	 ### SIGQUIT がshellをkillしない
 	
 	print_desc "SIGINT to SHELL"
-	(sleep 0.1; pkill -SIGINT bash; # SIGINTシグナルを正しく【無視】する
-	 sleep 0.1; pkill -SIGTERM bash;
-	 sleep 0.1; pkill -SIGINT minishell; # SIGINTシグナルを正しく【無視】する
-	 sleep 0.1; pkill -SIGTERM minishell) &
+	(sleep 0.1; kill_specific_parent bash -SIGINT; # SIGINTシグナルを正しく【無視】する
+	 sleep 0.1; kill_specific_parent bash -SIGTERM;
+	 sleep 0.1; kill_specific_parent minishell -SIGINT; # SIGINTシグナルを正しく【無視】する
+	 sleep 0.1; kill_specific_parent minishell -SIGTERM) &
 	assert './infinite_loop' 2>/dev/null
 	 ### SIGINT がshellをkillしない
 	

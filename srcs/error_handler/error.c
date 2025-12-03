@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 17:35:46 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 12:20:25 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/29 05:17:33 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 #define ERROR_PREFIX "minishell: "
 
-bool	syntax_error = false;
+bool	g_syntax_error = false;
 
 static	void	perror_prefix(void)
 {

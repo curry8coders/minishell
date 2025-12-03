@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 15:36:21 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/28 20:23:25 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/11/30 20:47:20 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <limits.h>
 #include <unistd.h>
-#include <limits.h>
 #include <sys/stat.h>
 #include "minishell.h"
 
@@ -39,7 +38,7 @@ int	builtin_pwd(char **argv)
 	char	cwd[PATH_MAX];
 
 	(void)argv;
-	pwd = getenv("PWD");
+	pwd = xgetenv("PWD");
 	if (pwd == NULL || !equal_inode(pwd, "."))
 	{
 		if (getcwd(cwd, PATH_MAX) == NULL)
