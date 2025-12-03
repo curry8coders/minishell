@@ -45,7 +45,7 @@ int	builtin_exit(char **argv)
 	}
 	if (argv[2])
 	{
-		xperror("exit: too many arguments");
+		builtin_error("exit", NULL, "too many arguments");
 		return (1);
 	}
 	arg = argv[1];

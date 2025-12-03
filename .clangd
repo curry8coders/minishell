@@ -2,7 +2,7 @@ CompileFlags:
     Add:
         - "-xc"
         - "-Iincludes"
-        - "Ilibft"
+        - "-Ilibft"
     Remove:
         - "-std=c++*"
 Diagnostics:

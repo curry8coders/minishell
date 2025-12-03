@@ -9,6 +9,9 @@
 #    Updated: 2025/11/30 20:20:05 by hichikaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+ 
+#Linux | Darwin
+OS := $(shell uname -s)
 
 #############
 # Variables #
@@ -18,15 +21,30 @@ NAME = minishell
 CC = cc
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
+
 INCLUDES = -I includes -I$(LIBFT_DIR)
 CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
+LDFLAGS=
+
+########################
+# Platform Compatibility 
+########################
+ifeq ($(OS),Darwin)
+    # commands for macOS
+    RLDIR = $(shell brew --prefix readline)
+    INCLUDES += -I$(RLDIR)/include
+    LDFLAGS += -L$(RLDIR)/lib $(LIBS)
+endif
+
 LIBS = -lreadline $(LIBFT)
+
 SRCS = srcs/main.c\
        srcs/error_handler/error.c\
-       srcs/error_handler/error_syntax.c\
        srcs/tokenizer/tokenize.c\
+		srcs/tokenizer/tokenize_utils.c\
        srcs/destructor.c\
        srcs/tokenizer/expand.c\
+		srcs/tokenizer/expand_utils.c\
        srcs/parser/parse.c\
        srcs/parser/parse_redirect.c\
        srcs/parser/parse_utils.c\
@@ -53,6 +71,7 @@ SRCS = srcs/main.c\
 	   srcs/hashstamp/map_item.c\
 	   srcs/hashstamp/env.c\
 
+
 OBJS = $(SRCS:%.c=%.o)
 
 #################
@@ -62,41 +81,26 @@ OBJS = $(SRCS:%.c=%.o)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBS)
-
+	$(CC) -o $(NAME) $(OBJS) $(LDFLAGS) $(LIBS) 
+	
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+	
 $(LIBFT):
-	make -C $(LIBFT_DIR) all bonus
+	+$(MAKE) -C $(LIBFT_DIR) all bonus
 
 clean:
-	$(RM) $(OBJS)
-	make -C $(LIBFT_DIR) clean
+	$(RM) $(OBJS) $(DEPS)
+	+$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
 	$(RM) $(NAME)
-	make -C $(LIBFT_DIR) fclean
+	+$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
 # We may delete the following code when we push this project to 42's remote repository.
 test: all
-	./test/test.sh
+	bash ./test/test.sh
 
 .PHONY: all clean fclean re test
-
-##########################
-# Platform Compatibility #
-##########################
-
-#Linux | Darwin
-OS := $(shell uname -s)
-
-ifeq ($(OS),Linux)
-	# commands for Linux
-endif
-
-ifeq ($(OS),Darwin)
-    # command for macOS
-    RLDIR = $(shell brew --prefix readline)
-    INCLUDES += -I$(RLDIR)/include
-    LIBS := -L$(RLDIR)/lib $(LIBS)
-endif
