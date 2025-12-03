@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/03 17:56:52 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/03 18:53:21 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,8 @@ static pid_t	exec_pipeline(t_node *node)
 			exec_nonbuiltin(node);
 	}
 	prepare_pipe_parent(node);
+	if (node->command)
+		close_redirect_fds(node->command->redirects);
 	if (node->next)
 		return (exec_pipeline(node->next));
 	return (pid);
