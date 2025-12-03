@@ -40,7 +40,6 @@ LIBS = -lreadline $(LIBFT)
 
 SRCS = srcs/main.c\
        srcs/error_handler/error.c\
-       srcs/error_handler/error_syntax.c\
        srcs/tokenizer/tokenize.c\
 		srcs/tokenizer/tokenize_utils.c\
        srcs/destructor.c\
