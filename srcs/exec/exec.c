@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/03 15:52:59 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/03 17:56:52 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,17 @@ int	exec(t_node *node)
 	int		status;
 
 	if (open_redir_file(node) < 0)
+	{
+		close_all_redirect_fds(node);
 		return (ERROR_OPEN_REDIR);
+	}
 	if (node->next == NULL && is_builtin(node))
 		status = exec_builtin(node);
 	else
 	{
 		last_pid = exec_pipeline(node);
 		status = wait_pipeline(last_pid);
+		close_all_redirect_fds(node);
 	}
 	return (status);
 }

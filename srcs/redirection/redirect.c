@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 05:58:26 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/03 17:22:02 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/03 17:56:52 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,34 @@ void	do_redirect(t_node *redir)
 	do_redirect(redir->next);
 }
 
+void	close_redirect_fds(t_node *redir)
+{
+	if (redir == NULL)
+		return ;
+	if (is_redirect(redir))
+	{
+		if (redir->filefd >= 0)
+		{
+			close(redir->filefd);
+			redir->filefd = -1;
+		}
+	}
+	close_redirect_fds(redir->next);
+}
+
+void	close_all_redirect_fds(t_node *node)
+{
+	if (node == NULL)
+		return ;
+	if (node->kind == ND_PIPELINE)
+	{
+		close_all_redirect_fds(node->command);
+		close_all_redirect_fds(node->next);
+	}
+	else if (node->kind == ND_SIMPLE_CMD)
+		close_redirect_fds(node->redirects);
+}
+
 // Reset must be done from tail to head
 void	reset_redirect(t_node *redir)
 {
@@ -60,11 +88,16 @@ void	reset_redirect(t_node *redir)
 	if (is_redirect(redir))
 	{
 		if (redir->filefd >= 0)
+		{
 			close(redir->filefd);
-		if (redir->targetfd >= 0)
-			close(redir->targetfd);
-		dup2(redir->stashed_targetfd, redir->targetfd);
-		close(redir->stashed_targetfd);
+			redir->filefd = -1;
+		}
+		if (redir->stashed_targetfd >= 0)
+		{
+			dup2(redir->stashed_targetfd, redir->targetfd);
+			close(redir->stashed_targetfd);
+			redir->stashed_targetfd = -1;
+		}
 	}
 	else
 		assert_error("reset_redirect");
