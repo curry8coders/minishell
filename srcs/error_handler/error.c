@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 17:35:46 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/29 05:17:33 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/03 21:28:11 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	todo(const char *msg)
 
 void	tokenize_error(const char *location, char **rest, char *line)
 {
-	syntax_error = true;
+	g_syntax_error = true;
 	perror_prefix();
 	if (*line == '\0')
 		dprintf(STDERR_FILENO, "syntax error: unexpected end of input in %s\n", location);
@@ -67,7 +67,7 @@ void	tokenize_error(const char *location, char **rest, char *line)
 
 void	parse_error(const char *location, t_token **rest, t_token *tok)
 {
-	syntax_error = true;
+	g_syntax_error = true;
 	perror_prefix();
 	dprintf(STDERR_FILENO, "syntax error near unexpected token `%s' in %s\n", tok->word, location);
 	//note : 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kenakamu <kenakamu@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:57:17 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/29 12:33:20 by kenakamu         ###   ########.fr       */
+/*   Updated: 2025/12/03 21:28:33 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include "minishell.h"
 
-extern bool syntax_error;
+extern bool g_syntax_error;
 
 t_token	*new_token(char *word, t_token_kind kind)
 {
@@ -58,10 +58,10 @@ t_token	*tokenize(char *line)
 	t_token	head;
 	t_token	*tok;
 
-	syntax_error = false;
+	g_syntax_error = false;
 	head.next = NULL;
 	tok = &head;
-	while (*line && syntax_error == false)
+	while (*line && g_syntax_error == false)
 	{
 		if (consume_blank(&line, line))
 			continue ;
