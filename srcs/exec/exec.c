@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/03 18:53:21 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/03 18:59:33 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int	exec_nonbuiltin(t_node *node)
 {
 	char	*path;
 	char	**argv;
+	char	**envp;
 
 	do_redirect(node->command->redirects);
 	argv = token_list_to_argv(node->command->args);
@@ -67,7 +68,9 @@ int	exec_nonbuiltin(t_node *node)
 			free(path);
 		exit(127);
 	}
-	execve(path, argv, get_environ(g_envmap));
+	envp = get_environ(g_envmap);
+	execve(path, argv, envp);
+	free_argv(envp);
 	free_argv(argv);
 	if (path != argv[0])
 		free(path);

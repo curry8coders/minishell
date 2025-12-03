@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/03 17:56:52 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/03 18:59:02 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #define ERROR_OPEN_REDIR 1
 #define SINGLE_QUOTE_CHAR '\''
 #define DOUBLE_QUOTE_CHAR '"'
+#define BUILTIN_EXIT_REQUEST 256
 
 typedef struct s_token t_token;
 typedef enum e_token_kind t_token_kind;
@@ -33,6 +34,7 @@ typedef struct s_map t_map;
 typedef struct s_item t_item;
 
 extern int g_last_status;
+extern int g_exit_status;
 extern bool g_syntax_error;
 extern bool g_readline_interrupted;
 extern volatile sig_atomic_t g_sig;

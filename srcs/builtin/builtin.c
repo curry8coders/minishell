@@ -6,10 +6,11 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 05:15:00 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/03 15:37:39 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/03 18:59:26 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "minishell.h"
 
 #include <string.h>
@@ -39,6 +40,8 @@ int	exec_builtin(t_node *node)
 		todo("exec_builtin");
 	free_argv(argv);
 	reset_redirect(node->command->redirects);
+	if (status == BUILTIN_EXIT_REQUEST)
+		exit(g_exit_status);
 	return (status);
 }
 
