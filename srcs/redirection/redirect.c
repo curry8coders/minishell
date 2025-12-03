@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 05:58:26 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/30 20:03:16 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/03 17:22:02 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ int	stashfd(int fd)
 	stashfd = fcntl(fd, F_DUPFD, 10);
 	if (stashfd < 0)
 		fatal_error("fcntl");
-	if (close(fd) < 0)
-		fatal_error("close");
 	return (stashfd);
 }
 
@@ -61,9 +59,12 @@ void	reset_redirect(t_node *redir)
 	reset_redirect(redir->next);
 	if (is_redirect(redir))
 	{
-		close(redir->filefd);
-		close(redir->targetfd);
+		if (redir->filefd >= 0)
+			close(redir->filefd);
+		if (redir->targetfd >= 0)
+			close(redir->targetfd);
 		dup2(redir->stashed_targetfd, redir->targetfd);
+		close(redir->stashed_targetfd);
 	}
 	else
 		assert_error("reset_redirect");
