@@ -91,6 +91,7 @@ static pid_t	exec_pipeline(t_node *node)
 	else if (pid == 0)
 	{
 		reset_signal();
+		close_all_redirect_fds(node->next);
 		prepare_pipe_child(node);
 		if (is_builtin(node))
 			exit(exec_builtin(node));

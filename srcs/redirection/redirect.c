@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 05:58:26 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/03 17:59:58 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/03 20:22:38 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	stashfd(int fd)
 {
 	int	stashfd;
 
-	stashfd = fcntl(fd, F_DUPFD, 10);
+	stashfd = fcntl(fd, F_DUPFD_CLOEXEC, 10);
 	if (stashfd < 0)
 		fatal_error("fcntl");
 	return (stashfd);
@@ -45,6 +45,11 @@ void	do_redirect(t_node *redir)
 	{
 		redir->stashed_targetfd = stashfd(redir->targetfd);
 		dup2(redir->filefd, redir->targetfd);
+		if (redir->filefd >= 0)
+		{
+			close(redir->filefd);
+			redir->filefd = -1;
+		}
 	}
 	else
 		assert_error("do_redirect");
@@ -77,6 +82,18 @@ void	close_all_redirect_fds(t_node *node)
 	}
 	else if (node->kind == ND_SIMPLE_CMD)
 		close_redirect_fds(node->redirects);
+}
+
+void	close_pipeline_fds_except_current(t_node *head, t_node *current)
+{
+	if (head == NULL)
+		return ;
+	if (head->kind == ND_PIPELINE)
+	{
+		if (head != current && head->command)
+			close_redirect_fds(head->command->redirects);
+		close_pipeline_fds_except_current(head->next, current);
+	}
 }
 
 // Reset must be done from tail to head

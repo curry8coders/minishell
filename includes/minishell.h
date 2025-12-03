@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/03 18:59:02 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/03 20:22:38 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,7 @@ void do_redirect(t_node *redirects);
 void reset_redirect(t_node *redirects);
 void close_redirect_fds(t_node *redir);
 void close_all_redirect_fds(t_node *node);
+void close_pipeline_fds_except_current(t_node *head, t_node *current);
 
 // redirect_heredoc.c
 int read_heredoc(const char *delimiter, bool is_delim_unquoted);
