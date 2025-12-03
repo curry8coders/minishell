@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 07:09:28 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 07:09:29 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/03 17:59:58 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,25 @@ void	prepare_pipe(t_node *node)
 
 void	prepare_pipe_child(t_node *node)
 {
-	close(node->outpipe[0]);
-	dup2(node->inpipe[0], STDIN_FILENO);
-	if (node->inpipe[0] != STDIN_FILENO)
+	if (node->outpipe[0] >= 0)
+		close(node->outpipe[0]);
+	if (node->inpipe[0] >= 0 && node->inpipe[0] != STDIN_FILENO)
+	{
+		dup2(node->inpipe[0], STDIN_FILENO);
 		close(node->inpipe[0]);
-	dup2(node->outpipe[1], STDOUT_FILENO);
-	if (node->outpipe[1] != STDOUT_FILENO)
+	}
+	if (node->outpipe[1] >= 0 && node->outpipe[1] != STDOUT_FILENO)
+	{
+		dup2(node->outpipe[1], STDOUT_FILENO);
 		close(node->outpipe[1]);
+	}
 }
 
 void	prepare_pipe_parent(t_node *node)
 {
-	if (node->inpipe[0] != STDIN_FILENO)
+	if (node->inpipe[0] >= 0 && node->inpipe[0] != STDIN_FILENO)
 		close(node->inpipe[0]);
-	if (node->next)
+	if (node->next && node->outpipe[1] >= 0)
 		close(node->outpipe[1]);
 }
 

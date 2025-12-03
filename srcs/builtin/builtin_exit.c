@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 10:38:10 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/30 20:23:52 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/03 18:59:17 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include "minishell.h"
 
 #include <ctype.h>
+
+int	g_exit_status;
 
 bool	is_numeric(char *s)
 {
@@ -37,7 +39,10 @@ int	builtin_exit(char **argv)
 	char	*endptr;
 
 	if (argv[1] == NULL)
-		exit(g_last_status);
+	{
+		g_exit_status = g_last_status;
+		return (BUILTIN_EXIT_REQUEST);
+	}
 	if (argv[2])
 	{
 		builtin_error("exit", NULL, "too many arguments");
@@ -49,8 +54,12 @@ int	builtin_exit(char **argv)
 		errno = 0;
 		res = strtol(arg, &endptr, 10);
 		if (errno == 0 && *endptr == '\0')
-			exit((int)res);
+		{
+			g_exit_status = (int)res;
+			return (BUILTIN_EXIT_REQUEST);
+		}
 	}
-	builtin_error("exit", NULL, "numeric argument required");
-	exit(255);
+	xperror("exit: numeric argument required");
+	g_exit_status = 2;
+	return (BUILTIN_EXIT_REQUEST);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/30 20:23:52 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/03 21:13:47 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 #define ERROR_OPEN_REDIR 1
 #define SINGLE_QUOTE_CHAR '\''
 #define DOUBLE_QUOTE_CHAR '"'
+#define BUILTIN_EXIT_REQUEST 256
 
 typedef struct s_token t_token;
 typedef enum e_token_kind t_token_kind;
@@ -33,18 +34,20 @@ typedef struct s_node t_node;
 typedef struct s_map t_map;
 typedef struct s_item t_item;
 
-extern int	g_last_status;
-extern bool	g_syntax_error;
-extern bool	g_readline_interrupted;
-extern volatile sig_atomic_t	g_sig;
-extern t_map	*g_envmap;
+extern int g_last_status;
+extern int g_exit_status;
+extern bool g_syntax_error;
+extern bool g_readline_interrupted;
+extern volatile sig_atomic_t g_sig;
+extern t_map *g_envmap;
 
 // error.c
 void todo(const char *msg) __attribute__((noreturn));
 void fatal_error(const char *msg) __attribute__((noreturn));
 void assert_error(const char *msg) __attribute__((noreturn));
+void print_error(const char *location, const char *msg);
 void err_exit(const char *location, const char *msg, int status)
-	__attribute__((noreturn));
+    __attribute__((noreturn));
 void tokenize_error(const char *location, char **rest, char *line);
 void parse_error(const char *location, t_token **rest, t_token *tok);
 void xperror(const char *location);
@@ -179,6 +182,9 @@ int stashfd(int fd);
 bool is_redirect(t_node *node);
 void do_redirect(t_node *redirects);
 void reset_redirect(t_node *redirects);
+void close_redirect_fds(t_node *redir);
+void close_all_redirect_fds(t_node *node);
+void close_pipeline_fds_except_current(t_node *head, t_node *current);
 
 // redirect_heredoc.c
 int read_heredoc(const char *delimiter, bool is_delim_unquoted);
@@ -196,7 +202,7 @@ int exec(t_node *node);
 
 // exec_utils.c
 char *search_path(const char *filename);
-void validate_access(const char *path, const char *filename);
+
 int get_exit_status(int wstatus);
 
 // signal.c
@@ -240,6 +246,7 @@ char *resolve_pwd(char *oldpwd, char *path);
 int builtin_pwd(char **argv);
 
 // builtin_echo.c
+bool check_only_n_options(char *arg);
 int builtin_echo(char **argv);
 
 // map.c

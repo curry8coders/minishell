@@ -38,10 +38,15 @@ void	assert_error(const char *msg)
 	exit(255);
 }
 
-void	err_exit(const char *location, const char *msg, int status)
+void	print_error(const char *location, const char *msg)
 {
 	perror_prefix();
 	dprintf(STDERR_FILENO, "%s: %s\n", location, msg);
+}
+
+void	err_exit(const char *location, const char *msg, int status)
+{
+	print_error(location, msg);
 	exit(status);
 }
 

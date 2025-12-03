@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/30 20:55:50 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/03 21:13:47 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,17 @@ int	exec(t_node *node)
 	int		status;
 
 	if (open_redir_file(node) < 0)
+	{
+		close_all_redirect_fds(node);
 		return (ERROR_OPEN_REDIR);
+	}
 	if (node->next == NULL && is_builtin(node))
 		status = exec_builtin(node);
 	else
 	{
 		last_pid = exec_pipeline(node);
 		status = wait_pipeline(last_pid);
+		close_all_redirect_fds(node);
 	}
 	return (status);
 }
@@ -43,15 +47,33 @@ int	exec_nonbuiltin(t_node *node)
 {
 	char	*path;
 	char	**argv;
+	char	**envp;
 
 	do_redirect(node->command->redirects);
 	argv = token_list_to_argv(node->command->args);
 	path = argv[0];
 	if (strchr(path, '/') == NULL)
 		path = search_path(path);
-	validate_access(path, argv[0]);
-	execve(path, argv, get_environ(g_envmap));
+	if (path == NULL)
+	{
+		print_error(argv[0], "command not found");
+		free_argv(argv);
+		exit(127);
+	}
+	if (access(path, F_OK) < 0)
+	{
+		print_error(argv[0], "command not found");
+		free_argv(argv);
+		if (path != argv[0])
+			free(path);
+		exit(127);
+	}
+	envp = get_environ(g_envmap);
+	execve(path, argv, envp);
+	free_argv(envp);
 	free_argv(argv);
+	if (path != argv[0])
+		free(path);
 	reset_redirect(node->command->redirects);
 	fatal_error("execve");
 }
@@ -69,6 +91,7 @@ static pid_t	exec_pipeline(t_node *node)
 	else if (pid == 0)
 	{
 		reset_signal();
+		close_all_redirect_fds(node->next);
 		prepare_pipe_child(node);
 		if (is_builtin(node))
 			exit(exec_builtin(node));
@@ -76,6 +99,8 @@ static pid_t	exec_pipeline(t_node *node)
 			exec_nonbuiltin(node);
 	}
 	prepare_pipe_parent(node);
+	if (node->command)
+		close_redirect_fds(node->command->redirects);
 	if (node->next)
 		return (exec_pipeline(node->next));
 	return (pid);

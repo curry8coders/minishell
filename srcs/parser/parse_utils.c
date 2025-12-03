@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 00:00:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/30 19:46:14 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/03 17:59:58 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,12 @@ t_node	*new_node(t_node_kind kind)
 	if (node == NULL)
 		fatal_error("calloc");
 	node->kind = kind;
+	node->filefd = -1;
+	node->stashed_targetfd = -1;
+	node->inpipe[0] = -1;
+	node->inpipe[1] = -1;
+	node->outpipe[0] = -1;
+	node->outpipe[1] = -1;
 	return (node);
 }
 

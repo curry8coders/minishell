@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 00:00:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/30 20:56:16 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/03 15:53:01 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,7 @@ char	*search_path(const char *filename)
 	return (NULL);
 }
 
-void	validate_access(const char *path, const char *filename)
-{
-	if (path == NULL)
-		err_exit(filename, "command not found", 127);
-	if (access(path, F_OK) < 0)
-		err_exit(filename, "command not found", 127);
-}
+
 
 int	get_exit_status(int wstatus)
 {

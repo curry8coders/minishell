@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 05:15:00 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/29 03:38:22 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/03 18:59:26 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "minishell.h"
 
 #include <string.h>
@@ -39,42 +40,32 @@ int	exec_builtin(t_node *node)
 		todo("exec_builtin");
 	free_argv(argv);
 	reset_redirect(node->command->redirects);
+	if (status == BUILTIN_EXIT_REQUEST)
+		exit(g_exit_status);
 	return (status);
-}
-
-const char	**set_builtin_commands(void)
-{
-	static const char	**builtin_commands;
-
-	builtin_commands = (const char **)malloc(sizeof(char *) * 8);
-	if (!builtin_commands)
-		return (NULL);
-	builtin_commands[0] = "exit";
-	builtin_commands[1] = "export";
-	builtin_commands[2] = "unset";
-	builtin_commands[3] = "env";
-	builtin_commands[4] = "cd";
-	builtin_commands[5] = "pwd";
-	builtin_commands[6] = "echo";
-	builtin_commands[7] = NULL;
-	return (builtin_commands);
 }
 
 bool	is_builtin(t_node *node)
 {
-	const char			*cmd_name;
-	static const char	**builtin_commands;
-	unsigned int		i;
+	const char		*cmd_name;
+	int				i;
+	static char		*builtin_commands[] = {
+		"exit",
+		"export",
+		"unset",
+		"env",
+		"cd",
+		"pwd",
+		"echo",
+		NULL
+	};
 
-	builtin_commands = set_builtin_commands();
-	if (!builtin_commands)
-		return (false);
 	if (node == NULL || node->command == NULL || node->command->args == NULL
 		|| node->command->args->word == NULL)
 		return (false);
 	cmd_name = node->command->args->word;
 	i = 0;
-	while (i < 7)
+	while (builtin_commands[i])
 	{
 		if (ft_strcmp(cmd_name, builtin_commands[i]) == 0)
 			return (true);
