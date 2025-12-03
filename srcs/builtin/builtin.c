@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 05:15:00 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/29 03:38:22 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/03 15:37:39 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,39 +42,27 @@ int	exec_builtin(t_node *node)
 	return (status);
 }
 
-const char	**set_builtin_commands(void)
-{
-	static const char	**builtin_commands;
-
-	builtin_commands = (const char **)malloc(sizeof(char *) * 8);
-	if (!builtin_commands)
-		return (NULL);
-	builtin_commands[0] = "exit";
-	builtin_commands[1] = "export";
-	builtin_commands[2] = "unset";
-	builtin_commands[3] = "env";
-	builtin_commands[4] = "cd";
-	builtin_commands[5] = "pwd";
-	builtin_commands[6] = "echo";
-	builtin_commands[7] = NULL;
-	return (builtin_commands);
-}
-
 bool	is_builtin(t_node *node)
 {
-	const char			*cmd_name;
-	static const char	**builtin_commands;
-	unsigned int		i;
+	const char		*cmd_name;
+	int				i;
+	static char		*builtin_commands[] = {
+		"exit",
+		"export",
+		"unset",
+		"env",
+		"cd",
+		"pwd",
+		"echo",
+		NULL
+	};
 
-	builtin_commands = set_builtin_commands();
-	if (!builtin_commands)
-		return (false);
 	if (node == NULL || node->command == NULL || node->command->args == NULL
 		|| node->command->args->word == NULL)
 		return (false);
 	cmd_name = node->command->args->word;
 	i = 0;
-	while (i < 7)
+	while (builtin_commands[i])
 	{
 		if (ft_strcmp(cmd_name, builtin_commands[i]) == 0)
 			return (true);
