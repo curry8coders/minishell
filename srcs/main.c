@@ -24,24 +24,37 @@ void	interpret(char *line, int *stat_loc)
 	t_node	*node;
 
 	tok = tokenize(line);
-	if (at_eof(tok))
-		;
-	else if (g_syntax_error)
-		*stat_loc = ERROR_TOKENIZE;
-	else
+	if (syntax_error || at_eof(tok))
 	{
-		node = parse(tok);
-		if (g_syntax_error)
-			*stat_loc = ERROR_PARSE;
-		else
-		{
-			expand(node);
-			*stat_loc = exec(node);
-		}
-		free_node(node);
+		if (syntax_error)
+			*stat_loc = ERROR_TOKENIZE;
+		free_tok(tok);
+		return;
 	}
+	
+	node = parse(tok);
+	if (syntax_error)
+	{
+		*stat_loc = ERROR_PARSE;
+		free_node(node);
+		free_tok(tok);
+		return;
+	}
+	
+	expand(node);
+	if (syntax_error)
+	{
+		*stat_loc = ERROR_EXPAND;
+		free_node(node);
+		free_tok(tok);
+		return;
+	}
+	
+	*stat_loc = exec(node);
+	free_node(node);
 	free_tok(tok);
 }
+
 //*stat_locではメモリアクセスでステータス渡す
 //status localtion
 // なぜinterpretでexecが起動されるか
