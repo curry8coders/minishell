@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/01 21:34:08 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/03 15:53:03 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,19 @@ typedef struct s_node t_node;
 typedef struct s_map t_map;
 typedef struct s_item t_item;
 
-extern int	g_last_status;
-extern bool	g_syntax_error;
-extern bool	g_readline_interrupted;
-extern volatile sig_atomic_t	g_sig;
-extern t_map	*g_envmap;
+extern int g_last_status;
+extern bool g_syntax_error;
+extern bool g_readline_interrupted;
+extern volatile sig_atomic_t g_sig;
+extern t_map *g_envmap;
 
 // error.c
 void todo(const char *msg) __attribute__((noreturn));
 void fatal_error(const char *msg) __attribute__((noreturn));
 void assert_error(const char *msg) __attribute__((noreturn));
+void print_error(const char *location, const char *msg);
 void err_exit(const char *location, const char *msg, int status)
-	__attribute__((noreturn));
+    __attribute__((noreturn));
 void tokenize_error(const char *location, char **rest, char *line);
 void parse_error(const char *location, t_token **rest, t_token *tok);
 void xperror(const char *location);
@@ -184,7 +185,7 @@ int exec(t_node *node);
 
 // exec_utils.c
 char *search_path(const char *filename);
-void validate_access(const char *path, const char *filename);
+
 int get_exit_status(int wstatus);
 
 // signal.c

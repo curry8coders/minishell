@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/30 20:55:50 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/03 15:52:59 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,24 @@ int	exec_nonbuiltin(t_node *node)
 	path = argv[0];
 	if (strchr(path, '/') == NULL)
 		path = search_path(path);
-	validate_access(path, argv[0]);
+	if (path == NULL)
+	{
+		print_error(argv[0], "command not found");
+		free_argv(argv);
+		exit(127);
+	}
+	if (access(path, F_OK) < 0)
+	{
+		print_error(argv[0], "command not found");
+		free_argv(argv);
+		if (path != argv[0])
+			free(path);
+		exit(127);
+	}
 	execve(path, argv, get_environ(g_envmap));
 	free_argv(argv);
+	if (path != argv[0])
+		free(path);
 	reset_redirect(node->command->redirects);
 	fatal_error("execve");
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 17:35:46 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/29 05:17:33 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/03 15:52:43 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,15 @@ void	assert_error(const char *msg)
 	exit(255);
 }
 
-void	err_exit(const char *location, const char *msg, int status)
+void	print_error(const char *location, const char *msg)
 {
 	perror_prefix();
 	dprintf(STDERR_FILENO, "%s: %s\n", location, msg);
+}
+
+void	err_exit(const char *location, const char *msg, int status)
+{
+	print_error(location, msg);
 	exit(status);
 }
 
