@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:10:51 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/04 22:44:06 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/05 08:15:56 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,72 +17,85 @@
 #include <readline/history.h>
 #include "minishell.h"
 
-int	g_last_status;
-
-static void	exec_and_cleanup(t_node *node, t_token *tok, int *stat_loc)
+static void	exec_and_cleanup(t_shell *sh, t_node *node, t_token *tok)
 {
-	expand(node);
-	if (g_syntax_error)
+	expand(sh, node);
+	if (sh->syntax_error)
 	{
-		*stat_loc = ERROR_EXPAND;
+		sh->last_status = ERROR_EXPAND;
 		free_node(node);
 		free_tok(tok);
 		return ;
 	}
-	*stat_loc = exec(node);
+	sh->last_status = exec(sh, node);
 	free_node(node);
 	free_tok(tok);
 }
 
-void	interpret(char *line, int *stat_loc)
+static void	interpret(t_shell *shell, char *line)
 {
 	t_token	*tok;
 	t_node	*node;
 
-	tok = tokenize(line);
-	if (g_syntax_error || at_eof(tok))
+	tok = tokenize(shell, line);
+	if (shell->syntax_error || at_eof(tok))
 	{
-		if (g_syntax_error)
-			*stat_loc = ERROR_TOKENIZE;
+		if (shell->syntax_error)
+			shell->last_status = ERROR_TOKENIZE;
 		free_tok(tok);
 		return ;
 	}
-	node = parse(tok);
-	if (g_syntax_error)
+	node = parse(shell, tok);
+	if (shell->syntax_error)
 	{
-		*stat_loc = ERROR_PARSE;
+		shell->last_status = ERROR_PARSE;
 		free_node(node);
 		free_tok(tok);
 		return ;
 	}
-	exec_and_cleanup(node, tok, stat_loc);
+	exec_and_cleanup(shell, node, tok);
+}
+
+static void	init_shell(t_shell *shell)
+{
+	shell->last_status = 0;
+	shell->exit_status = 0;
+	shell->syntax_error = false;
+	shell->readline_interrupted = false;
+	shell->envmap = NULL;
+}
+
+static void	handle_line(t_shell *shell, char *line)
+{
+	if (shell->readline_interrupted)
+	{
+		shell->last_status = 128 + SIGINT;
+		free(line);
+		return ;
+	}
+	if (*line)
+		add_history(line);
+	interpret(shell, line);
+	free(line);
 }
 
 int	main(void)
 {
+	t_shell	shell;
 	char	*line;
 
 	rl_outstream = stderr;
-	initenv();
-	setup_signal();
-	g_last_status = 0;
+	init_shell(&shell);
+	initenv(&shell);
+	setup_signal(&shell);
 	while (1)
 	{
-		g_readline_interrupted = false;
+		shell.readline_interrupted = false;
 		line = readline("minishell$ ");
 		if (line == NULL)
 			break ;
-		if (g_readline_interrupted)
-		{
-			g_last_status = 128 + SIGINT;
-			free(line);
-			continue ;
-		}
-		if (*line)
-			add_history(line);
-		interpret(line, &g_last_status);
-		free(line);
+		handle_line(&shell, line);
 	}
 	write(STDERR_FILENO, "exit\n", 5);
-	exit(g_last_status);
+	exit(shell.last_status);
 }

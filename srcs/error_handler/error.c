@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 17:35:46 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/04 20:53:05 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/05 08:15:56 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 #include "minishell.h"
 
 #define ERROR_PREFIX "minishell: "
-
-bool	g_syntax_error = false;
 
 void	perror_prefix(void)
 {

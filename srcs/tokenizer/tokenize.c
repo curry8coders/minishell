@@ -6,15 +6,13 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:57:17 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/04 22:39:33 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/05 08:15:56 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
 #include <stdlib.h>
 #include "minishell.h"
-
-extern bool	g_syntax_error;
 
 t_token	*new_token(char *word, t_token_kind kind)
 {
@@ -51,15 +49,15 @@ t_token	*operator(char **rest, char *line)
 	assert_error("Unexpected operator");
 }
 
-t_token	*tokenize(char *line)
+t_token	*tokenize(t_shell *shell, char *line)
 {
 	t_token	head;
 	t_token	*tok;
 
-	g_syntax_error = false;
+	shell->syntax_error = false;
 	head.next = NULL;
 	tok = &head;
-	while (*line && g_syntax_error == false)
+	while (*line && shell->syntax_error == false)
 	{
 		if (consume_blank(&line, line))
 			continue ;
@@ -70,7 +68,7 @@ t_token	*tokenize(char *line)
 		}
 		else if (is_word(line))
 		{
-			tok->next = word(&line, line);
+			tok->next = word(shell, &line, line);
 			tok = tok->next;
 		}
 		else

@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/04 21:26:57 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/05 08:15:56 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,37 +18,37 @@
 #include <string.h>
 #include "minishell.h"
 
-static pid_t	exec_pipeline(t_node *node);
+static pid_t	exec_pipeline(t_shell *shell, t_node *node);
 static int		wait_pipeline(pid_t last_pid);
 
-int	exec(t_node *node)
+int	exec(t_shell *shell, t_node *node)
 {
 	pid_t	last_pid;
 	int		status;
 
-	if (open_redir_file(node) < 0)
+	if (open_redir_file(shell, node) < 0)
 	{
 		close_all_redirect_fds(node);
 		return (ERROR_OPEN_REDIR);
 	}
 	if (node->next == NULL && is_builtin(node))
-		status = exec_builtin(node);
+		status = exec_builtin(shell, node);
 	else
 	{
-		last_pid = exec_pipeline(node);
+		last_pid = exec_pipeline(shell, node);
 		status = wait_pipeline(last_pid);
 		close_all_redirect_fds(node);
 	}
 	return (status);
 }
 
-static char	*resolve_path(char **argv)
+static char	*resolve_path(t_shell *shell, char **argv)
 {
 	char	*path;
 
 	path = argv[0];
 	if (strchr(path, '/') == NULL)
-		path = search_path(path);
+		path = search_path(shell, path);
 	if (path == NULL || access(path, F_OK) < 0)
 	{
 		print_error(argv[0], "command not found");
@@ -60,7 +60,7 @@ static char	*resolve_path(char **argv)
 	return (path);
 }
 
-int	exec_nonbuiltin(t_node *node)
+static int	exec_nonbuiltin(t_shell *shell, t_node *node)
 {
 	char	*path;
 	char	**argv;
@@ -68,8 +68,8 @@ int	exec_nonbuiltin(t_node *node)
 
 	do_redirect(node->command->redirects);
 	argv = token_list_to_argv(node->command->args);
-	path = resolve_path(argv);
-	envp = get_environ(g_envmap);
+	path = resolve_path(shell, argv);
+	envp = get_environ(shell->envmap);
 	execve(path, argv, envp);
 	free_argv(envp);
 	free_argv(argv);
@@ -79,7 +79,7 @@ int	exec_nonbuiltin(t_node *node)
 	fatal_error("execve");
 }
 
-static pid_t	exec_pipeline(t_node *node)
+static pid_t	exec_pipeline(t_shell *shell, t_node *node)
 {
 	pid_t	pid;
 
@@ -95,15 +95,15 @@ static pid_t	exec_pipeline(t_node *node)
 		close_all_redirect_fds(node->next);
 		prepare_pipe_child(node);
 		if (is_builtin(node))
-			exit(exec_builtin(node));
+			exit(exec_builtin(shell, node));
 		else
-			exec_nonbuiltin(node);
+			exec_nonbuiltin(shell, node);
 	}
 	prepare_pipe_parent(node);
 	if (node->command)
 		close_redirect_fds(node->command->redirects);
 	if (node->next)
-		return (exec_pipeline(node->next));
+		return (exec_pipeline(shell, node->next));
 	return (pid);
 }
 

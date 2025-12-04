@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 00:00:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/04 21:26:56 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/05 08:15:56 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,14 @@ static void	build_path(char *path, const char *dir, size_t len,
 	ft_strlcat(path, filename, PATH_MAX);
 }
 
-char	*search_path(const char *filename)
+char	*search_path(t_shell *shell, const char *filename)
 {
 	char	path[PATH_MAX];
 	char	*value;
 	char	*end;
 	char	*result;
 
-	value = xgetenv("PATH");
+	value = xgetenv(shell, "PATH");
 	if (value == NULL)
 		return (NULL);
 	while (*value)

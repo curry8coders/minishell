@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:54:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/04 22:39:31 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/05 08:15:56 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@ void	expand_quote_removal(t_node *node)
 	expand_quote_removal(node->next);
 }
 
-void	expand(t_node *node)
+void	expand(t_shell *shell, t_node *node)
 {
-	expand_variable_node(node);
+	expand_variable_node(shell, node);
 	expand_quote_removal(node);
 }
 
-char	*expand_heredoc_line(char *line)
+char	*expand_heredoc_line(t_shell *shell, char *line)
 {
 	t_strbuf	buf;
 	char		*p;
@@ -41,9 +41,9 @@ char	*expand_heredoc_line(char *line)
 	while (*p)
 	{
 		if (is_variable(p))
-			expand_variable(&buf, &p, p);
+			expand_variable(shell, &buf, &p, p);
 		else if (is_special_parameter(p))
-			expand_special_parameter(&buf, &p, p);
+			expand_special_param(shell, &buf, &p, p);
 		else
 			strbuf_append_char(&buf, *p++);
 	}

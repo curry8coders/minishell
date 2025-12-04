@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 05:15:00 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/04 20:47:54 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/05 08:15:56 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,39 +14,39 @@
 #include <unistd.h>
 #include "minishell.h"
 
-static int	dispatch_builtin(char **argv)
+static int	dispatch_builtin(t_shell *shell, char **argv)
 {
 	if (ft_strcmp(argv[0], "exit") == 0)
-		return (builtin_exit(argv));
+		return (builtin_exit(shell, argv));
 	else if (ft_strcmp(argv[0], "export") == 0)
-		return (builtin_export(argv));
+		return (builtin_export(shell, argv));
 	else if (ft_strcmp(argv[0], "unset") == 0)
-		return (builtin_unset(argv));
+		return (builtin_unset(shell, argv));
 	else if (ft_strcmp(argv[0], "env") == 0)
-		return (builtin_env(argv));
+		return (builtin_env(shell, argv));
 	else if (ft_strcmp(argv[0], "cd") == 0)
-		return (builtin_cd(argv));
+		return (builtin_cd(shell, argv));
 	else if (ft_strcmp(argv[0], "pwd") == 0)
-		return (builtin_pwd(argv));
+		return (builtin_pwd(shell, argv));
 	else if (ft_strcmp(argv[0], "echo") == 0)
 		return (builtin_echo(argv));
 	return (1);
 }
 
-int	exec_builtin(t_node *node)
+int	exec_builtin(t_shell *shell, t_node *node)
 {
 	int		status;
 	char	**argv;
 
 	do_redirect(node->command->redirects);
 	argv = token_list_to_argv(node->command->args);
-	status = dispatch_builtin(argv);
+	status = dispatch_builtin(shell, argv);
 	free_argv(argv);
 	reset_redirect(node->command->redirects);
 	if (status == BUILTIN_EXIT_REQUEST)
 	{
 		write(STDERR_FILENO, "exit\n", 5);
-		exit(g_exit_status);
+		exit(shell->exit_status);
 	}
 	return (status);
 }

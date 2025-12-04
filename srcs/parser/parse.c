@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include "minishell.h"
 
-t_node	*parse(t_token *tok)
+t_node	*parse(t_shell *shell, t_token *tok)
 {
 	t_node	*node;
 
@@ -23,9 +23,9 @@ t_node	*parse(t_token *tok)
 	node->inpipe[1] = -1;
 	node->outpipe[0] = -1;
 	node->outpipe[1] = STDOUT_FILENO;
-	node->command = simple_command(&tok, tok);
+	node->command = simple_command(shell, &tok, tok);
 	if (equal_op(tok, "|"))
-		node->next = parse(tok->next);
+		node->next = parse(shell, tok->next);
 	return (node);
 }
 
@@ -45,36 +45,36 @@ bool	is_control_operator(t_token *tok)
 	return (false);
 }
 
-t_node	*simple_command(t_token **rest, t_token *tok)
+t_node	*simple_command(t_shell *shell, t_token **rest, t_token *tok)
 {
 	t_node	*node;
 
 	node = new_node(ND_SIMPLE_CMD);
-	append_command_element(node, &tok, tok);
+	append_cmd_elm(shell, node, &tok, tok);
 	while (tok && !at_eof(tok) && !is_control_operator(tok))
-		append_command_element(node, &tok, tok);
+		append_cmd_elm(shell, node, &tok, tok);
 	*rest = tok;
 	return (node);
 }
 
-void	append_command_element(t_node *command, t_token **rest, t_token *tok)
+void	append_cmd_elm(t_shell *sh, t_node *cmd, t_token **rest, t_token *tok)
 {
 	if (tok->kind == TK_WORD)
 	{
-		append_tok(&command->args, tokdup(tok));
+		append_tok(&cmd->args, tokdup(tok));
 		tok = tok->next;
 	}
 	else if (equal_op(tok, ">") && tok->next->kind == TK_WORD)
-		append_node(&command->redirects, redirect_out(&tok, tok));
+		append_node(&cmd->redirects, redirect_out(&tok, tok));
 	else if (equal_op(tok, "<") && tok->next->kind == TK_WORD)
-		append_node(&command->redirects, redirect_input(&tok, tok));
+		append_node(&cmd->redirects, redirect_input(&tok, tok));
 	else if (equal_op(tok, ">>") && tok->next->kind == TK_WORD)
-		append_node(&command->redirects, redirect_append(&tok, tok));
+		append_node(&cmd->redirects, redirect_append(&tok, tok));
 	else if (equal_op(tok, "<<") && tok->next->kind == TK_WORD)
-		append_node(&command->redirects, redirect_heredoc(&tok, tok));
+		append_node(&cmd->redirects, redirect_heredoc(&tok, tok));
 	else
 	{
-		parse_error(&tok, tok);
+		parse_error(sh, &tok, tok);
 		*rest = tok;
 		return ;
 	}

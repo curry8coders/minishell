@@ -17,21 +17,19 @@
 
 #include <string.h>
 
-t_map	*g_envmap;
-
 static void	envmap_init(t_map *map, char **ep);
 
-char	*xgetenv(const char *name)
+char	*xgetenv(t_shell *shell, const char *name)
 {
-	return (map_get(g_envmap, name));
+	return (map_get(shell->envmap, name));
 }
 
-void	initenv(void)
+void	initenv(t_shell *shell)
 {
 	extern char	**environ;
 
-	g_envmap = map_new();
-	envmap_init(g_envmap, environ);
+	shell->envmap = map_new();
+	envmap_init(shell->envmap, environ);
 }
 
 char	**get_environ(t_map *map)

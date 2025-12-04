@@ -17,6 +17,7 @@
 #include "minishell.h"
 
 volatile sig_atomic_t	g_sig = 0;
+static bool				*g_rl_int_ptr = NULL;
 
 int	check_state(void)
 {
@@ -25,7 +26,8 @@ int	check_state(void)
 	else if (g_sig == SIGINT)
 	{
 		g_sig = 0;
-		g_readline_interrupted = true;
+		if (g_rl_int_ptr)
+			*g_rl_int_ptr = true;
 		rl_replace_line("", 0);
 		rl_done = 1;
 		return (0);
@@ -33,10 +35,11 @@ int	check_state(void)
 	return (0);
 }
 
-void	setup_signal(void)
+void	setup_signal(t_shell *shell)
 {
 	extern int	_rl_echo_control_chars;
 
+	g_rl_int_ptr = &shell->readline_interrupted;
 	_rl_echo_control_chars = 0;
 	rl_outstream = stderr;
 	if (isatty(STDIN_FILENO))

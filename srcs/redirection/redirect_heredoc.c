@@ -18,9 +18,7 @@
 
 #include <string.h>
 
-bool	g_readline_interrupted = false;
-
-static bool	process_heredoc_line(int pfd, const char *delimiter,
+static bool	process_heredoc_line(t_shell *sh, int pfd, const char *delim,
 	bool is_delim_unquoted)
 {
 	char	*line;
@@ -28,34 +26,34 @@ static bool	process_heredoc_line(int pfd, const char *delimiter,
 	line = readline("> ");
 	if (line == NULL)
 		return (false);
-	if (g_readline_interrupted)
+	if (sh->readline_interrupted)
 	{
 		free(line);
 		return (false);
 	}
-	if (strcmp(line, delimiter) == 0)
+	if (strcmp(line, delim) == 0)
 	{
 		free(line);
 		return (false);
 	}
 	if (is_delim_unquoted)
-		line = expand_heredoc_line(line);
+		line = expand_heredoc_line(sh, line);
 	dprintf(pfd, "%s\n", line);
 	free(line);
 	return (true);
 }
 
-int	read_heredoc(const char *delimiter, bool is_delim_unquoted)
+int	read_heredoc(t_shell *sh, const char *delim, bool is_delim_unquoted)
 {
 	int		pfd[2];
 
 	if (pipe(pfd) < 0)
 		fatal_error("pipe");
-	g_readline_interrupted = false;
-	while (process_heredoc_line(pfd[1], delimiter, is_delim_unquoted))
+	sh->readline_interrupted = false;
+	while (process_heredoc_line(sh, pfd[1], delim, is_delim_unquoted))
 		;
 	close(pfd[1]);
-	if (g_readline_interrupted)
+	if (sh->readline_interrupted)
 	{
 		close(pfd[0]);
 		return (-1);

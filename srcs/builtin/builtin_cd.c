@@ -17,13 +17,13 @@
 
 #include <string.h>
 
-static int	get_target_path(char *path, char **argv)
+static int	get_target_path(t_shell *sh, char *path, char **argv)
 {
 	char	*home;
 
 	if (argv[1] == NULL)
 	{
-		home = map_get(g_envmap, "HOME");
+		home = map_get(sh->envmap, "HOME");
 		if (home == NULL)
 		{
 			builtin_error("cd", NULL, "HOME not set");
@@ -36,15 +36,15 @@ static int	get_target_path(char *path, char **argv)
 	return (0);
 }
 
-int	builtin_cd(char **argv)
+int	builtin_cd(t_shell *shell, char **argv)
 {
 	char	*oldpwd;
 	char	path[PATH_MAX];
 	char	*newpwd;
 
-	oldpwd = map_get(g_envmap, "PWD");
-	map_set(g_envmap, "OLDPWD", oldpwd);
-	if (get_target_path(path, argv) != 0)
+	oldpwd = map_get(shell->envmap, "PWD");
+	map_set(shell->envmap, "OLDPWD", oldpwd);
+	if (get_target_path(shell, path, argv) != 0)
 		return (1);
 	if (chdir(path) < 0)
 	{
@@ -52,7 +52,7 @@ int	builtin_cd(char **argv)
 		return (1);
 	}
 	newpwd = resolve_pwd(oldpwd, path);
-	map_set(g_envmap, "PWD", newpwd);
+	map_set(shell->envmap, "PWD", newpwd);
 	free(newpwd);
 	return (0);
 }

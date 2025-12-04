@@ -15,9 +15,9 @@
 #include <stdio.h>
 #include "minishell.h"
 
-void	tokenize_error(const char *location, char **rest, char *line)
+void	tokenize_error(t_shell *sh, const char *loc, char **rest, char *line)
 {
-	g_syntax_error = true;
+	sh->syntax_error = true;
 	perror_prefix();
 	if (*line == '\0')
 		dprintf(STDERR_FILENO, "syntax error: unexpected end of input\n");
@@ -27,12 +27,12 @@ void	tokenize_error(const char *location, char **rest, char *line)
 	while (*line)
 		line++;
 	*rest = line;
-	(void)location;
+	(void)loc;
 }
 
-void	parse_error(t_token **rest, t_token *tok)
+void	parse_error(t_shell *shell, t_token **rest, t_token *tok)
 {
-	g_syntax_error = true;
+	shell->syntax_error = true;
 	perror_prefix();
 	dprintf(STDERR_FILENO, "syntax error near unexpected token `%s'\n",
 		tok->word);

@@ -14,33 +14,33 @@
 #include <stdlib.h>
 #include "minishell.h"
 
-static void	skip_single_quote(char **line, char **rest)
+static void	skip_single_quote(t_shell *sh, char **line, char **rest)
 {
 	(*line)++;
 	while (**line && **line != SINGLE_QUOTE_CHAR)
 		(*line)++;
 	if (**line == '\0')
 	{
-		tokenize_error("word(single quote)", rest, *line);
+		tokenize_error(sh, "word(single quote)", rest, *line);
 		return ;
 	}
 	(*line)++;
 }
 
-static void	skip_double_quote(char **line, char **rest)
+static void	skip_double_quote(t_shell *sh, char **line, char **rest)
 {
 	(*line)++;
 	while (**line && **line != DOUBLE_QUOTE_CHAR)
 		(*line)++;
 	if (**line == '\0')
 	{
-		tokenize_error("word(double quote)", rest, *line);
+		tokenize_error(sh, "word(double quote)", rest, *line);
 		return ;
 	}
 	(*line)++;
 }
 
-t_token	*word(char **rest, char *line)
+t_token	*word(t_shell *shell, char **rest, char *line)
 {
 	const char	*start;
 	char		*w;
@@ -49,12 +49,12 @@ t_token	*word(char **rest, char *line)
 	while (*line && !is_metacharacter(*line))
 	{
 		if (*line == SINGLE_QUOTE_CHAR)
-			skip_single_quote(&line, rest);
+			skip_single_quote(shell, &line, rest);
 		else if (*line == DOUBLE_QUOTE_CHAR)
-			skip_double_quote(&line, rest);
+			skip_double_quote(shell, &line, rest);
 		else
 			line++;
-		if (g_syntax_error)
+		if (shell->syntax_error)
 			break ;
 	}
 	w = strndup(start, line - start);

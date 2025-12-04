@@ -13,7 +13,7 @@
 #include <fcntl.h>
 #include "minishell.h"
 
-static int	open_redirect_file_node(t_node *node)
+static int	open_redirect_file_node(t_shell *shell, t_node *node)
 {
 	if (node->kind == ND_REDIR_OUT)
 		node->filefd = open(node->filename->word,
@@ -24,7 +24,7 @@ static int	open_redirect_file_node(t_node *node)
 		node->filefd = open(node->filename->word,
 				O_CREAT | O_WRONLY | O_APPEND, 0644);
 	else if (node->kind == ND_REDIR_HEREDOC)
-		node->filefd = read_heredoc(node->delimiter->word,
+		node->filefd = read_heredoc(shell, node->delimiter->word,
 				node->is_delim_unquoted);
 	else
 		assert_error("open_redirect_file_node");
@@ -38,21 +38,21 @@ static int	open_redirect_file_node(t_node *node)
 	return (0);
 }
 
-int	open_redir_file(t_node *node)
+int	open_redir_file(t_shell *shell, t_node *node)
 {
 	if (node == NULL)
 		return (0);
 	if (node->kind == ND_PIPELINE)
 	{
-		if (open_redir_file(node->command) < 0)
+		if (open_redir_file(shell, node->command) < 0)
 			return (-1);
-		if (open_redir_file(node->next) < 0)
+		if (open_redir_file(shell, node->next) < 0)
 			return (-1);
 		return (0);
 	}
 	else if (node->kind == ND_SIMPLE_CMD)
-		return (open_redir_file(node->redirects));
-	if (open_redirect_file_node(node) < 0)
+		return (open_redir_file(shell, node->redirects));
+	if (open_redirect_file_node(shell, node) < 0)
 		return (-1);
-	return (open_redir_file(node->next));
+	return (open_redir_file(shell, node->next));
 }

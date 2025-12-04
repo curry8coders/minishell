@@ -32,13 +32,13 @@ bool	equal_inode(const char *path1, const char *path2)
 	return (st1.st_ino == st2.st_ino);
 }
 
-int	builtin_pwd(char **argv)
+int	builtin_pwd(t_shell *shell, char **argv)
 {
 	char	*pwd;
 	char	cwd[PATH_MAX];
 
 	(void)argv;
-	pwd = xgetenv("PWD");
+	pwd = xgetenv(shell, "PWD");
 	if (pwd == NULL || !equal_inode(pwd, "."))
 	{
 		if (getcwd(cwd, PATH_MAX) == NULL)
