@@ -6,16 +6,15 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:57:17 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/03 21:28:33 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/04 22:38:25 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
-
 #include <stdlib.h>
 #include "minishell.h"
 
-extern bool g_syntax_error;
+extern bool	g_syntax_error;
 
 t_token	*new_token(char *word, t_token_kind kind)
 {
@@ -29,13 +28,12 @@ t_token	*new_token(char *word, t_token_kind kind)
 	return (tok);
 }
 
-// Check longer operators first
 t_token	*operator(char **rest, char *line)
 {
 	static const char *const	operators[] = {">>", "<<", "||", "&&", ";;",
 		"<", ">", "&", ";", "(", ")", "|", "\n"};
-	size_t				i;
-	char				*op;
+	size_t						i;
+	char						*op;
 
 	i = 0;
 	while (i < sizeof(operators) / sizeof(*operators))
@@ -111,19 +109,3 @@ char	**token_list_to_argv(t_token *tok)
 		fatal_error("calloc");
 	return (tail_recursive(tok, 0, argv));
 }
-
-/*
-man bash
-DEFINITIONS
-       The following definitions are used throughout the rest of this document.
-       blank  A space or tab.
-       word   A sequence of characters considered as a single unit by the shell.  Also known as a token.
-       name   A word consisting only of alphanumeric characters and underscores, and beginning with an alphabetic
-              character or an underscore.  Also referred to as an identifier.
-       metacharacter
-              A character that, when unquoted, separates words.  One of the following:
-              |  & ; ( ) < > space tab
-       control operator
-              A token that performs a control function.  It is one of the following symbols:
-              || & && ; ;; ( ) | <newline>
-*/

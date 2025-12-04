@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/04 20:53:05 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/04 22:38:25 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,10 +118,41 @@ struct s_item {
 struct s_map {
   t_item item_head;
 };
- 
+
+#define STRBUF_INIT_CAP 16
+
+typedef struct s_strbuf
+{
+	char	*data;
+	size_t	len;
+	size_t	capacity;
+}	t_strbuf;
+
+// expand_strbuf.c
+void	strbuf_init(t_strbuf *buf);
+void	strbuf_grow(t_strbuf *buf, size_t needed);
+void	strbuf_append_char(t_strbuf *buf, char c);
+void	strbuf_append_str(t_strbuf *buf, const char *s);
+char	*strbuf_finish(t_strbuf *buf);
+
+// expand_var.c
+void	append_num(t_strbuf *buf, unsigned int num);
+void	expand_special_parameter(t_strbuf *buf, char **rest, char *p);
+void	expand_variable(t_strbuf *buf, char **rest, char *p);
+void	expand_variable_tok(t_token *tok);
+void	expand_variable_node(t_node *node);
+
+// expand_quote.c
+void	remove_single_quote(t_strbuf *buf, char **rest, char *p);
+void	remove_double_quote(t_strbuf *buf, char **rest, char *p);
+void	remove_quote(t_token *tok);
+void	append_single_quote(t_strbuf *buf, char **rest, char *p);
+void	append_double_quote(t_strbuf *buf, char **rest, char *p);
+
 // expand.c
-void expand(t_node *node);
-char *expand_heredoc_line(char *line);
+void	expand(t_node *node);
+char	*expand_heredoc_line(char *line);
+void	expand_quote_removal(t_node *node);
 
 //expand_utils.c
 bool	is_alpha_under(char c);

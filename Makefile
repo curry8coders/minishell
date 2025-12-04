@@ -6,7 +6,7 @@
 #    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/12/04 22:32:20 by ichikawahik      ###   ########.fr        #
+#    Updated: 2025/12/04 22:38:25 by ichikawahik      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,10 +42,14 @@ SRCS = srcs/main.c\
        srcs/error_handler/error.c\
        srcs/error_handler/error_syntax.c\
        srcs/tokenizer/tokenize.c\
-		srcs/tokenizer/tokenize_utils.c\
+       srcs/tokenizer/tokenize_utils.c\
+       srcs/tokenizer/tokenize_utils2.c\
        srcs/destructor.c\
        srcs/tokenizer/expand.c\
-		srcs/tokenizer/expand_utils.c\
+       srcs/tokenizer/expand_strbuf.c\
+       srcs/tokenizer/expand_var.c\
+       srcs/tokenizer/expand_quote.c\
+       srcs/tokenizer/expand_utils.c\
        srcs/parser/parse.c\
        srcs/parser/parse_redirect.c\
        srcs/parser/parse_utils.c\
