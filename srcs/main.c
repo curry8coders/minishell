@@ -6,12 +6,13 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:10:51 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/03 21:27:43 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/04 20:00:22 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "minishell.h"
@@ -69,14 +70,23 @@ int	main(void)
 	g_last_status = 0;
 	while (1)
 	{
+		g_readline_interrupted = false;
 		line = readline("minishell$ ");
 		if (line == NULL)
 			break ;
+		if (g_readline_interrupted)
+		{
+			g_last_status = 128 + SIGINT;
+			free(line);
+			write(STDERR_FILENO, "\n", 1);
+			continue ;
+		}
 		if (*line)
 			add_history(line);
 		interpret(line, &g_last_status);
 		free(line);
 	}
+	write(STDERR_FILENO, "exit\n", 5);
 	exit(g_last_status);
 }
 //interpret(line, &status)は&アドレス渡し

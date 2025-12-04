@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/03 21:13:47 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/04 20:02:47 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,13 @@ extern volatile sig_atomic_t g_sig;
 extern t_map *g_envmap;
 
 // error.c
-void todo(const char *msg) __attribute__((noreturn));
 void fatal_error(const char *msg) __attribute__((noreturn));
 void assert_error(const char *msg) __attribute__((noreturn));
 void print_error(const char *location, const char *msg);
 void err_exit(const char *location, const char *msg, int status)
     __attribute__((noreturn));
 void tokenize_error(const char *location, char **rest, char *line);
-void parse_error(const char *location, t_token **rest, t_token *tok);
+void parse_error(t_token **rest, t_token *tok);
 void xperror(const char *location);
 void builtin_error(const char *func, const char *name, const char *err);
 
@@ -57,12 +56,10 @@ void builtin_error(const char *func, const char *name, const char *err);
 typedef struct s_token t_token;
 enum e_token_kind {
   TK_WORD,
-  TK_RESERVED,
   TK_OP,
   TK_EOF,
 };
 typedef enum e_token_kind t_token_kind;
-//TK_RESERVED未使用
 
 
 // `word` is zero terminated string.
@@ -133,8 +130,7 @@ bool	is_special_parameter(char *s);
 t_token *tokenize(char *line);
 char **token_list_to_argv(t_token *tok);
 t_token *new_token(char *word, t_token_kind kind);
-bool is_operator(const char *s);//?
-t_token *operator(char **rest, char *line);//?
+t_token *operator(char **rest, char *line);
 
 // tokenize_utils.c
 bool	is_blank(char c);
@@ -143,12 +139,6 @@ bool	startswith(const char *s, const char *keyword);
 bool	is_metacharacter(char c);
 bool	is_word(const char *s);
 t_token *word(char **rest, char *line);
-
-// expand.c
-void expand(t_node *node);
-char *expand_heredoc_line(char *line);
-bool is_alpha_under(char c);
-bool is_alpha_num_under(char c);
 
 // destructor.c
 void free_node(t_node *node);

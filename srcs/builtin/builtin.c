@@ -6,11 +6,12 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 05:15:00 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/03 18:59:26 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/04 20:00:22 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <unistd.h>
 #include "minishell.h"
 
 #include <string.h>
@@ -37,11 +38,14 @@ int	exec_builtin(t_node *node)
 	else if (ft_strcmp(argv[0], "echo") == 0)
 		status = builtin_echo(argv);
 	else
-		todo("exec_builtin");
+		status = 1;
 	free_argv(argv);
 	reset_redirect(node->command->redirects);
 	if (status == BUILTIN_EXIT_REQUEST)
+	{
+		write(STDERR_FILENO, "exit\n", 5);
 		exit(g_exit_status);
+	}
 	return (status);
 }
 

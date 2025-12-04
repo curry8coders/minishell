@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 17:35:46 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/03 21:28:11 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/04 20:02:47 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,6 @@ void	err_exit(const char *location, const char *msg, int status)
 	exit(status);
 }
 
-void	todo(const char *msg)
-{
-	perror_prefix();
-	dprintf(STDERR_FILENO, "TODO: %s\n", msg);
-	exit(255);
-}
-
 void	tokenize_error(const char *location, char **rest, char *line)
 {
 	g_syntax_error = true;
@@ -70,11 +63,11 @@ void	tokenize_error(const char *location, char **rest, char *line)
 	*rest = line;
 }
 
-void	parse_error(const char *location, t_token **rest, t_token *tok)
+void	parse_error(t_token **rest, t_token *tok)
 {
 	g_syntax_error = true;
 	perror_prefix();
-	dprintf(STDERR_FILENO, "syntax error near unexpected token `%s' in %s\n", tok->word, location);
+	dprintf(STDERR_FILENO, "syntax error near unexpected token `%s'\n", tok->word);
 	//note : 
 	// tokenize() 関数で作られる TK_EOF トークンは、wordに
 	// NULLを設定した状態で生成される そこでparse_error()に
