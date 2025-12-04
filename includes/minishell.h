@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/04 20:02:47 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/04 20:53:05 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,18 @@ extern volatile sig_atomic_t g_sig;
 extern t_map *g_envmap;
 
 // error.c
-void fatal_error(const char *msg) __attribute__((noreturn));
-void assert_error(const char *msg) __attribute__((noreturn));
-void print_error(const char *location, const char *msg);
-void err_exit(const char *location, const char *msg, int status)
-    __attribute__((noreturn));
-void tokenize_error(const char *location, char **rest, char *line);
-void parse_error(t_token **rest, t_token *tok);
-void xperror(const char *location);
-void builtin_error(const char *func, const char *name, const char *err);
+void	perror_prefix(void);
+void	fatal_error(const char *msg) __attribute__((noreturn));
+void	assert_error(const char *msg) __attribute__((noreturn));
+void	print_error(const char *location, const char *msg);
+void	err_exit(const char *location, const char *msg, int status)
+	__attribute__((noreturn));
+
+// error_syntax.c
+void	tokenize_error(const char *location, char **rest, char *line);
+void	parse_error(t_token **rest, t_token *tok);
+void	xperror(const char *location);
+void	builtin_error(const char *func, const char *name, const char *err);
 
 // tokenize.c
 typedef struct s_token t_token;

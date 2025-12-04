@@ -3,13 +3,13 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+         #
+#    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/11/30 20:20:05 by hichikaw         ###   ########.fr        #
+#    Updated: 2025/12/04 20:53:06 by ichikawahik      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
- 
+
 #Linux | Darwin
 OS := $(shell uname -s)
 
@@ -40,6 +40,7 @@ LIBS = -lreadline $(LIBFT)
 
 SRCS = srcs/main.c\
        srcs/error_handler/error.c\
+       srcs/error_handler/error_syntax.c\
        srcs/tokenizer/tokenize.c\
 		srcs/tokenizer/tokenize_utils.c\
        srcs/destructor.c\
