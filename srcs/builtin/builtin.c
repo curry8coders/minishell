@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 05:15:00 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/04 20:00:22 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/04 20:47:54 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,24 @@
 #include <unistd.h>
 #include "minishell.h"
 
-#include <string.h>
+static int	dispatch_builtin(char **argv)
+{
+	if (ft_strcmp(argv[0], "exit") == 0)
+		return (builtin_exit(argv));
+	else if (ft_strcmp(argv[0], "export") == 0)
+		return (builtin_export(argv));
+	else if (ft_strcmp(argv[0], "unset") == 0)
+		return (builtin_unset(argv));
+	else if (ft_strcmp(argv[0], "env") == 0)
+		return (builtin_env(argv));
+	else if (ft_strcmp(argv[0], "cd") == 0)
+		return (builtin_cd(argv));
+	else if (ft_strcmp(argv[0], "pwd") == 0)
+		return (builtin_pwd(argv));
+	else if (ft_strcmp(argv[0], "echo") == 0)
+		return (builtin_echo(argv));
+	return (1);
+}
 
 int	exec_builtin(t_node *node)
 {
@@ -23,22 +40,7 @@ int	exec_builtin(t_node *node)
 
 	do_redirect(node->command->redirects);
 	argv = token_list_to_argv(node->command->args);
-	if (ft_strcmp(argv[0], "exit") == 0)
-		status = builtin_exit(argv);
-	else if (ft_strcmp(argv[0], "export") == 0)
-		status = builtin_export(argv);
-	else if (ft_strcmp(argv[0], "unset") == 0)
-		status = builtin_unset(argv);
-	else if (ft_strcmp(argv[0], "env") == 0)
-		status = builtin_env(argv);
-	else if (ft_strcmp(argv[0], "cd") == 0)
-		status = builtin_cd(argv);
-	else if (ft_strcmp(argv[0], "pwd") == 0)
-		status = builtin_pwd(argv);
-	else if (ft_strcmp(argv[0], "echo") == 0)
-		status = builtin_echo(argv);
-	else
-		status = 1;
+	status = dispatch_builtin(argv);
 	free_argv(argv);
 	reset_redirect(node->command->redirects);
 	if (status == BUILTIN_EXIT_REQUEST)
@@ -54,14 +56,7 @@ bool	is_builtin(t_node *node)
 	const char		*cmd_name;
 	int				i;
 	static char		*builtin_commands[] = {
-		"exit",
-		"export",
-		"unset",
-		"env",
-		"cd",
-		"pwd",
-		"echo",
-		NULL
+		"exit", "export", "unset", "env", "cd", "pwd", "echo", NULL
 	};
 
 	if (node == NULL || node->command == NULL || node->command->args == NULL
