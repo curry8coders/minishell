@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:10:51 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/04 20:12:25 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/04 22:43:29 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,21 @@
 
 int	g_last_status;
 
+static void	exec_and_cleanup(t_node *node, t_token *tok, int *stat_loc)
+{
+	expand(node);
+	if (g_syntax_error)
+	{
+		*stat_loc = ERROR_EXPAND;
+		free_node(node);
+		free_tok(tok);
+		return ;
+	}
+	*stat_loc = exec(node);
+	free_node(node);
+	free_tok(tok);
+}
+
 void	interpret(char *line, int *stat_loc)
 {
 	t_token	*tok;
@@ -30,35 +45,18 @@ void	interpret(char *line, int *stat_loc)
 		if (g_syntax_error)
 			*stat_loc = ERROR_TOKENIZE;
 		free_tok(tok);
-		return;
+		return ;
 	}
-	
 	node = parse(tok);
 	if (g_syntax_error)
 	{
 		*stat_loc = ERROR_PARSE;
 		free_node(node);
 		free_tok(tok);
-		return;
+		return ;
 	}
-	
-	expand(node);
-	if (g_syntax_error)
-	{
-		*stat_loc = ERROR_EXPAND;
-		free_node(node);
-		free_tok(tok);
-		return;
-	}
-	
-	*stat_loc = exec(node);
-	free_node(node);
-	free_tok(tok);
+	exec_and_cleanup(node, tok, stat_loc);
 }
-
-//*stat_locではメモリアクセスでステータス渡す
-//status localtion
-// なぜinterpretでexecが起動されるか
 
 int	main(void)
 {
@@ -88,4 +86,3 @@ int	main(void)
 	write(STDERR_FILENO, "exit\n", 5);
 	exit(g_last_status);
 }
-//interpret(line, &status)は&アドレス渡し
