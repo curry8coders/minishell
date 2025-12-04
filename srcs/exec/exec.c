@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/03 21:13:47 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/04 21:25:58 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,8 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/wait.h>
-#include "minishell.h"
-
 #include <string.h>
+#include "minishell.h"
 
 static pid_t	exec_pipeline(t_node *node);
 static int		wait_pipeline(pid_t last_pid);
@@ -43,6 +42,24 @@ int	exec(t_node *node)
 	return (status);
 }
 
+static char	*resolve_path(char **argv)
+{
+	char	*path;
+
+	path = argv[0];
+	if (strchr(path, '/') == NULL)
+		path = search_path(path);
+	if (path == NULL || access(path, F_OK) < 0)
+	{
+		print_error(argv[0], "command not found");
+		free_argv(argv);
+		if (path != NULL && path != argv[0])
+			free(path);
+		exit(127);
+	}
+	return (path);
+}
+
 int	exec_nonbuiltin(t_node *node)
 {
 	char	*path;
@@ -51,23 +68,7 @@ int	exec_nonbuiltin(t_node *node)
 
 	do_redirect(node->command->redirects);
 	argv = token_list_to_argv(node->command->args);
-	path = argv[0];
-	if (strchr(path, '/') == NULL)
-		path = search_path(path);
-	if (path == NULL)
-	{
-		print_error(argv[0], "command not found");
-		free_argv(argv);
-		exit(127);
-	}
-	if (access(path, F_OK) < 0)
-	{
-		print_error(argv[0], "command not found");
-		free_argv(argv);
-		if (path != argv[0])
-			free(path);
-		exit(127);
-	}
+	path = resolve_path(argv);
 	envp = get_environ(g_envmap);
 	execve(path, argv, envp);
 	free_argv(envp);

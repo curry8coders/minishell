@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 00:00:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/03 15:53:01 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/04 21:25:58 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,6 @@ char	*search_path(const char *filename)
 	}
 	return (NULL);
 }
-
-
 
 int	get_exit_status(int wstatus)
 {
