@@ -6,7 +6,7 @@
 #    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/12/04 20:53:06 by ichikawahik      ###   ########.fr        #
+#    Updated: 2025/12/04 21:29:31 by ichikawahik      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,7 @@ SRCS = srcs/main.c\
        srcs/parser/parse_utils.c\
        srcs/parser/parse_append.c\
        srcs/redirection/redirect.c\
+       srcs/redirection/redirect_close.c\
        srcs/redirection/redirect_heredoc.c\
        srcs/redirection/redirect_open.c\
 	   srcs/pipe/pipe.c\
