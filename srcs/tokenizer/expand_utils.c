@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/04 22:00:00 by ichikawahik       #+#    #+#             */
+/*   Updated: 2025/12/04 22:00:00 by ichikawahik      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
-#include "minishell.h"
-#include <string.h>
 #include <ctype.h>
+#include "minishell.h"
 
 bool	is_alpha_under(char c)
 {
