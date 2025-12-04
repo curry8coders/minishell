@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:54:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/30 20:23:52 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/04 20:35:46 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,27 +15,69 @@
 #include <string.h>
 #include <ctype.h>
 
-void	append_char(char **s, char c)
-{
-	size_t	size;
-	char	*new;
+#define STRBUF_INIT_CAP 16
 
-	size = 2;
-	if (*s)
-		size += strlen(*s);
-	new = malloc(size);
-	if (new == NULL)
+typedef struct s_strbuf
+{
+	char	*data;
+	size_t	len;
+	size_t	capacity;
+}	t_strbuf;
+
+static void	strbuf_init(t_strbuf *buf)
+{
+	buf->capacity = STRBUF_INIT_CAP;
+	buf->data = malloc(buf->capacity);
+	if (buf->data == NULL)
 		fatal_error("malloc");
-	if (*s)
-		ft_strlcpy(new, *s, size);
-	new[size - 2] = c;
-	new[size - 1] = '\0';
-	if (*s)
-		free(*s);
-	*s = new;
+	buf->data[0] = '\0';
+	buf->len = 0;
 }
 
-void	remove_single_quote(char **dst, char **rest, char *p)
+static void	strbuf_grow(t_strbuf *buf, size_t needed)
+{
+	char	*new_data;
+	size_t	new_cap;
+
+	if (buf->len + needed < buf->capacity)
+		return ;
+	new_cap = buf->capacity * 2;
+	while (buf->len + needed >= new_cap)
+		new_cap *= 2;
+	new_data = malloc(new_cap);
+	if (new_data == NULL)
+		fatal_error("malloc");
+	ft_memcpy(new_data, buf->data, buf->len + 1);
+	free(buf->data);
+	buf->data = new_data;
+	buf->capacity = new_cap;
+}
+
+static void	strbuf_append_char(t_strbuf *buf, char c)
+{
+	strbuf_grow(buf, 2);
+	buf->data[buf->len++] = c;
+	buf->data[buf->len] = '\0';
+}
+
+static void	strbuf_append_str(t_strbuf *buf, const char *s)
+{
+	size_t	slen;
+
+	if (s == NULL)
+		return ;
+	slen = ft_strlen(s);
+	strbuf_grow(buf, slen + 1);
+	ft_memcpy(buf->data + buf->len, s, slen + 1);
+	buf->len += slen;
+}
+
+static char	*strbuf_finish(t_strbuf *buf)
+{
+	return (buf->data);
+}
+
+static void	remove_single_quote(t_strbuf *buf, char **rest, char *p)
 {
 	if (*p == SINGLE_QUOTE_CHAR)
 	{
@@ -44,10 +86,10 @@ void	remove_single_quote(char **dst, char **rest, char *p)
 		{
 			if (*p == '\0')
 			{
-				tokenize_error("remove_single_quote", rest, p);//beta
+				tokenize_error("remove_single_quote", rest, p);
 				return ;
 			}
-			append_char(dst, *p++);
+			strbuf_append_char(buf, *p++);
 		}
 		p++;
 		*rest = p;
@@ -56,7 +98,7 @@ void	remove_single_quote(char **dst, char **rest, char *p)
 		assert_error("Expected single quote");
 }
 
-void	remove_double_quote(char **dst, char **rest, char *p)
+static void	remove_double_quote(t_strbuf *buf, char **rest, char *p)
 {
 	if (*p == DOUBLE_QUOTE_CHAR)
 	{
@@ -65,10 +107,10 @@ void	remove_double_quote(char **dst, char **rest, char *p)
 		{
 			if (*p == '\0')
 			{
-				tokenize_error("remove_double_quote", rest, p);//beta
+				tokenize_error("remove_double_quote", rest, p);
 				return ;
 			}
-			append_char(dst, *p++);
+			strbuf_append_char(buf, *p++);
 		}
 		p++;
 		*rest = p;
@@ -77,28 +119,26 @@ void	remove_double_quote(char **dst, char **rest, char *p)
 		assert_error("Expected double quote");
 }
 
-void	remove_quote(t_token *tok)
+static void	remove_quote(t_token *tok)
 {
-	char	*new_word;
-	char	*p;
+	t_strbuf	buf;
+	char		*p;
 
 	if (tok == NULL || tok->kind != TK_WORD || tok->word == NULL)
 		return ;
 	p = tok->word;
-	new_word = calloc(1, sizeof(char));
-	if (new_word == NULL)
-		fatal_error("calloc");
+	strbuf_init(&buf);
 	while (*p && !is_metacharacter(*p))
 	{
 		if (*p == SINGLE_QUOTE_CHAR)
-			remove_single_quote(&new_word, &p, p);
+			remove_single_quote(&buf, &p, p);
 		else if (*p == DOUBLE_QUOTE_CHAR)
-			remove_double_quote(&new_word, &p, p);
+			remove_double_quote(&buf, &p, p);
 		else
-			append_char(&new_word, *p++);
+			strbuf_append_char(&buf, *p++);
 	}
 	free(tok->word);
-	tok->word = new_word;
+	tok->word = strbuf_finish(&buf);
 	remove_quote(tok->next);
 }
 
@@ -114,172 +154,156 @@ void	expand_quote_removal(t_node *node)
 	expand_quote_removal(node->next);
 }
 
-void	append_num(char **dst, unsigned int num)
+static void	append_num(t_strbuf *buf, unsigned int num)
 {
 	if (num == 0)
 	{
-		append_char(dst, '0');
+		strbuf_append_char(buf, '0');
 		return ;
 	}
 	if (num / 10 != 0)
-		append_num(dst, num / 10);
-	append_char(dst, '0' + (num % 10));
+		append_num(buf, num / 10);
+	strbuf_append_char(buf, '0' + (num % 10));
 }
 
-void	expand_special_parameter_str(char **dst, char **rest, char *p)
+static void	expand_special_parameter(t_strbuf *buf, char **rest, char *p)
 {
 	if (!is_special_parameter(p))
 		assert_error("Expected special parameter");
 	p += 2;
-	append_num(dst, g_last_status);
+	append_num(buf, g_last_status);
 	*rest = p;
 }
 
-void	expand_variable_str(char **dst, char **rest, char *p)
+static void	expand_variable(t_strbuf *buf, char **rest, char *p)
 {
-	char	*name;
-	char	*value;
+	t_strbuf	name_buf;
+	char		*value;
 
-	name = calloc(1, sizeof(char));
-	if (name == NULL)
-		fatal_error("calloc");
+	strbuf_init(&name_buf);
 	if (*p != '$')
 		assert_error("Expected dollar sign");
 	p++;
 	if (!is_alpha_under(*p))
 		assert_error(\
 			"Variable must starts with alphabetic character or underscore.");
-	append_char(&name, *p++);
+	strbuf_append_char(&name_buf, *p++);
 	while (is_alpha_num_under(*p))
-		append_char(&name, *p++);
-	value = xgetenv(name);
-	free(name);
+		strbuf_append_char(&name_buf, *p++);
+	value = xgetenv(name_buf.data);
+	free(name_buf.data);
 	if (value)
-		while (*value)
-			append_char(dst, *value++);
+		strbuf_append_str(buf, value);
 	*rest = p;
 }
 
-void	append_single_quote(char **dst, char **rest, char *p)
+static void	append_single_quote(t_strbuf *buf, char **rest, char *p)
 {
 	if (*p == SINGLE_QUOTE_CHAR)
 	{
-		append_char(dst, *p++);
+		strbuf_append_char(buf, *p++);
 		while (*p != SINGLE_QUOTE_CHAR)
 		{
 			if (*p == '\0')
 			{
-				tokenize_error("append_single_quote", rest, p);//beta
+				tokenize_error("append_single_quote", rest, p);
 				return ;
 			}
-			append_char(dst, *p++);
+			strbuf_append_char(buf, *p++);
 		}
-		append_char(dst, *p++);
+		strbuf_append_char(buf, *p++);
 		*rest = p;
 	}
 	else
 		assert_error("Expected single quote");
 }
 
-void	append_double_quote(char **dst, char **rest, char *p)
+static void	append_double_quote(t_strbuf *buf, char **rest, char *p)
 {
 	if (*p == DOUBLE_QUOTE_CHAR)
 	{
-		// skip quote
-		append_char(dst, *p++);
+		strbuf_append_char(buf, *p++);
 		while (*p != DOUBLE_QUOTE_CHAR)
 		{
 			if (*p == '\0')
 			{
-				tokenize_error("append_double_quote", rest, p);//beta
+				tokenize_error("append_double_quote", rest, p);
 				return ;
 			}
 			else if (is_variable(p))
-				expand_variable_str(dst, &p, p);
+				expand_variable(buf, &p, p);
 			else if (is_special_parameter(p))
-				expand_special_parameter_str(dst, &p, p);
+				expand_special_parameter(buf, &p, p);
 			else
-				append_char(dst, *p++);
+				strbuf_append_char(buf, *p++);
 		}
-		// skip quote
-		append_char(dst, *p++);
+		strbuf_append_char(buf, *p++);
 		*rest = p;
 	}
 	else
 		assert_error("Expected double quote");
 }
 
-void	expand_variable_tok(t_token *tok)
+static void	expand_variable_tok(t_token *tok)
 {
-	char *new_word;
-	char *p;
+	t_strbuf	buf;
+	char		*p;
 
 	if (tok == NULL || tok->kind != TK_WORD || tok->word == NULL)
 		return ;
 	p = tok->word;
-	new_word = calloc(1, sizeof(char));
-	if (new_word == NULL)
-		fatal_error("calloc");
+	strbuf_init(&buf);
 	while (*p && !is_metacharacter(*p))
 	{
 		if (*p == SINGLE_QUOTE_CHAR)
-			append_single_quote(&new_word, &p, p);
+			append_single_quote(&buf, &p, p);
 		else if (*p == DOUBLE_QUOTE_CHAR)
-			append_double_quote(&new_word, &p, p);
+			append_double_quote(&buf, &p, p);
 		else if (is_variable(p))
-			expand_variable_str(&new_word, &p, p);
+			expand_variable(&buf, &p, p);
 		else if (is_special_parameter(p))
-			expand_special_parameter_str(&new_word, &p, p);
+			expand_special_parameter(&buf, &p, p);
 		else
-			append_char(&new_word, *p++);
+			strbuf_append_char(&buf, *p++);
 	}
 	free(tok->word);
-	tok->word = new_word;
+	tok->word = strbuf_finish(&buf);
 	expand_variable_tok(tok->next);
 }
 
-void	expand_variable(t_node *node)
+static void	expand_variable_node(t_node *node)
 {
 	if (node == NULL)
 		return ;
 	expand_variable_tok(node->args);
 	expand_variable_tok(node->filename);
-	// do not expand heredoc delimiter
-	expand_variable(node->redirects);
-	expand_variable(node->command);
-	expand_variable(node->next);
+	expand_variable_node(node->redirects);
+	expand_variable_node(node->command);
+	expand_variable_node(node->next);
 }
 
 void	expand(t_node *node)
 {
-	expand_variable(node);
+	expand_variable_node(node);
 	expand_quote_removal(node);
 }
 
 char	*expand_heredoc_line(char *line)
 {
-	char	*new_word;
-	char	*p;
+	t_strbuf	buf;
+	char		*p;
 
 	p = line;
-	new_word = calloc(1, sizeof(char));
-	if (new_word == NULL)
-		fatal_error("calloc");
+	strbuf_init(&buf);
 	while (*p)
 	{
 		if (is_variable(p))
-			expand_variable_str(&new_word, &p, p);
+			expand_variable(&buf, &p, p);
 		else if (is_special_parameter(p))
-			expand_special_parameter_str(&new_word, &p, p);
+			expand_special_parameter(&buf, &p, p);
 		else
-			append_char(&new_word, *p++);
+			strbuf_append_char(&buf, *p++);
 	}
 	free(line);
-	return (new_word);
+	return (strbuf_finish(&buf));
 }
-
-// void	append_char(char **s, char c)
-//Critical performance issue:
-// O(n²) complexity for string building.
-// この実装だと1文字追加するたびに、毎回新しくメモリ確保をしていることになる
-// バッファの概念を導入するとさらに良い rabbitくんより
