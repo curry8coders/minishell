@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:10:51 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/04 20:00:22 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/04 20:12:25 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ int	main(void)
 		{
 			g_last_status = 128 + SIGINT;
 			free(line);
-			write(STDERR_FILENO, "\n", 1);
 			continue ;
 		}
 		if (*line)
