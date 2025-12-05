@@ -1,3 +1,8 @@
+DPRINTF_DIR = ft_dprintf
+DPRINTF_SRCS = $(DPRINTF_DIR)/ft_dprintf.c \
+               $(DPRINTF_DIR)/ac_put.c \
+               $(DPRINTF_DIR)/ac_put_uniques.c
+
 SRCS =	ft_isalpha.c \
 		ft_isdigit.c \
 		ft_isalnum.c \
@@ -34,7 +39,8 @@ SRCS =	ft_isalpha.c \
 		ft_putstr_fd.c \
 		ft_strcat.c \
 		ft_strncat.c \
-		ft_strcmp.c
+		ft_strcmp.c	\
+		$(DPRINTF_SRCS)
 
 SRCSB = ft_lstnew.c \
 		ft_lstadd_front.c \
@@ -48,7 +54,7 @@ SRCSB = ft_lstnew.c \
 
 NAME = libft.a
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -I. -I$(DPRINTF_DIR)
 OBJC = $(SRCS:.c=.o)
 OBJCB = $(SRCSB:.c=.o)
 RM = rm -f

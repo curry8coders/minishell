@@ -79,4 +79,7 @@ char				*ft_strcat(char *dst, const char *src);
 char				*ft_strncat(char *dst, const char *src, size_t n);
 int					ft_strcmp(const char *s1, const char *s2);
 
+//dprintf
+int ft_dprintf(int fd, const char *format, ...);
+
 #endif
