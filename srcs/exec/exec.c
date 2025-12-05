@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/06 02:31:46 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 02:37:53 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,10 @@ int	exec(t_shell *shell, t_node *node)
 		status = exec_builtin(shell, node);
 	else
 	{
+		ignore_sig(SIGINT);
 		last_pid = exec_pipeline(shell, node);
 		status = wait_pipeline(last_pid);
+		setup_sigint();
 		close_all_redirect_fds(node);
 	}
 	return (status);
