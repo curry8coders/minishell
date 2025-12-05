@@ -12,7 +12,6 @@
 
 #include <stdlib.h>
 #include <unistd.h>
-#include <stdio.h>
 #include "minishell.h"
 
 #define ERROR_PREFIX "minishell: "

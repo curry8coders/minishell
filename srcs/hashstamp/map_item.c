@@ -21,9 +21,9 @@ void	update_existing_item(t_item *cur, const char *value)
 		cur->value = NULL;
 	else
 	{
-		cur->value = strdup(value);
+		cur->value = ft_strdup(value);
 		if (cur->value == NULL)
-			fatal_error("strdup");
+			fatal_error("ft_strdup");
 	}
 }
 
@@ -33,15 +33,15 @@ t_item	*create_new_item(const char *name, const char *value)
 
 	if (value == NULL)
 	{
-		cur = item_new(strdup(name), NULL);
+		cur = item_new(ft_strdup(name), NULL);
 		if (cur->name == NULL)
-			fatal_error("strdup");
+			fatal_error("ft_strdup");
 	}
 	else
 	{
-		cur = item_new(strdup(name), strdup(value));
+		cur = item_new(ft_strdup(name), ft_strdup(value));
 		if (cur->name == NULL || cur->value == NULL)
-			fatal_error("strdup");
+			fatal_error("ft_strdup");
 	}
 	return (cur);
 }
@@ -50,19 +50,19 @@ void	parse_name_value(const char *string, char **name, char **value)
 {
 	char	*name_end;
 
-	name_end = strchr(string, '=');
+	name_end = ft_strchr(string, '=');
 	if (name_end == NULL)
 	{
-		*name = strdup(string);
+		*name = ft_strdup(string);
 		*value = NULL;
 		if (*name == NULL)
-			fatal_error("strdup");
+			fatal_error("ft_strdup");
 	}
 	else
 	{
-		*name = strndup(string, name_end - string);
-		*value = strdup(name_end + 1);
+		*name = ft_substr(string, 0, name_end - string);
+		*value = ft_strdup(name_end + 1);
 		if (*name == NULL || *value == NULL)
-			fatal_error("strdup");
+			fatal_error("ft_strdup");
 	}
 }

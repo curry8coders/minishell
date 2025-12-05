@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 22:00:00 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/04 22:39:33 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 08:04:50 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,14 @@ bool	consume_blank(char **rest, char *line)
 
 bool	startswith(const char *s, const char *keyword)
 {
-	return (memcmp(s, keyword, strlen(keyword)) == 0);
+	return (ft_memcmp(s, keyword, ft_strlen(keyword)) == 0);
 }
 
 bool	is_metacharacter(char c)
 {
 	if (is_blank(c))
 		return (true);
-	return (c && strchr("|&;()<>\n", c));
+	return (c && ft_strchr("<>|\n", c));
 }
 
 bool	is_word(const char *s)

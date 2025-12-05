@@ -19,9 +19,9 @@ t_map	*map_new(void)
 {
 	t_map	*map;
 
-	map = calloc(1, sizeof(*map));
+	map = ft_calloc(1, sizeof(*map));
 	if (map == NULL)
-		fatal_error("calloc");
+		fatal_error("ft_calloc");
 	return (map);
 }
 
@@ -34,7 +34,7 @@ char	*map_get(t_map *map, const char *name)
 	cur = map->item_head.next;
 	while (cur)
 	{
-		if (strcmp(cur->name, name) == 0)
+		if (ft_strcmp(cur->name, name) == 0)
 			return (cur->value);
 		cur = cur->next;
 	}
@@ -52,7 +52,7 @@ int	map_unset(t_map *map, const char *name)
 	cur = map->item_head.next;
 	while (cur)
 	{
-		if (strcmp(cur->name, name) == 0)
+		if (ft_strcmp(cur->name, name) == 0)
 		{
 			prev->next = cur->next;
 			free(cur->name);
@@ -75,7 +75,7 @@ int	map_set(t_map *map, const char *name, const char *value)
 	cur = map->item_head.next;
 	while (cur)
 	{
-		if (strcmp(cur->name, name) == 0)
+		if (ft_strcmp(cur->name, name) == 0)
 			break ;
 		cur = cur->next;
 	}

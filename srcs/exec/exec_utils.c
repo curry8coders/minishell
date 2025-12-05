@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 00:00:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/05 22:03:46 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 04:40:28 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ static char	*check_path_access(char *path)
 
 	if (access(path, X_OK) == 0)
 	{
-		dup = strdup(path);
+		dup = ft_strdup(path);
 		if (dup == NULL)
-			fatal_error("strdup");
+			fatal_error("ft_strdup");
 		return (dup);
 	}
 	return (NULL);
@@ -35,9 +35,9 @@ static char	*check_path_access(char *path)
 static void	build_path(char *path, const char *dir, size_t len,
 		const char *filename)
 {
-	bzero(path, PATH_MAX);
+	ft_bzero(path, PATH_MAX);
 	if (len > 0)
-		strncpy(path, dir, len);
+		ft_strlcpy(path, dir, len + 1);
 	else
 		ft_strlcpy(path, dir, PATH_MAX);
 	ft_strlcat(path, "/", PATH_MAX);
@@ -56,7 +56,7 @@ char	*search_path(t_shell *shell, const char *filename)
 		return (NULL);
 	while (*value)
 	{
-		end = strchr(value, ':');
+		end = ft_strchr(value, ':');
 		if (end)
 			build_path(path, value, end - value, filename);
 		else

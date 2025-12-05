@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:57:17 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/05 08:15:56 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 03:43:07 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ t_token	*new_token(char *word, t_token_kind kind)
 {
 	t_token	*tok;
 
-	tok = calloc(1, sizeof(*tok));
+	tok = ft_calloc(1, sizeof(*tok));
 	if (tok == NULL)
-		fatal_error("calloc");
+		fatal_error("ft_calloc");
 	tok->word = word;
 	tok->kind = kind;
 	return (tok);
@@ -28,8 +28,8 @@ t_token	*new_token(char *word, t_token_kind kind)
 
 t_token	*operator(char **rest, char *line)
 {
-	static const char *const	operators[] = {">>", "<<", "||", "&&", ";;",
-		"<", ">", "&", ";", "(", ")", "|", "\n"};
+	static const char *const	operators[] = {">>", "<<",
+		"<", ">", "|", "\n"};
 	size_t						i;
 	char						*op;
 
@@ -38,10 +38,10 @@ t_token	*operator(char **rest, char *line)
 	{
 		if (startswith(line, operators[i]))
 		{
-			op = strdup(operators[i]);
+			op = ft_strdup(operators[i]);
 			if (op == NULL)
-				fatal_error("strdup");
-			*rest = line + strlen(op);
+				fatal_error("ft_strdup");
+			*rest = line + ft_strlen(op);
 			return (new_token(op, TK_OP));
 		}
 		i++;
@@ -91,9 +91,9 @@ char	**tail_recursive(t_token *tok, int nargs, char **argv)
 		fatal_error("realloc");
 	}
 	argv = new_argv;
-	argv[nargs] = strdup(tok->word);
+	argv[nargs] = ft_strdup(tok->word);
 	if (argv[nargs] == NULL)
-		fatal_error("strdup");
+		fatal_error("ft_strdup");
 	argv[nargs + 1] = NULL;
 	return (tail_recursive(tok->next, nargs + 1, argv));
 }
@@ -102,8 +102,8 @@ char	**token_list_to_argv(t_token *tok)
 {
 	char	**argv;
 
-	argv = calloc(1, sizeof(char *));
+	argv = ft_calloc(1, sizeof(char *));
 	if (argv == NULL)
-		fatal_error("calloc");
+		fatal_error("ft_calloc");
 	return (tail_recursive(tok, 0, argv));
 }
