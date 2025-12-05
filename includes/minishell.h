@@ -106,84 +106,6 @@ struct s_shell
 	bool			readline_interrupted;
 	t_map			*envmap;
 };
- 
-
-//expand_utils.c
-
-
-// tokenize.c
-
-
-// tokenize_utils.c
-
-
-// expand.c
-
-// destructor.c
-
-
-// parse.c
-
-// parse_redirect.c
-
-
-// parse_utils.c
-
-
-// parse_append.c
-
-// redirect.c
-
-// redirect_heredoc.c
-
-
-// redirect_open.c
-
-// pipe.c
-
-
-// exec.c
-
-
-// exec_utils.c
-
-
-// signal.c
-
-
-// signal_handler.c
-
-
-// builtin.c
-
-
-// builtin_exit.c
-
-// builtin_export.c
-
-// builtin_unset.c
-
-// builtin_env.c
-
-// builtin_cd.c
-
-// builtin_cd_utils.c
-
-
-// builtin_pwd.c
-
-
-// builtin_echo.c
-
-
-// map.c
-
-
-// map_utils.c
-
-
-// map_item.c
-
 
 void				perror_prefix(void);
 void				fatal_error(const char *msg) __attribute__((noreturn));
@@ -266,6 +188,8 @@ int					exec(t_shell *shell, t_node *node);
 char				*search_path(t_shell *shell, const char *filename);
 char				*resolve_path(t_shell *shell, char **argv);
 int					get_exit_status(int wstatus);
+void				handle_child_status(pid_t wait_result, pid_t last_pid,
+						int *status, int wstatus);
 int					check_state(void);
 void				setup_signal(t_shell *shell);
 void				reset_signal(void);

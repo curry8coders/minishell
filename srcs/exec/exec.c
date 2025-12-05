@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/06 02:37:53 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 02:48:03 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,8 @@ static int	wait_pipeline(pid_t last_pid)
 	while (1)
 	{
 		wait_result = wait(&wstatus);
-		if (wait_result == last_pid)
-			status = get_exit_status(wstatus);
-		else if (wait_result < 0)
+		handle_child_status(wait_result, last_pid, &status, wstatus);
+		if (wait_result < 0)
 		{
 			if (errno == ECHILD)
 				break ;
