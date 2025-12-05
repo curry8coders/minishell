@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/05 22:03:46 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 05:04:01 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,64 @@ struct s_shell
 	bool			readline_interrupted;
 	t_map			*envmap;
 };
+
+//expand_utils.c
+
+// tokenize.c
+
+// tokenize_utils.c
+
+// expand.c
+
+// destructor.c
+
+// parse.c
+
+// parse_redirect.c
+
+// parse_utils.c
+
+// parse_append.c
+
+// redirect.c
+
+// redirect_heredoc.c
+
+// redirect_open.c
+
+// pipe.c
+
+// exec.c
+
+// exec_utils.c
+
+// signal.c
+
+// signal_handler.c
+
+// builtin.c
+
+// builtin_exit.c
+
+// builtin_export.c
+
+// builtin_unset.c
+
+// builtin_env.c
+
+// builtin_cd.c
+
+// builtin_cd_utils.c
+
+// builtin_pwd.c
+
+// builtin_echo.c
+
+// map.c
+
+// map_utils.c
+
+// map_item.c
 
 void				perror_prefix(void);
 void				fatal_error(const char *msg) __attribute__((noreturn));
