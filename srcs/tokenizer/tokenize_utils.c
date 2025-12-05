@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 22:00:00 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/04 22:39:33 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 08:04:50 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,11 @@ bool	is_metacharacter(char c)
 {
 	if (is_blank(c))
 		return (true);
+<<<<<<< Updated upstream
 	return (c && strchr("|&;()<>\n", c));
+=======
+	return (c && strchr("<>|\n", c));
+>>>>>>> Stashed changes
 }
 
 bool	is_word(const char *s)

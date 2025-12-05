@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 17:36:01 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/04 20:02:47 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 03:44:19 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,7 @@ t_node	*parse(t_shell *shell, t_token *tok)
 
 bool	is_control_operator(t_token *tok)
 {
-	static char *const	operators[] = {"||", "&", "&&",
-		";", ";;", "(", ")", "|", "\n"};
+	static char *const	operators[] = {"|", "\n"};
 	size_t				i;
 
 	i = 0;
