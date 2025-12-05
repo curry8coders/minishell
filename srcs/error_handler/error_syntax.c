@@ -20,9 +20,9 @@ void	tokenize_error(t_shell *sh, const char *loc, char **rest, char *line)
 	sh->syntax_error = true;
 	perror_prefix();
 	if (*line == '\0')
-		dprintf(STDERR_FILENO, "syntax error: unexpected end of input\n");
+		ft_dprintf(STDERR_FILENO, "syntax error: unexpected end of input\n");
 	else
-		dprintf(STDERR_FILENO, "syntax error: unexpected character '%c'\n",
+		ft_dprintf(STDERR_FILENO, "syntax error: unexpected character '%c'\n",
 			*line);
 	while (*line)
 		line++;
@@ -34,7 +34,7 @@ void	parse_error(t_shell *shell, t_token **rest, t_token *tok)
 {
 	shell->syntax_error = true;
 	perror_prefix();
-	dprintf(STDERR_FILENO, "syntax error near unexpected token `%s'\n",
+	ft_dprintf(STDERR_FILENO, "syntax error near unexpected token `%s'\n",
 		tok->word);
 	while (tok && !at_eof(tok))
 		tok = tok->next;
@@ -50,8 +50,8 @@ void	xperror(const char *location)
 void	builtin_error(const char *func, const char *name, const char *err)
 {
 	perror_prefix();
-	dprintf(STDERR_FILENO, "%s: ", func);
+	ft_dprintf(STDERR_FILENO, "%s: ", func);
 	if (name)
-		dprintf(STDERR_FILENO, "%s: ", name);
-	dprintf(STDERR_FILENO, "%s\n", err);
+		ft_dprintf(STDERR_FILENO, "%s: ", name);
+	ft_dprintf(STDERR_FILENO, "%s\n", err);
 }

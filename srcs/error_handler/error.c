@@ -21,27 +21,27 @@ bool	g_syntax_error = false;
 
 void	perror_prefix(void)
 {
-	dprintf(STDERR_FILENO, "%s", ERROR_PREFIX);
+	ft_dprintf(STDERR_FILENO, "%s", ERROR_PREFIX);
 }
 
 void	fatal_error(const char *msg)
 {
 	perror_prefix();
-	dprintf(STDERR_FILENO, "Fatal Error: %s\n", msg);
+	ft_dprintf(STDERR_FILENO, "Fatal Error: %s\n", msg);
 	exit(1);
 }
 
 void	assert_error(const char *msg)
 {
 	perror_prefix();
-	dprintf(STDERR_FILENO, "Assert Error: %s\n", msg);
+	ft_dprintf(STDERR_FILENO, "Assert Error: %s\n", msg);
 	exit(255);
 }
 
 void	print_error(const char *location, const char *msg)
 {
 	perror_prefix();
-	dprintf(STDERR_FILENO, "%s: %s\n", location, msg);
+	ft_dprintf(STDERR_FILENO, "%s: %s\n", location, msg);
 }
 
 void	err_exit(const char *location, const char *msg, int status)
@@ -53,7 +53,7 @@ void	err_exit(const char *location, const char *msg, int status)
 void	todo(const char *msg)
 {
 	perror_prefix();
-	dprintf(STDERR_FILENO, "TODO: %s\n", msg);
+	ft_dprintf(STDERR_FILENO, "TODO: %s\n", msg);
 	exit(255);
 }
 

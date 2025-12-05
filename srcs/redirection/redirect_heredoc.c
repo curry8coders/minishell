@@ -37,7 +37,7 @@ static bool	process_heredoc_line(t_shell *sh, int pfd, const char *delim,
 	}
 	if (is_delim_unquoted)
 		line = expand_heredoc_line(sh, line);
-	dprintf(pfd, "%s\n", line);
+	ft_dprintf(pfd, "%s\n", line);
 	free(line);
 	return (true);
 }
