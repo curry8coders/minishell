@@ -63,19 +63,20 @@ endif
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(AR) $@ $^
+	@$(AR) $@ $^
 
 bonus: $(OBJCB)
-	$(AR) $(NAME) $^
+	@$(AR) $(NAME) $^
 
 %.o: %.c libft.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-		 $(RM) $(OBJC) $(OBJCB)
+		@$(RM) $(OBJC) $(OBJCB)
+		@$(RM) $(SRCS:%.c=%.o.tmp) 
 
 fclean: clean
-		$(RM) $(NAME)
+		@$(RM) $(NAME)
 
 re: fclean all
 .PHONY: all clean fclean re bonus

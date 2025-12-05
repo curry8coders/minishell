@@ -98,3 +98,8 @@ void	builtin_error(const char *func, const char *name, const char *err)
 		dprintf(STDERR_FILENO, "%s: ", name);
 	dprintf(STDERR_FILENO, "%s\n", err);
 }
+
+void	command_not_found_error(const char *location)
+{
+	print_error(location, "command not found");
+}
