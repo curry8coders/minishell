@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 14:04:45 by ichikawahik       #+#    #+#             */
+<<<<<<< Updated upstream
 /*   Updated: 2025/12/05 21:37:32 by ichikawahik      ###   ########.fr       */
+=======
+/*   Updated: 2025/12/05 20:42:37 by hichikaw         ###   ########.fr       */
+>>>>>>> Stashed changes
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +51,7 @@ int	builtin_cd(t_shell *shell, char **argv)
 		return (1);
 	if (chdir(path) < 0)
 	{
-		builtin_error("cd", NULL, "chdir");
+		builtin_error("cd", argv[1], strerror(errno));
 		return (1);
 	}
 	newpwd = resolve_pwd(oldpwd, path);
