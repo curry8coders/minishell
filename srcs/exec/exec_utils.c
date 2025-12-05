@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 00:00:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/06 04:40:28 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 08:49:34 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ char	*resolve_path(t_shell *shell, char **argv)
 		exit(127);
 	}
 
-	if (strchr(path, '/') == NULL)
+	if (ft_strchr(path, '/') == NULL)
 	{
 		path = search_path(shell, path);
 		if (path == NULL)

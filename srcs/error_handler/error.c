@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 17:35:46 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/03 21:28:11 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 08:49:05 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	todo(const char *msg)
 
 void	command_not_found_error(const char *location)
 {
-	if (location == NULL | *location == '\0')
-		location = "";
+	if (location == NULL || *location == '\0')
+		return ;
 	print_error(location, "command not found");
 }

@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/06 05:04:01 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 08:49:10 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,8 @@ struct s_shell
 char				*search_path(t_shell *shell, const char *filename);
 int					get_exit_status(int wstatus);
 char				*resolve_path(t_shell *shell, char **argv);
+void				handle_child_status(pid_t wait_result, pid_t last_pid,
+						int *status, int wstatus);
 
 // signal.c
 
