@@ -21,11 +21,25 @@ t_map	*g_envmap;
 
 static void	envmap_init(t_map *map, char **ep);
 
+/**
+ * Retrieve the value of an environment variable from the global environment map.
+ *
+ * @param name Name of the environment variable to look up.
+ * @return Pointer to the value string if found, NULL otherwise.
+ */
 char	*xgetenv(const char *name)
 {
 	return (map_get(g_envmap, name));
 }
 
+/**
+ * Initialize the global environment map from the process environment.
+ *
+ * Populates the global pointer `g_envmap` with a new map containing the current
+ * process environment variables (from `environ`). The resulting `g_envmap` is
+ * ready for lookup and may include ensured entries such as `SHLVL`, `PWD`, and
+ * `OLDPWD` when absent from the original environment.
+ */
 void	initenv(void)
 {
 	extern char	**environ;
@@ -34,6 +48,16 @@ void	initenv(void)
 	envmap_init(g_envmap, environ);
 }
 
+/**
+ * Build a NULL-terminated array of environment strings from a map.
+ *
+ * Creates a newly allocated array containing "KEY=VALUE" strings for each
+ * map entry that has a non-NULL value. The array is terminated with NULL.
+ *
+ * @param map Map containing environment entries; entries with NULL values are skipped.
+ * @returns Pointer to the newly allocated NULL-terminated array of strings (each "KEY=VALUE").
+ *          The caller is responsible for freeing the array and the strings it contains.
+ */
 char	**get_environ(t_map *map)
 {
 	size_t	i;

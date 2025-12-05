@@ -12,6 +12,12 @@
 
 #include "libft.h"
 
+/**
+ * Compute the number of characters required to represent an integer in base 10,
+ * including a minus sign for negative values and a digit for zero.
+ * @param n Integer to measure.
+ * @returns Number of characters required to represent `n` (does not include the null terminator).
+ */
 static	int	ft_numlen(int n)
 {
 	int		len;
@@ -32,6 +38,14 @@ static	int	ft_numlen(int n)
 	return (len);
 }
 
+/**
+ * Convert an integer to a null-terminated decimal string.
+ *
+ * @param n Integer value to convert.
+ * @returns Pointer to a newly allocated null-terminated string containing the base-10
+ * representation of `n` (including a leading '-' for negative values), or `NULL` if
+ * memory allocation fails.
+ */
 char	*ft_itoa(int n)
 {
 	char	*str;

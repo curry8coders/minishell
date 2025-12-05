@@ -12,6 +12,15 @@
 
 #include "libft.h"
 
+/**
+ * Compare two null-terminated strings lexicographically.
+ *
+ * Comparison is performed using the unsigned char values of characters.
+ *
+ * @param s1 First string to compare.
+ * @param s2 Second string to compare.
+ * @returns Negative value if s1 is lexicographically less than s2, `0` if they are equal, positive value if s1 is greater than s2.
+ */
 int	ft_strcmp(const char *s1, const char *s2)
 {
 	size_t	i;

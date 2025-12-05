@@ -12,6 +12,14 @@
 
 #include "libft.h"
 
+/**
+ * Write a null-terminated string followed by a newline to the given file descriptor.
+ *
+ * If `s` is NULL the function returns immediately and performs no writes.
+ *
+ * @param s Pointer to the null-terminated string to write.
+ * @param fd File descriptor to which the string and terminating newline are written.
+ */
 void	ft_putendl_fd(char *s, int fd)
 {
 	if (!s)

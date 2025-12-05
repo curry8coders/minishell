@@ -17,6 +17,16 @@
 
 extern bool g_syntax_error;
 
+/**
+ * Allocate and initialize a new token with the given word and kind.
+ *
+ * @param word The string to use as the token's word; ownership of this pointer
+ *             is transferred to the returned token.
+ * @param kind The token kind to assign.
+ * @returns Pointer to the newly allocated t_token.
+ *
+ * On allocation failure, calls fatal_error("calloc").
+ */
 t_token	*new_token(char *word, t_token_kind kind)
 {
 	t_token	*tok;
@@ -29,7 +39,14 @@ t_token	*new_token(char *word, t_token_kind kind)
 	return (tok);
 }
 
-// Check longer operators first
+/**
+ * Selects the longest operator that matches the start of `line` and returns it as a token.
+ *
+ * @param rest On success, set to point immediately after the matched operator within `line`.
+ * @param line The input string to scan for a leading operator.
+ * @returns A newly allocated `TK_OP` token whose `word` is a heap-allocated copy of the matched operator.
+ *          On allocation failure `fatal_error("strdup")` is called. If no operator matches, `assert_error("Unexpected operator")` is invoked.
+ */
 t_token	*operator(char **rest, char *line)
 {
 	static const char *const	operators[] = {">>", "<<", "||", "&&", ";;",
@@ -53,6 +70,18 @@ t_token	*operator(char **rest, char *line)
 	assert_error("Unexpected operator");
 }
 
+/**
+ * Convert an input command line into a linked list of lexical tokens.
+ *
+ * Tokenization produces a singly linked list of t_token nodes representing
+ * words, operators, and a terminating TK_EOF token. Tokenization skips
+ * whitespace and stops early if a syntax error occurs; the global flag
+ * `g_syntax_error` is cleared at the start and may be set to true if an error
+ * is encountered.
+ *
+ * @param line Null-terminated input string to tokenize.
+ * @returns Pointer to the first token in the resulting linked list (the list
+ *          is terminated by a token of kind `TK_EOF`).
 t_token	*tokenize(char *line)
 {
 	t_token	head;
@@ -102,6 +131,13 @@ char	**tail_recursive(t_token *tok, int nargs, char **argv)
 	return (tail_recursive(tok->next, nargs + 1, argv));
 }
 
+/**
+ * Convert a linked list of tokens into a NULL-terminated argv-style array of strings.
+ *
+ * @param tok Head of the token list to convert; traversal continues until a TK_EOF or NULL is reached.
+ * @returns A heap-allocated NULL-terminated array of C strings containing the tokens' words.
+ *          The caller owns the returned array and must free each string and the array itself.
+ */
 char	**token_list_to_argv(t_token *tok)
 {
 	char	**argv;

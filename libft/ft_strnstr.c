@@ -12,6 +12,16 @@
 
 #include "libft.h"
 
+/**
+ * Locate the first occurrence of the substring `little` within the first `len` bytes of `big`.
+ *
+ * If `little` is an empty string, returns `big`.
+ *
+ * @param big String to be searched.
+ * @param little Substring to locate in `big`.
+ * @param len Maximum number of bytes of `big` to search.
+ * @returns Pointer to the first occurrence of `little` in `big` within the first `len` bytes, or `NULL` if no such occurrence exists.
+ */
 char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
 	size_t	i;

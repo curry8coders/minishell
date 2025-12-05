@@ -12,6 +12,12 @@
 
 #include "libft.h"
 
+/**
+ * Calculate the length of a null-terminated C string.
+ *
+ * @param c Pointer to the null-terminated string to measure. Behavior is undefined if `c` is NULL.
+ * @returns The number of characters preceding the terminating null byte.
+ */
 size_t	ft_strlen(const char *c)
 {
 	size_t	i;

@@ -16,6 +16,13 @@
 #include <stdio.h>
 #include <string.h>
 
+/**
+ * Allocate and return a new, zero-initialized t_map.
+ *
+ * On allocation failure this function calls fatal_error("calloc") (does not return).
+ *
+ * @returns Pointer to a newly allocated, zero-initialized `t_map`.
+ */
 t_map	*map_new(void)
 {
 	t_map	*map;
@@ -42,6 +49,17 @@ char	*map_get(t_map *map, const char *name)
 	return (NULL);
 }
 
+/**
+ * Remove a named entry from the map.
+ *
+ * If an item with the given name exists, it is unlinked from the map and its
+ * name and value buffers and item structure are freed.
+ *
+ * @param map Map from which to remove the item.
+ * @param name Name of the item to remove.
+ * @returns `-1` if `name` is NULL or is not a valid identifier; `0` if the operation completed
+ *          (item was removed or no matching item was found).
+ */
 int	map_unset(t_map *map, const char *name)
 {
 	t_item	*cur;
@@ -67,6 +85,14 @@ int	map_unset(t_map *map, const char *name)
 	return (0);
 }
 
+/**
+ * Insert a new entry into the map or update the value of an existing entry.
+ *
+ * @param map Map to modify.
+ * @param name Identifier name for the entry; must be a valid identifier.
+ * @param value String value to associate with the name (may be NULL depending on use).
+ * @returns `0` on success; `-1` if `name` is NULL or not a valid identifier.
+ */
 int	map_set(t_map *map, const char *name, const char *value)
 {
 	t_item	*cur;

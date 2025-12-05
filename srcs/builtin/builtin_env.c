@@ -14,6 +14,16 @@
 
 #include <stdio.h>
 
+/**
+ * Print the current environment variables to standard output.
+ *
+ * Iterates the global environment map and writes each entry with a non-null value
+ * in the form "name=value" on its own line, then prints the fixed entry
+ * "_=/usr/bin/env".
+ *
+ * @param argv Ignored; accepted for builtin signature compatibility.
+ * @return 0 on success.
+ */
 int	builtin_env(char **argv)
 {
 	t_item	*cur;

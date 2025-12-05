@@ -17,6 +17,16 @@
 
 #include <string.h>
 
+/**
+ * Determine the target directory path for the cd builtin and write it into the provided buffer.
+ *
+ * If no argument is provided in argv, the function uses the HOME environment variable as the target;
+ * otherwise it uses argv[1]. The chosen path is copied into the caller-provided buffer.
+ *
+ * @param path Buffer (size PATH_MAX) where the target path will be stored.
+ * @param argv Argument vector passed to the builtin; argv[1] is used when present.
+ * @returns `0` on success, `1` if no argument was given and the HOME environment variable is not set.
+ */
 static int	get_target_path(char *path, char **argv)
 {
 	char	*home;
@@ -36,6 +46,14 @@ static int	get_target_path(char *path, char **argv)
 	return (0);
 }
 
+/**
+ * Change the current working directory and update `PWD` and `OLDPWD` in the global environment map.
+ *
+ * @param argv Argument vector for the `cd` command; `argv[1]` is the optional target directory.
+ *            If `argv[1]` is NULL, the function attempts to use the `HOME` value from `g_envmap`.
+ *
+ * @returns `0` on success, `1` on failure (for example if `HOME` is not set when no target is given, or if `chdir` fails).
+ */
 int	builtin_cd(char **argv)
 {
 	char	*oldpwd;

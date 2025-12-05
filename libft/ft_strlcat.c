@@ -12,6 +12,19 @@
 
 #include "libft.h"
 
+/**
+ * Append `src` to the end of `dst` without exceeding a total buffer size and report
+ * the total length the function attempted to create.
+ *
+ * @param dst Destination buffer where `src` will be appended; must be NUL-terminated if its
+ *            length is less than `size`.
+ * @param src NUL-terminated source string to append to `dst`.
+ * @param size Total size of the destination buffer `dst`.
+ * @returns The sum of the initial length of `dst` (up to `size`) and the length of `src`;
+ *          this is the length of the string the function tried to create. If `size` is
+ *          less than or equal to the initial length of `dst`, no bytes are appended and
+ *          the return value is `size + strlen(src)`.
+ */
 size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
 	size_t	i;

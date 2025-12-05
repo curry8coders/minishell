@@ -15,6 +15,14 @@
 
 #include <stdio.h>
 
+/**
+ * Free all memory associated with a command node and its linked components.
+ *
+ * Frees the node's token lists (arguments, filename, delimiter), all child nodes
+ * (redirects, next, command) and the node itself. Does nothing if `node` is NULL.
+ *
+ * @param node Pointer to the head of the node subtree to free.
+ */
 void	free_node(t_node *node)
 {
 	if (node == NULL)
@@ -28,6 +36,13 @@ void	free_node(t_node *node)
 	free(node);
 }
 
+/**
+ * Release a token list and any associated word buffers.
+ *
+ * Recursively frees each token in the list: frees the token's `word` buffer if present, then frees the remainder of the list and the token structure itself.
+ *
+ * @param tok Pointer to the head of the token list; if NULL nothing is done.
+ */
 void	free_tok(t_token *tok)
 {
 	if (tok == NULL)
@@ -38,6 +53,13 @@ void	free_tok(t_token *tok)
 	free(tok);
 }
 
+/**
+ * Free a NULL-terminated array of heap-allocated strings and the array container.
+ *
+ * Frees each element in argv and then frees argv itself. If argv is NULL, no action is taken.
+ *
+ * @param argv NULL-terminated array of pointers to heap-allocated strings to free.
+ */
 void	free_argv(char **argv)
 {
 	int	i;

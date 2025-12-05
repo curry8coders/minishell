@@ -12,6 +12,12 @@
 
 #include "libft.h"
 
+/**
+ * Retrieve the last node of a linked list.
+ *
+ * @param lst Pointer to the first node of the list (may be NULL).
+ * @returns Pointer to the last node in the list, or NULL if `lst` is NULL.
+ */
 t_list	*ft_lstlast(t_list *lst)
 {
 	if (!lst)

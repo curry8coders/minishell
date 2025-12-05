@@ -12,6 +12,19 @@
 
 #include "libft.h"
 
+/**
+ * Create a newly allocated string containing up to `len` characters from `s`,
+ * starting at index `start`.
+ *
+ * @param s Source string. If `s` is NULL the function returns NULL.
+ * @param start Starting index in `s`. If `start` is greater than the length of `s`,
+ *              an empty string is returned.
+ * @param len Maximum number of characters to include from `s` beginning at `start`;
+ *            if `len` exceeds the remaining characters it is truncated to the
+ *            available length.
+ * @returns Pointer to a null-terminated allocated substring, an empty string if
+ *          `start` is past the end of `s`, or NULL if `s` is NULL or allocation fails.
+ */
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*str;

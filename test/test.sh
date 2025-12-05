@@ -94,7 +94,7 @@ EOF
 
 # =================================================================================
 # 
-# =================================================================================
+# assert runs a command under both the system bash and the test `minishell`, compares their stdout, stderr, exit status, and any specified output files, and prints colored pass/fail indicators (optionally showing diffs).
 
 assert() {
 	COMMAND="$1"
@@ -181,7 +181,7 @@ assert() {
 # 
 # =================================================================================
 
-# ----------------------------------------1----------------------------------------
+# test_1 runs assertions that validate empty-input handling, execution of absolute and searched commands (including ./a.out), and behavior for nonexistent commands.
 test_1(){
 	# Empty line (EOF)
 	printf "## Empty line (EOF)\n"
@@ -210,7 +210,7 @@ test_1(){
 }
 # ----------------------------------------1----------------------------------------
 
-# ----------------------------------------2----------------------------------------
+# test_2 tests tokenization behavior including unquoted words, single-quote and double-quote handling, and mixed quoting scenarios by executing assertions that compare minishell output to bash.
 test_2(){
 	# Tokenize
 	printf "# Tokenize\n"
@@ -243,7 +243,7 @@ test_2(){
 }
 # ----------------------------------------2----------------------------------------
 
-# ----------------------------------------3----------------------------------------
+# test_3 tests redirection behaviors including output/input redirection, appending, and various here-document forms.
 test_3(){
 	# redirect
 	ptrintf "# redirect\n"
@@ -285,7 +285,7 @@ test_3(){
 }
 # ----------------------------------------3----------------------------------------
 
-# ----------------------------------------4----------------------------------------
+# test_4 runs a group of assertions that validate pipes, shell variable expansion, and the special parameter `$?`.
 test_4(){
 	# Pipe
 	printf "# Pipe\n"
@@ -311,7 +311,7 @@ test_4(){
 	
 # ----------------------------------------4----------------------------------------
 
-# ----------------------------------------5----------------------------------------
+# test_5 verifies signal handling behavior by asserting how the shell and its child processes respond to SIGTERM, SIGQUIT, SIGINT and other signals.
 test_5(){
 	# Signal
 	printf "# Signal\n"
@@ -321,7 +321,7 @@ test_5(){
 	 # `-`: ソースコードをファイルからではなく、標準入力から読み込み
 	
 	## Signal to shell processes
-	# Kill the parent of infinite_loop IF the parent's name matches the target
+	# kill_specific_parent kills the parent processes of any running `infinite_loop` processes whose command name contains the provided target name, sending the specified signal.
 	kill_specific_parent() {
 		local target_name=$1
 		local sig=$2
@@ -414,7 +414,7 @@ test_5(){
 # 2. Ctrl-C
 # 3. Ctrl-D
 
-# ----------------------------------------6---------------------------------------- 
+# test_6 executes a group of builtin tests for `exit` and `export`, validating minishell behavior against bash.
 test_6(){
 	# Builtin
 	printf "# Builtin\n"
@@ -447,7 +447,7 @@ test_6(){
 }
 # ----------------------------------------6---------------------------------------- 
 
-# ----------------------------------------7---------------------------------------- 
+# test_7 runs a set of assertions validating the `unset` builtin, covering removal of variables, handling of nonexistent names and invalid identifiers, and effects on the environment.
 test_7(){
 	## unset
 	printf "# unset\n"
@@ -465,7 +465,7 @@ test_7(){
 }
 # ----------------------------------------7---------------------------------------- 
 
-# ----------------------------------------8---------------------------------------- 
+# test_8 runs environment-related tests including printing the environment and filtering it with 'env | grep hoge | sort'.
 test_8(){
 	## env
 	printf "## env\n"
@@ -477,7 +477,7 @@ test_8(){
 
 # ----------------------------------------8---------------------------------------- 
 
-# ----------------------------------------9---------------------------------------- 
+# test_9 runs a suite of cd command tests covering path normalization, trailing slashes, parent-directory traversal, unset HOME behavior, and verification of PWD after each change.
 test_9(){
 	## cd
 	printf "## cd\n"
@@ -507,7 +507,7 @@ test_9(){
 }
 # ----------------------------------------9---------------------------------------- 
 
-# ----------------------------------------10---------------------------------------- 
+# test_10 runs a suite of echo and pwd tests, verifying echo option handling and quoting, and validating cd, pwd, PWD, and OLDPWD behaviors.
 test_10(){
 	## echo
 	printf "## echo\n"

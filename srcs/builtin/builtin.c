@@ -15,6 +15,17 @@
 
 #include <string.h>
 
+/**
+ * Execute a recognized shell builtin from the provided node.
+ *
+ * Applies the node's I/O redirections, runs the matched builtin with argv
+ * converted from the node's token list, and then restores redirections.
+ * If the executed builtin requests process termination (status == BUILTIN_EXIT_REQUEST),
+ * this function will exit the process with the global exit status.
+ *
+ * @param node Parsed command node containing the command, arguments, and redirects.
+ * @return The exit status returned by the executed builtin; may be BUILTIN_EXIT_REQUEST.
+ */
 int	exec_builtin(t_node *node)
 {
 	int		status;
@@ -45,6 +56,14 @@ int	exec_builtin(t_node *node)
 	return (status);
 }
 
+/**
+ * Determine whether the command in the given parse node is a recognized shell builtin.
+ *
+ * @param node Parse tree node containing the command to check; may be NULL.
+ * @returns `true` if the node contains a command name that matches a recognized builtin, `false` otherwise.
+ *          If `node`, `node->command`, `node->command->args`, or `node->command->args->word` is NULL,
+ *          the function returns `false`.
+ */
 bool	is_builtin(t_node *node)
 {
 	const char		*cmd_name;

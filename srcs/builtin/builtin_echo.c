@@ -15,6 +15,12 @@
 
 #include <string.h>
 
+/**
+ * Determine whether a string is an echo "-n" style option (a '-' followed only by one or more 'n' characters).
+ *
+ * @param arg Null-terminated string to test.
+ * @returns `true` if `arg` starts with '-' and every following character is 'n', `false` otherwise.
+ */
 bool	check_only_n_options(char *arg)
 {
 	size_t	i;
@@ -31,6 +37,12 @@ bool	check_only_n_options(char *arg)
 	return (true);
 }
 
+/**
+ * Print the provided arguments to standard output using echo semantics, accepting one or more `-n` options to suppress the trailing newline.
+ *
+ * @param argv Null-terminated argument vector where `argv[0]` is the command name; subsequent entries are printed separated by single spaces.
+ * @returns 0 on success.
+ */
 int	builtin_echo(char **argv)
 {
 	bool	echo_newline;

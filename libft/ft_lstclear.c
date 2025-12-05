@@ -12,6 +12,15 @@
 
 #include "libft.h"
 
+/**
+ * Delete and free all nodes of a linked list and set the head pointer to NULL.
+ *
+ * Applies the function `del` to the content of each node, frees each node's memory,
+ * and advances until the list is empty. If `lst` or `del` is NULL, the function does nothing.
+ *
+ * @param lst Pointer to the head pointer of the list to clear.
+ * @param del Function used to free the content of each node.
+ */
 void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
 	t_list	*tmp;

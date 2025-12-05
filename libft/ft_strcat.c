@@ -12,6 +12,13 @@
 
 #include "libft.h"
 
+/**
+ * Append the string `src` to the end of `dst`.
+ *
+ * @param dst Destination buffer which must be large enough to hold the resulting string and must be null-terminated.
+ * @param src Source null-terminated string to append.
+ * @returns Pointer to `dst` containing the concatenated string.
+ */
 char	*ft_strcat(char *dst, const char *src)
 {
 	size_t	len_dst;

@@ -12,6 +12,12 @@
 
 #include "libft.h"
 
+/**
+ * Convert an uppercase ASCII letter to its lowercase equivalent.
+ *
+ * @param c Integer value representing a character.
+ * @returns The lowercase equivalent if `c` is between 'A' and 'Z', otherwise returns `c` unchanged.
+ */
 int	ft_tolower(int c)
 {
 	if (c >= 'A' && c <= 'Z')

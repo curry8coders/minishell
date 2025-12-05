@@ -12,6 +12,14 @@
 
 #include "libft.h"
 
+/**
+ * Copy up to size - 1 characters from src into dst and ensure dst is null-terminated when size is greater than zero.
+ *
+ * @param dst Destination buffer where the string will be copied.
+ * @param src Source NUL-terminated string to copy from.
+ * @param size Size of the destination buffer in bytes; if zero, nothing is written to dst.
+ * @returns The total length of src (the number of bytes in src not including the terminating NUL).
+ */
 size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 {
 	size_t	i;

@@ -12,6 +12,12 @@
 
 #include "libft.h"
 
+/**
+ * Create a new t_list node containing the given content.
+ *
+ * @param content Pointer to the data to store in the new node.
+ * @return Pointer to the newly allocated t_list node, or NULL if memory allocation fails.
+ */
 t_list	*ft_lstnew(void *content)
 {
 	t_list	*new_node;

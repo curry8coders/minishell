@@ -12,6 +12,11 @@
 
 #include "libft.h"
 
+/**
+ * Selects the appropriate integer overflow boundary for the given sign.
+ * @param sign If 1, indicates a positive value; any other value is treated as negative.
+ * @returns `INT_MAX` when `sign` is 1, `INT_MIN` otherwise.
+ */
 int	ft_handle_overflow(int sign)
 {
 	if (sign == 1)
@@ -19,6 +24,13 @@ int	ft_handle_overflow(int sign)
 	return (INT_MIN);
 }
 
+/**
+ * Convert the initial portion of a string to an int.
+ *
+ * Parses optional leading whitespace, an optional '+' or '-' sign, and consecutive decimal digits; parsing stops at the first non-digit character.
+ * @param nptr String to convert; may contain leading whitespace and an optional '+' or '-' sign.
+ * @returns INT_MAX if overflow occurs and the sign is positive, INT_MIN if overflow occurs and the sign is negative, otherwise the parsed integer value.
+ */
 int	ft_atoi(const char *nptr)
 {
 	int	result;

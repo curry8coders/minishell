@@ -12,6 +12,15 @@
 
 #include "libft.h"
 
+/**
+ * Count the number of elements in a singly linked list.
+ *
+ * Iterates the list starting at `lst` and returns the total node count.
+ * If `lst` is NULL, returns 0.
+ *
+ * @param lst Pointer to the head of the list (may be NULL).
+ * @return The number of nodes in the list.
+ */
 int	ft_lstsize(t_list *lst)
 {
 	int	count;

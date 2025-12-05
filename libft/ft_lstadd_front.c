@@ -12,6 +12,15 @@
 
 #include "libft.h"
 
+/**
+ * Insert a node at the front of a singly linked list.
+ *
+ * If `lst` or `new` is NULL, the function does nothing. Otherwise `new` becomes
+ * the new head and its `next` pointer is set to the previous head.
+ *
+ * @param lst Pointer to the head pointer of the list.
+ * @param new Node to insert at the front of the list.
+ */
 void	ft_lstadd_front(t_list **lst, t_list *new)
 {
 	if (!lst || !new)

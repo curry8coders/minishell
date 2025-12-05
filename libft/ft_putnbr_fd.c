@@ -12,6 +12,15 @@
 
 #include "libft.h"
 
+/**
+ * Write the decimal representation of an integer to the given file descriptor.
+ *
+ * If n equals INT_MIN (-2147483648), the literal string "-2147483648" is written.
+ * For other negative values a leading '-' is written before the digits.
+ * Digits are written in base 10 with no trailing newline.
+ * @param n Integer value to output.
+ * @param fd Target file descriptor. 
+ */
 void	ft_putnbr_fd(int n, int fd)
 {
 	char	c;

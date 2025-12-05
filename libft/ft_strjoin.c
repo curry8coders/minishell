@@ -12,6 +12,16 @@
 
 #include "libft.h"
 
+/**
+ * Allocate and return a new string containing s1 followed by s2.
+ *
+ * The returned string is null-terminated and must be freed by the caller.
+ * Behavior is undefined if `s1` or `s2` is NULL.
+ *
+ * @param s1 Null-terminated prefix string.
+ * @param s2 Null-terminated suffix string.
+ * @returns Pointer to the newly allocated concatenated string, or `NULL` if allocation fails.
+ */
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*joined_str;

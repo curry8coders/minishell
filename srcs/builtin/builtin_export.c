@@ -14,6 +14,12 @@
 
 #include <stdio.h>
 
+/**
+ * Output all environment variables in bash-compatible `declare -x` format to stdout.
+ *
+ * For each entry in the global `g_envmap` list, prints `declare -x NAME="VALUE"` when a value exists,
+ * otherwise prints `declare -x NAME`.
+ */
 void	print_allenv(void)
 {
 	t_item	*cur;
@@ -29,6 +35,17 @@ void	print_allenv(void)
 	}
 }
 
+/**
+ * Handle the `export` builtin: either print all environment variables or add arguments to the environment.
+ *
+ * If no arguments are provided after the command, prints all environment variables in the shell's export format.
+ * Otherwise attempts to add each argument as an environment entry; invalid identifiers are reported and cause
+ * a non-zero exit status.
+ *
+ * @param argv NULL-terminated argument vector where argv[0] is the command name and subsequent entries are
+ *             the values to export.
+ * @returns `0` if all provided arguments were valid (or when printing the environment), `1` if any argument
+ *          was not a valid identifier.
 int	builtin_export(char **argv)
 {
 	size_t	i;

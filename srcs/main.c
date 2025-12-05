@@ -18,6 +18,18 @@
 
 int	g_last_status;
 
+/**
+ * Process a single input line through tokenization, parsing, expansion, and execution,
+ * and store the resulting exit or error status at the provided location.
+ *
+ * The function updates *stat_loc with one of the specific error codes
+ * (ERROR_TOKENIZE, ERROR_PARSE, ERROR_EXPAND) if a failure occurs during the
+ * corresponding stage, or with the value returned by exec() on success.
+ * Internal token and syntax-node structures are freed before any return.
+ *
+ * @param line Input command line to interpret.
+ * @param stat_loc Pointer to an integer where the final exit or error status will be stored.
+ */
 void	interpret(char *line, int *stat_loc)
 {
 	t_token	*tok;
@@ -57,7 +69,13 @@ void	interpret(char *line, int *stat_loc)
 
 //*stat_locではメモリアクセスでステータス渡す
 //status localtion
-// なぜinterpretでexecが起動されるか
+/**
+ * Initialize the shell environment and run the Read–Eval–Print Loop until input ends, then exit with the last command's status.
+ *
+ * Sets up readline output, the environment, and signal handlers, then repeatedly reads lines, records history for non-empty lines, processes each line via interpret, and terminates the process with the most recent command status.
+ *
+ * @returns Process exit status equal to the most recent command's status.
+ */
 
 int	main(void)
 {

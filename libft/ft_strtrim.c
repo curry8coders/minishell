@@ -12,6 +12,13 @@
 
 #include "libft.h"
 
+/**
+ * Check whether a character is contained in a null-terminated character set.
+ *
+ * @param c Character to search for.
+ * @param set Null-terminated string representing the set of characters to check against.
+ * @returns `1` if `c` is found in `set`, `0` otherwise.
+ */
 int	is_in_set(char c, const char *set)
 {
 	size_t	i;
@@ -26,6 +33,13 @@ int	is_in_set(char c, const char *set)
 	return (0);
 }
 
+/**
+ * Create a newly allocated string with characters from `set` removed from the start and end of `s1`.
+ *
+ * @param s1 The input null-terminated string to trim. If NULL, the function returns NULL.
+ * @param set A null-terminated string containing characters to remove from both ends of `s1`. If NULL, the function returns NULL.
+ * @returns Pointer to a newly allocated null-terminated string containing the trimmed result, an empty string if all characters are removed, or NULL on invalid input or allocation failure.
+ */
 char	*ft_strtrim(char const *s1, char const *set)
 {
 	size_t	start;

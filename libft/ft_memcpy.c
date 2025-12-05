@@ -12,6 +12,16 @@
 
 #include "libft.h"
 
+/**
+ * Copy n bytes from src to dest.
+ *
+ * Copies exactly n bytes from the memory area pointed to by src to the memory area pointed to by dest. The memory areas must not overlap.
+ *
+ * @param dest Destination buffer.
+ * @param src Source buffer.
+ * @param n Number of bytes to copy.
+ * @returns Pointer to dest.
+ */
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	size_t	i;

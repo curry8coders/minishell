@@ -20,6 +20,19 @@
 
 bool	g_readline_interrupted = false;
 
+/**
+ * Read a single heredoc line from the user and write it to the provided pipe.
+ *
+ * @param pfd Write-end file descriptor of the pipe where the line and a
+ *            trailing newline will be written.
+ * @param delimiter The heredoc delimiter string that terminates input when
+ *                  entered on a line by itself.
+ * @param is_delim_unquoted If `true`, apply heredoc expansions to the read
+ *                          line before writing it.
+ * @returns `true` if a line was successfully read (and written) and heredoc
+ *          input should continue; `false` if EOF, the delimiter was entered,
+ *          or a readline interruption occurred.
+ */
 static bool	process_heredoc_line(int pfd, const char *delimiter,
 	bool is_delim_unquoted)
 {
@@ -45,6 +58,13 @@ static bool	process_heredoc_line(int pfd, const char *delimiter,
 	return (true);
 }
 
+/**
+ * Create a pipe populated with lines read from a heredoc until the specified delimiter is entered.
+ *
+ * @param delimiter Delimiter string that, when entered on its own line, terminates heredoc input.
+ * @param is_delim_unquoted If `true`, apply expansion to each heredoc line before writing it into the pipe.
+ * @returns Read end file descriptor of the pipe containing the heredoc contents, or `-1` if the heredoc was interrupted.
+ */
 int	read_heredoc(const char *delimiter, bool is_delim_unquoted)
 {
 	int		pfd[2];

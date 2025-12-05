@@ -13,6 +13,15 @@
 #include <fcntl.h>
 #include "minishell.h"
 
+/**
+ * Open the file or heredoc associated with a redirection node and store its file descriptor in the node.
+ *
+ * Opens the target file for output (create/truncate), input (read), or append as appropriate for the node's redirection kind,
+ * or obtains a heredoc file descriptor for heredoc redirections. On success, stores the resulting descriptor in node->filefd.
+ *
+ * @param node Redirection node whose target should be opened; its `filefd` field is updated on success.
+ * @returns `0` on success, `-1` on failure (in which case an error is reported for file-based redirections).
+ */
 static int	open_redirect_file_node(t_node *node)
 {
 	if (node->kind == ND_REDIR_OUT)
@@ -38,6 +47,15 @@ static int	open_redirect_file_node(t_node *node)
 	return (0);
 }
 
+/**
+ * Open all files required by the redirections in a syntax-tree node subtree.
+ *
+ * Recursively traverses pipeline, simple command, and redirection nodes and opens each redirection target
+ * (including heredocs), storing the resulting file descriptor in the corresponding node.
+ *
+ * @param node Root of the command/redirect subtree to process; may be NULL.
+ * @returns `0` on success, `-1` if any redirection file or heredoc fails to open.
+ */
 int	open_redir_file(t_node *node)
 {
 	if (node == NULL)

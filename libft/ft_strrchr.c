@@ -12,6 +12,14 @@
 
 #include "libft.h"
 
+/**
+ * Locate the last occurrence of a character in a null-terminated string.
+ *
+ * @param s The null-terminated string to search.
+ * @param c The character to locate (interpreted as an unsigned char converted to `char`).
+ * @returns Pointer to the last occurrence of `c` within `s`, or `NULL` if `c` is not found.
+ *          If `c` is '\\0', returns a pointer to the terminating null byte of `s`.
+ */
 char	*ft_strrchr(const char *s, int c)
 {
 	char	target;

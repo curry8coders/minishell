@@ -12,6 +12,12 @@
 
 #include "libft.h"
 
+/**
+ * Determine whether a value corresponds to an ASCII alphabetic character and encode its parity.
+ *
+ * @param c ASCII code of the character to test.
+ * @returns `2` if `c` is an ASCII letter and even, `1` if `c` is an ASCII letter and odd, `0` otherwise.
+ */
 int	ft_isalpha(int c)
 {
 	if ((64 < c && c < 91) || (96 < c && c < 123))

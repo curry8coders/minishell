@@ -12,6 +12,19 @@
 
 #include "minishell.h"
 
+/**
+ * Remove the environment variables named in argv from the global environment map.
+ *
+ * For each argument starting at argv[1], attempts to remove that name from the
+ * global g_envmap. If removal fails for an argument, an error is reported via
+ * builtin_error with message "not a valid identifier".
+ *
+ * @param argv NULL-terminated argument vector where argv[0] is the command name;
+ *             processing begins at argv[1].
+ * @returns `0` if the final processed argument was removed successfully or if
+ *          no arguments were provided, `1` if the final processed argument was
+ *          an invalid identifier (an error is reported in that case).
+ */
 int	builtin_unset(char **argv)
 {
 	int		status;

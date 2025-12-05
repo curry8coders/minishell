@@ -12,6 +12,12 @@
 
 #include "libft.h"
 
+/**
+ * Check whether a character code is a decimal digit.
+ *
+ * @param c Character code to test (typically an unsigned char cast to int or EOF).
+ * @return `1` if `c` is a digit between `'0'` and `'9'`, `0` otherwise.
+ */
 int	ft_isdigit(int c)
 {
 	if (c >= '0' && c <= '9')

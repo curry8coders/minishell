@@ -19,6 +19,14 @@
 
 #include <string.h>
 
+/**
+ * Check whether a filesystem path is executable and return a heap-allocated copy when it is.
+ *
+ * @param path Path to test for execute permission.
+ * @returns A malloc-allocated duplicate of `path` if the file is executable, `NULL` otherwise.
+ *          The caller is responsible for freeing the returned string.
+ *          On allocation failure, `fatal_error("strdup")` is invoked.
+ */
 static char	*check_path_access(char *path)
 {
 	char	*dup;
@@ -33,6 +41,19 @@ static char	*check_path_access(char *path)
 	return (NULL);
 }
 
+/**
+ * Construct a filesystem path by joining a directory and a filename into the provided buffer.
+ *
+ * The function writes the resulting string "dir/filename" into the `path` buffer,
+ * clearing the buffer first. If `len` is greater than zero, only the first `len`
+ * bytes of `dir` are used as the directory component; otherwise the full `dir`
+ * string is used. If the combined result exceeds PATH_MAX it will be truncated.
+ *
+ * @param path Buffer where the combined path will be written (must have at least PATH_MAX bytes).
+ * @param dir Directory component to use (may be partially used when `len` > 0).
+ * @param len Number of bytes from `dir` to copy when > 0; if 0 the full `dir` is used.
+ * @param filename Filename component to append after a '/' separator.
+ */
 static void	build_path(char *path, const char *dir, size_t len,
 		const char *filename)
 {
@@ -45,6 +66,12 @@ static void	build_path(char *path, const char *dir, size_t len,
 	ft_strlcat(path, filename, PATH_MAX);
 }
 
+/**
+ * Locate an executable by searching each directory listed in the PATH environment variable.
+ *
+ * @param filename Name of the executable to locate; appended to each PATH directory to form candidate paths.
+ * @returns A newly allocated string containing the full path to the first matching executable found; `NULL` if no executable is found or PATH is not set. The caller is responsible for freeing the returned string.
+ */
 char	*search_path(const char *filename)
 {
 	char	path[PATH_MAX];
@@ -74,6 +101,12 @@ char	*search_path(const char *filename)
 
 
 
+/**
+ * Map a process termination status from wait(2) to a conventional exit code.
+ *
+ * @param wstatus Status value returned by wait(2) or a related wait-family call.
+ * @returns `128 + signal` if the process was terminated by a signal, otherwise the process's exit status.
+ */
 int	get_exit_status(int wstatus)
 {
 	if (WIFSIGNALED(wstatus))

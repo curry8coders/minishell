@@ -18,6 +18,14 @@
 #include <stdio.h>
 #include <string.h>
 
+/**
+ * Determine whether two filesystem paths refer to the same inode.
+ *
+ * @param path1 Filesystem path of the first file or directory to compare.
+ * @param path2 Filesystem path of the second file or directory to compare.
+ * @returns `true` if both paths refer to the same inode, `false` otherwise.
+ * @note Calls fatal_error("stat") and does not return if `stat` fails for either path.
+ */
 bool	equal_inode(const char *path1, const char *path2)
 {
 	struct stat	st1;

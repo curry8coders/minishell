@@ -18,6 +18,14 @@
 
 volatile sig_atomic_t	g_sig = 0;
 
+/**
+ * Process pending signal state and, if it indicates SIGINT, interrupt the current readline input.
+ *
+ * When a SIGINT is pending, clears the signal flag, marks the readline subsystem as interrupted,
+ * clears the current input line, and requests readline to finish input.
+ *
+ * @returns Always returns 0.
+ */
 int	check_state(void)
 {
 	if (g_sig == 0)
@@ -33,6 +41,14 @@ int	check_state(void)
 	return (0);
 }
 
+/**
+ * Configure readline and terminal signal behavior for interactive use.
+ *
+ * Disables echoing of control characters, directs readline output to stderr,
+ * and, when standard input is a terminal, installs a readline event hook to
+ * integrate signal state with the input loop and ignores SIGQUIT. Always
+ * initializes SIGINT handling.
+ */
 void	setup_signal(void)
 {
 	extern int	_rl_echo_control_chars;

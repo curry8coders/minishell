@@ -12,6 +12,14 @@
 
 #include "libft.h"
 
+/**
+ * Locate the first occurrence of a byte value within a memory block.
+ *
+ * @param s Pointer to the memory area to be searched.
+ * @param c Byte value to search for (converted to `unsigned char`).
+ * @param n Number of bytes to examine starting at `s`.
+ * @returns Pointer to the first matching byte within `s`, or `NULL` if no match is found within the first `n` bytes.
+ */
 void	*ft_memchr(const void *s, int c, size_t n)
 {
 	const unsigned char	*ptr;

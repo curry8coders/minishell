@@ -12,6 +12,12 @@
 
 #include "libft.h"
 
+/**
+ * Determine whether an integer value represents an ASCII character.
+ *
+ * @param c Integer value to test.
+ * @returns `1` if `c` is within the ASCII range 0–127, `0` otherwise.
+ */
 int	ft_isascii(int c)
 {
 	return (0 <= c && c <= 127);

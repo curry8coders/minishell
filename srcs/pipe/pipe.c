@@ -24,6 +24,17 @@ void	prepare_pipe(t_node *node)
 	cpy_pipe(node->next->inpipe, node->outpipe);
 }
 
+/**
+ * Configure standard input and output for a child process using the node's pipes.
+ *
+ * Duplicates node->inpipe[0] onto STDIN_FILENO if inpipe[0] is a valid descriptor
+ * and not already STDIN, and duplicates node->outpipe[1] onto STDOUT_FILENO if
+ * outpipe[1] is a valid descriptor and not already STDOUT. Closes the corresponding
+ * original descriptors and closes node->outpipe[0] if it is a valid descriptor.
+ *
+ * @param node Pointer to the pipeline node whose inpipe and outpipe file descriptors
+ *             are used to set up the child's standard streams.
+ */
 void	prepare_pipe_child(t_node *node)
 {
 	if (node->outpipe[0] >= 0)
@@ -40,6 +51,14 @@ void	prepare_pipe_child(t_node *node)
 	}
 }
 
+/**
+ * Close pipe file descriptors for a node in the parent process after forking.
+ *
+ * Closes the node's read-end input descriptor if it is a valid descriptor and not STDIN_FILENO.
+ * If the node has a successor, closes the node's write-end output descriptor when it is valid.
+ *
+ * @param node The pipeline node whose pipe descriptors should be closed in the parent.
+ */
 void	prepare_pipe_parent(t_node *node)
 {
 	if (node->inpipe[0] >= 0 && node->inpipe[0] != STDIN_FILENO)

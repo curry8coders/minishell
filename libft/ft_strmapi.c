@@ -12,6 +12,13 @@
 
 #include "libft.h"
 
+/**
+ * Create a new string by applying function `f` to each character of `s`, where `f` receives the character's index and value.
+ *
+ * @param s Input string to transform; must not be NULL.
+ * @param f Function applied to each character; receives the character's index and the character and returns the new character.
+ * @returns A newly allocated string containing the results of `f` for each character from `s`, or `NULL` if `s` or `f` is NULL or memory allocation fails.
+ */
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
 	char			*new_str;
