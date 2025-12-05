@@ -57,9 +57,9 @@ t_token	*word(t_shell *shell, char **rest, char *line)
 		if (shell->syntax_error)
 			break ;
 	}
-	w = strndup(start, line - start);
+	w = ft_substr(start, 0, line - start);
 	if (w == NULL)
-		fatal_error("strndup");
+		fatal_error("ft_substr");
 	*rest = line;
 	return (new_token(w, TK_WORD));
 }

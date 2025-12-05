@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 21:00:00 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/04 21:00:00 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 04:07:51 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,13 @@ void	tokenize_error(t_shell *sh, const char *loc, char **rest, char *line)
 	sh->syntax_error = true;
 	perror_prefix();
 	if (*line == '\0')
-		dprintf(STDERR_FILENO, "syntax error: unexpected end of input\n");
+		write(STDERR_FILENO, "syntax error: unexpected end of input\n", 38);
 	else
-		dprintf(STDERR_FILENO, "syntax error: unexpected character '%c'\n",
-			*line);
+	{
+		write(STDERR_FILENO, "syntax error: unexpected character '", 36);
+		write(STDERR_FILENO, line, 1);
+		write(STDERR_FILENO, "'\n", 2);
+	}
 	while (*line)
 		line++;
 	*rest = line;
@@ -34,8 +37,9 @@ void	parse_error(t_shell *shell, t_token **rest, t_token *tok)
 {
 	shell->syntax_error = true;
 	perror_prefix();
-	dprintf(STDERR_FILENO, "syntax error near unexpected token `%s'\n",
-		tok->word);
+	write(STDERR_FILENO, "syntax error near unexpected token `", 36);
+	write(STDERR_FILENO, tok->word, ft_strlen(tok->word));
+	write(STDERR_FILENO, "'\n", 2);
 	while (tok && !at_eof(tok))
 		tok = tok->next;
 	*rest = tok;
@@ -50,8 +54,13 @@ void	xperror(const char *location)
 void	builtin_error(const char *func, const char *name, const char *err)
 {
 	perror_prefix();
-	dprintf(STDERR_FILENO, "%s: ", func);
+	write(STDERR_FILENO, func, ft_strlen(func));
+	write(STDERR_FILENO, ": ", 2);
 	if (name)
-		dprintf(STDERR_FILENO, "%s: ", name);
-	dprintf(STDERR_FILENO, "%s\n", err);
+	{
+		write(STDERR_FILENO, name, ft_strlen(name));
+		write(STDERR_FILENO, ": ", 2);
+	}
+	write(STDERR_FILENO, err, ft_strlen(err));
+	write(STDERR_FILENO, "\n", 1);
 }

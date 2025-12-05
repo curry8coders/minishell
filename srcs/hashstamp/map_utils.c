@@ -33,9 +33,9 @@ t_item	*item_new(char *name, char *value)
 {
 	t_item	*item;
 
-	item = calloc(1, sizeof(*item));
+	item = ft_calloc(1, sizeof(*item));
 	if (item == NULL)
-		fatal_error("calloc");
+		fatal_error("ft_calloc");
 	item->name = name;
 	item->value = value;
 	return (item);
@@ -46,9 +46,9 @@ char	*item_get_string(t_item *item)
 	size_t	strsize;
 	char	*string;
 
-	strsize = strlen(item->name) + 2;
+	strsize = ft_strlen(item->name) + 2;
 	if (item->value)
-		strsize += strlen(item->value);
+		strsize += ft_strlen(item->value);
 	string = malloc(strsize);
 	if (string == NULL)
 		fatal_error("malloc");
@@ -67,7 +67,7 @@ int	map_put(t_map *map, const char *string, bool allow_empty_value)
 	char	*name;
 	char	*value;
 
-	if (!allow_empty_value && strchr(string, '=') == NULL)
+	if (!allow_empty_value && ft_strchr(string, '=') == NULL)
 		return (-1);
 	parse_name_value(string, &name, &value);
 	result = map_set(map, name, value);
