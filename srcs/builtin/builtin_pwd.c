@@ -6,17 +6,16 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 15:36:21 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/30 20:47:20 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/05 22:03:45 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <limits.h>
+#include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include "minishell.h"
-
-#include <stdio.h>
-#include <string.h>
 
 bool	equal_inode(const char *path1, const char *path2)
 {
@@ -26,19 +25,19 @@ bool	equal_inode(const char *path1, const char *path2)
 	memset(&st1, 0, sizeof(st1));
 	memset(&st2, 0, sizeof(st2));
 	if (stat(path1, &st1) < 0)
-		fatal_error("stat");
+		return (false);
 	if (stat(path2, &st2) < 0)
-		fatal_error("stat");
+		return (false);
 	return (st1.st_ino == st2.st_ino);
 }
 
-int	builtin_pwd(char **argv)
+int	builtin_pwd(t_shell *shell, char **argv)
 {
 	char	*pwd;
 	char	cwd[PATH_MAX];
 
 	(void)argv;
-	pwd = xgetenv("PWD");
+	pwd = xgetenv(shell, "PWD");
 	if (pwd == NULL || !equal_inode(pwd, "."))
 	{
 		if (getcwd(cwd, PATH_MAX) == NULL)

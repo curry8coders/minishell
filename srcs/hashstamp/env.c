@@ -6,32 +6,29 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 03:14:27 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/30 20:58:32 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/05 21:37:32 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include <limits.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include "minishell.h"
 
-#include <string.h>
-
-t_map	*g_envmap;
-
 static void	envmap_init(t_map *map, char **ep);
 
-char	*xgetenv(const char *name)
+char	*xgetenv(t_shell *shell, const char *name)
 {
-	return (map_get(g_envmap, name));
+	return (map_get(shell->envmap, name));
 }
 
-void	initenv(void)
+void	initenv(t_shell *shell)
 {
 	extern char	**environ;
 
-	g_envmap = map_new();
-	envmap_init(g_envmap, environ);
+	shell->envmap = map_new();
+	envmap_init(shell->envmap, environ);
 }
 
 char	**get_environ(t_map *map)

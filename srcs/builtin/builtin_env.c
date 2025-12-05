@@ -14,12 +14,12 @@
 
 #include <stdio.h>
 
-int	builtin_env(char **argv)
+int	builtin_env(t_shell *shell, char **argv)
 {
 	t_item	*cur;
 
 	(void)argv;
-	cur = g_envmap->item_head.next;
+	cur = shell->envmap->item_head.next;
 	while (cur)
 	{
 		if (cur->value)

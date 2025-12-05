@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 17:35:46 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/03 21:28:11 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/05 08:15:56 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,7 @@
 
 #define ERROR_PREFIX "minishell: "
 
-bool	g_syntax_error = false;
-
-static	void	perror_prefix(void)
+void	perror_prefix(void)
 {
 	dprintf(STDERR_FILENO, "%s", ERROR_PREFIX);
 }
@@ -48,58 +46,4 @@ void	err_exit(const char *location, const char *msg, int status)
 {
 	print_error(location, msg);
 	exit(status);
-}
-
-void	todo(const char *msg)
-{
-	perror_prefix();
-	dprintf(STDERR_FILENO, "TODO: %s\n", msg);
-	exit(255);
-}
-
-void	tokenize_error(const char *location, char **rest, char *line)
-{
-	g_syntax_error = true;
-	perror_prefix();
-	if (*line == '\0')
-		dprintf(STDERR_FILENO, "syntax error: unexpected end of input in %s\n", location);
-	else
-		dprintf(STDERR_FILENO, "syntax error near unexpected character '%c' in %s\n", *line, location);
-	while (*line)
-		line++;
-	*rest = line;
-}
-
-void	parse_error(const char *location, t_token **rest, t_token *tok)
-{
-	g_syntax_error = true;
-	perror_prefix();
-	dprintf(STDERR_FILENO, "syntax error near unexpected token `%s' in %s\n", tok->word, location);
-	//note : 
-	// tokenize() 関数で作られる TK_EOF トークンは、wordに
-	// NULLを設定した状態で生成される そこでparse_error()に
-	// EOFトークンが渡されてtok->wordにアクセスするとセグフォー
-	while(tok && !at_eof(tok))
-		tok = tok->next;
-	*rest = tok;
-}
-
-void	xperror(const char *location)
-{
-	perror_prefix();
-	perror(location);
-}
-
-void	builtin_error(const char *func, const char *name, const char *err)
-{
-	perror_prefix();
-	dprintf(STDERR_FILENO, "%s: ", func);
-	if (name)
-		dprintf(STDERR_FILENO, "%s: ", name);
-	dprintf(STDERR_FILENO, "%s\n", err);
-}
-
-void	command_not_found_error(const char *location)
-{
-	print_error(location, "command not found");
 }

@@ -3,18 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   map_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 00:00:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/29 14:59:29 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/05 21:37:32 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include "minishell.h"
-
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include "minishell.h"
 
 bool	is_identifier(const char *s)
 {

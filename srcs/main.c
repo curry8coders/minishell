@@ -6,77 +6,96 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:10:51 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/03 21:27:43 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/05 08:15:56 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "minishell.h"
 
-int	g_last_status;
-
-void	interpret(char *line, int *stat_loc)
+static void	exec_and_cleanup(t_shell *sh, t_node *node, t_token *tok)
 {
-	t_token	*tok;
-	t_node	*node;
-
-	tok = tokenize(line);
-	if (g_syntax_error || at_eof(tok))
+	expand(sh, node);
+	if (sh->syntax_error)
 	{
-		if (g_syntax_error)
-			*stat_loc = ERROR_TOKENIZE;
-		free_tok(tok);
-		return;
-	}
-	
-	node = parse(tok);
-	if (g_syntax_error)
-	{
-		*stat_loc = ERROR_PARSE;
+		sh->last_status = ERROR_EXPAND;
 		free_node(node);
 		free_tok(tok);
-		return;
+		return ;
 	}
-	
-	expand(node);
-	if (g_syntax_error)
-	{
-		*stat_loc = ERROR_EXPAND;
-		free_node(node);
-		free_tok(tok);
-		return;
-	}
-	
-	*stat_loc = exec(node);
+	sh->last_status = exec(sh, node);
 	free_node(node);
 	free_tok(tok);
 }
 
-//*stat_locではメモリアクセスでステータス渡す
-//status localtion
-// なぜinterpretでexecが起動されるか
+static void	interpret(t_shell *shell, char *line)
+{
+	t_token	*tok;
+	t_node	*node;
+
+	tok = tokenize(shell, line);
+	if (shell->syntax_error || at_eof(tok))
+	{
+		if (shell->syntax_error)
+			shell->last_status = ERROR_TOKENIZE;
+		free_tok(tok);
+		return ;
+	}
+	node = parse(shell, tok);
+	if (shell->syntax_error)
+	{
+		shell->last_status = ERROR_PARSE;
+		free_node(node);
+		free_tok(tok);
+		return ;
+	}
+	exec_and_cleanup(shell, node, tok);
+}
+
+static void	init_shell(t_shell *shell)
+{
+	shell->last_status = 0;
+	shell->exit_status = 0;
+	shell->syntax_error = false;
+	shell->readline_interrupted = false;
+	shell->envmap = NULL;
+}
+
+static void	handle_line(t_shell *shell, char *line)
+{
+	if (shell->readline_interrupted)
+	{
+		shell->last_status = 128 + SIGINT;
+		free(line);
+		return ;
+	}
+	if (*line)
+		add_history(line);
+	interpret(shell, line);
+	free(line);
+}
 
 int	main(void)
 {
+	t_shell	shell;
 	char	*line;
 
 	rl_outstream = stderr;
-	initenv();
-	setup_signal();
-	g_last_status = 0;
+	init_shell(&shell);
+	initenv(&shell);
+	setup_signal(&shell);
 	while (1)
 	{
+		shell.readline_interrupted = false;
 		line = readline("minishell$ ");
 		if (line == NULL)
 			break ;
-		if (*line)
-			add_history(line);
-		interpret(line, &g_last_status);
-		free(line);
+		handle_line(&shell, line);
 	}
-	exit(g_last_status);
+	write(STDERR_FILENO, "exit\n", 5);
+	exit(shell.last_status);
 }
-//interpret(line, &status)は&アドレス渡し
