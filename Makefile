@@ -87,17 +87,18 @@ OBJS = $(SRCS:%.c=%.o)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) -o $(NAME) $(OBJS) $(LDFLAGS) $(LIBS) 
+	@$(CC) -o $(NAME) $(OBJS) $(LDFLAGS) $(LIBS) 
 	
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 	
 $(LIBFT):
-	+$(MAKE) -C $(LIBFT_DIR) all bonus
+	@+$(MAKE) -C $(LIBFT_DIR) all bonus
 
 clean:
-	$(RM) $(OBJS) $(DEPS)
-	+$(MAKE) -C $(LIBFT_DIR) clean
+	@$(RM) $(OBJS)
+	@$(RM) $(SRCS:%.c=%.o.tmp) 
+	@+$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
 	$(RM) $(NAME)
