@@ -6,11 +6,10 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 00:00:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/30 20:20:05 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/05 09:40:09 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <signal.h>
 #include "minishell.h"
 
 void	handler(int signum)

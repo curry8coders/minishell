@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	builtin_unset(char **argv)
+int	builtin_unset(t_shell *shell, char **argv)
 {
 	int		status;
 	size_t	i;
@@ -21,7 +21,7 @@ int	builtin_unset(char **argv)
 	i = 1;
 	while (argv[i])
 	{
-		if (map_unset(g_envmap, argv[i]) < 0)
+		if (map_unset(shell->envmap, argv[i]) < 0)
 		{
 			builtin_error("unset", argv[i], "not a valid identifier");
 			status = 1;

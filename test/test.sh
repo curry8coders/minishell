@@ -205,7 +205,6 @@ test_1(){
 	assert 'a.out'
 	assert 'nosuchfile'
 	
-	printf '%80' ''  | tr ' ' '1'
 	echo
 }
 # ----------------------------------------1----------------------------------------
@@ -246,7 +245,7 @@ test_2(){
 # ----------------------------------------3----------------------------------------
 test_3(){
 	# redirect
-	ptrintf "# redirect\n"
+	printf "# redirect\n"
 	## Redirecting output
 	printf "## Redirecting output\n"
 	assert 'echo hello >hello.txt' 'hello.txt'
@@ -301,7 +300,7 @@ test_4(){
 	echo
 	
 	# Special Parameter $?
-	printf "# Special Parameter $?\n"
+	printf "# Special Parameter \$?\n"
 	assert 'echo $?'
 	assert 'invalid\necho $?\necho $?'
 	assert 'exit42\necho $?\necho $?'

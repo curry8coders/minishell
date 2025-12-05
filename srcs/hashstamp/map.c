@@ -3,18 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 04:24:42 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/29 14:51:42 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/05 21:37:32 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include "minishell.h"
-
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include "minishell.h"
 
 t_map	*map_new(void)
 {

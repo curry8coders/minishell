@@ -14,11 +14,11 @@
 
 #include <stdio.h>
 
-void	print_allenv(void)
+static void	print_allenv(t_shell *shell)
 {
 	t_item	*cur;
 
-	cur = g_envmap->item_head.next;
+	cur = shell->envmap->item_head.next;
 	while (cur)
 	{
 		if (cur->value)
@@ -29,21 +29,21 @@ void	print_allenv(void)
 	}
 }
 
-int	builtin_export(char **argv)
+int	builtin_export(t_shell *shell, char **argv)
 {
 	size_t	i;
 	int		status;
 
 	if (argv[1] == NULL)
 	{
-		print_allenv();
+		print_allenv(shell);
 		return (0);
 	}
 	status = 0;
 	i = 1;
 	while (argv[i])
 	{
-		if (map_put(g_envmap, argv[i], true) < 0)
+		if (map_put(shell->envmap, argv[i], true) < 0)
 		{
 			builtin_error("export", argv[i], "not a valid identifier");
 			status = 1;
