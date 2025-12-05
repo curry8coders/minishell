@@ -59,5 +59,7 @@ void	todo(const char *msg)
 
 void	command_not_found_error(const char *location)
 {
+	if (location == NULL | *location == '\0')
+		location = "";
 	print_error(location, "command not found");
 }
