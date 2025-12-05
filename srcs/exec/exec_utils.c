@@ -84,14 +84,29 @@ char	*resolve_path(t_shell *shell, char **argv)
 	char	*path;
 
 	path = argv[0];
-	if (strchr(path, '/') == NULL)
-		path = search_path(shell, path);
-	if (path == NULL || access(path, F_OK) < 0)
+	if (path == NULL || path[0] == '\0')
 	{
-		print_error(argv[0], "command not found");
+		command_not_found_error(argv[0]);
 		free_argv(argv);
+		exit(127);
+	}
+
+	if (strchr(path, '/') == NULL)
+	{
+		path = search_path(shell, path);
+		if (path == NULL)
+		{
+			command_not_found_error(argv[0]);
+			free_argv(argv);
+			exit(127);
+		}
+	}
+	if (access(path, F_OK) < 0)
+	{
+		command_not_found_error(argv[0]);
 		if (path != NULL && path != argv[0])
 			free(path);
+		free_argv(argv);
 		exit(127);
 	}
 	return (path);
