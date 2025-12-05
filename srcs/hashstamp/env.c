@@ -39,7 +39,7 @@ char	**get_environ(t_map *map)
 	char	**environ;
 
 	size = map_len(map, false) + 1;
-	environ = calloc(size, sizeof(char *));
+	environ = ft_calloc(size, sizeof(char *));
 	i = 0;
 	item = map->item_head.next;
 	while (item)

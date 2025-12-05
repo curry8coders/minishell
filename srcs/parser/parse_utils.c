@@ -23,16 +23,16 @@ bool	equal_op(t_token *tok, char *op)
 {
 	if (tok->kind != TK_OP)
 		return (false);
-	return (strcmp(tok->word, op) == 0);
+	return (ft_strcmp(tok->word, op) == 0);
 }
 
 t_node	*new_node(t_node_kind kind)
 {
 	t_node	*node;
 
-	node = calloc(1, sizeof(*node));
+	node = ft_calloc(1, sizeof(*node));
 	if (node == NULL)
-		fatal_error("calloc");
+		fatal_error("ft_calloc");
 	node->kind = kind;
 	node->filefd = -1;
 	node->stashed_targetfd = -1;
@@ -47,8 +47,8 @@ t_token	*tokdup(t_token *tok)
 {
 	char	*word;
 
-	word = strdup(tok->word);
+	word = ft_strdup(tok->word);
 	if (word == NULL)
-		fatal_error("strdup");
+		fatal_error("ft_strdup");
 	return (new_token(word, tok->kind));
 }

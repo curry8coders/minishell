@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/05 22:03:46 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 02:48:38 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,10 @@ int	exec(t_shell *shell, t_node *node)
 		status = exec_builtin(shell, node);
 	else
 	{
+		ignore_sig(SIGINT);
 		last_pid = exec_pipeline(shell, node);
 		status = wait_pipeline(last_pid);
+		setup_sigint();
 		close_all_redirect_fds(node);
 	}
 	return (status);
@@ -51,6 +53,12 @@ static int	exec_nonbuiltin(t_shell *shell, t_node *node)
 	do_redirect(node->command->redirects);
 	argv = token_list_to_argv(node->command->args);
 	path = resolve_path(shell, argv);
+	if (path == NULL)
+	{
+		free_argv(argv);
+		reset_redirect(node->command->redirects);
+		exit(127);
+	}
 	envp = get_environ(shell->envmap);
 	execve(path, argv, envp);
 	free_argv(envp);
@@ -110,9 +118,8 @@ static int	wait_pipeline(pid_t last_pid)
 	while (1)
 	{
 		wait_result = wait(&wstatus);
-		if (wait_result == last_pid)
-			status = get_exit_status(wstatus);
-		else if (wait_result < 0)
+		handle_child_status(wait_result, last_pid, &status, wstatus);
+		if (wait_result < 0)
 		{
 			if (errno == ECHILD)
 				break ;

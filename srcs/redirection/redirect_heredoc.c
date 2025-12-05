@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 00:00:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/05 22:03:46 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 04:07:51 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,15 @@ static bool	process_heredoc_line(t_shell *sh, int pfd, const char *delim,
 		free(line);
 		return (false);
 	}
-	if (strcmp(line, delim) == 0)
+	if (ft_strcmp(line, delim) == 0)
 	{
 		free(line);
 		return (false);
 	}
 	if (is_delim_unquoted)
 		line = expand_heredoc_line(sh, line);
-	dprintf(pfd, "%s\n", line);
+	write(pfd, line, ft_strlen(line));
+	write(pfd, "\n", 1);
 	free(line);
 	return (true);
 }

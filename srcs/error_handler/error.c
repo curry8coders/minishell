@@ -12,7 +12,6 @@
 
 #include <stdlib.h>
 #include <unistd.h>
-#include <stdio.h>
 #include "minishell.h"
 
 #define ERROR_PREFIX "minishell: "
@@ -21,27 +20,34 @@ bool	g_syntax_error = false;
 
 void	perror_prefix(void)
 {
-	dprintf(STDERR_FILENO, "%s", ERROR_PREFIX);
+	write(STDERR_FILENO, ERROR_PREFIX, ft_strlen(ERROR_PREFIX));
 }
 
 void	fatal_error(const char *msg)
 {
 	perror_prefix();
-	dprintf(STDERR_FILENO, "Fatal Error: %s\n", msg);
+	write(STDERR_FILENO, "Fatal Error: ", 13);
+	write(STDERR_FILENO, msg, ft_strlen(msg));
+	write(STDERR_FILENO, "\n", 1);
 	exit(1);
 }
 
 void	assert_error(const char *msg)
 {
 	perror_prefix();
-	dprintf(STDERR_FILENO, "Assert Error: %s\n", msg);
+	write(STDERR_FILENO, "Assert Error: ", 14);
+	write(STDERR_FILENO, msg, ft_strlen(msg));
+	write(STDERR_FILENO, "\n", 1);
 	exit(255);
 }
 
 void	print_error(const char *location, const char *msg)
 {
 	perror_prefix();
-	dprintf(STDERR_FILENO, "%s: %s\n", location, msg);
+	write(STDERR_FILENO, location, ft_strlen(location));
+	write(STDERR_FILENO, ": ", 2);
+	write(STDERR_FILENO, msg, ft_strlen(msg));
+	write(STDERR_FILENO, "\n", 1);
 }
 
 void	err_exit(const char *location, const char *msg, int status)

@@ -34,18 +34,14 @@ bool	consume_blank(char **rest, char *line)
 
 bool	startswith(const char *s, const char *keyword)
 {
-	return (memcmp(s, keyword, strlen(keyword)) == 0);
+	return (ft_memcmp(s, keyword, ft_strlen(keyword)) == 0);
 }
 
 bool	is_metacharacter(char c)
 {
 	if (is_blank(c))
 		return (true);
-<<<<<<< Updated upstream
-	return (c && strchr("|&;()<>\n", c));
-=======
-	return (c && strchr("<>|\n", c));
->>>>>>> Stashed changes
+	return (c && ft_strchr("<>|\n", c));
 }
 
 bool	is_word(const char *s)

@@ -61,6 +61,7 @@ SRCS = srcs/main.c\
 	   srcs/pipe/pipe.c\
 	   srcs/exec/exec.c\
 	   srcs/exec/exec_utils.c\
+	   srcs/exec/exec_wait.c\
 	   srcs/signal/signal.c\
 	   srcs/signal/signal_handler.c\
 	   srcs/builtin/builtin.c\
