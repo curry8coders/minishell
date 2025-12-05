@@ -146,6 +146,9 @@ struct s_shell
 
 
 // exec_utils.c
+char				*search_path(t_shell *shell, const char *filename);
+int					get_exit_status(int wstatus);
+char				*resolve_path(t_shell *shell, char **argv);
 
 
 // signal.c
@@ -184,18 +187,6 @@ struct s_shell
 
 // map_item.c
 
-
-void				perror_prefix(void);
-void				fatal_error(const char *msg) __attribute__((noreturn));
-void				assert_error(const char *msg) __attribute__((noreturn));
-void				print_error(const char *location, const char *msg);
-void				err_exit(const char *loc, const char *msg, int status)
-					__attribute__((noreturn));
-void				tokenize_error(t_shell *sh, const char *loc,
-						char **rest, char *line);
-void				parse_error(t_shell *shell, t_token **rest, t_token *tok);
-void				xperror(const char *location);
-void				builtin_error(const char *f, const char *n, const char *e);
 void				strbuf_init(t_strbuf *buf);
 void				strbuf_grow(t_strbuf *buf, size_t needed);
 void				strbuf_append_char(t_strbuf *buf, char c);
@@ -263,9 +254,6 @@ int					prepare_pipe(t_node *node);
 void				prepare_pipe_child(t_node *node);
 void				prepare_pipe_parent(t_node *node);
 int					exec(t_shell *shell, t_node *node);
-char				*search_path(t_shell *shell, const char *filename);
-char				*resolve_path(t_shell *shell, char **argv);
-int					get_exit_status(int wstatus);
 int					check_state(void);
 void				setup_signal(t_shell *shell);
 void				reset_signal(void);
@@ -304,5 +292,21 @@ void				parse_name_value(const char *str, char **name, char **val);
 char				*xgetenv(t_shell *shell, const char *name);
 void				initenv(t_shell *shell);
 char				**get_environ(t_map *map);
+
+//error.c
+void				perror_prefix(void);
+void				fatal_error(const char *msg) __attribute__((noreturn));
+void				assert_error(const char *msg) __attribute__((noreturn));
+void				print_error(const char *location, const char *msg);
+void				err_exit(const char *loc, const char *msg, int status)
+					__attribute__((noreturn));
+void				command_not_found_error(const char *location);
+
+//error_syntax.c
+void				tokenize_error(t_shell *sh, const char *loc,
+						char **rest, char *line);
+void				parse_error(t_shell *shell, t_token **rest, t_token *tok);
+void				xperror(const char *location);
+void				builtin_error(const char *f, const char *n, const char *e);
 
 #endif
