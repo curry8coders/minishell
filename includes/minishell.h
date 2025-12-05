@@ -120,9 +120,6 @@ struct s_map {
   t_item item_head;
 };
  
-// expand.c
-void expand(t_node *node);
-char *expand_heredoc_line(char *line);
 
 //expand_utils.c
 bool	is_alpha_under(char c);
