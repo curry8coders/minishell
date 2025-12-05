@@ -52,6 +52,7 @@ void tokenize_error(const char *location, char **rest, char *line);
 void parse_error(const char *location, t_token **rest, t_token *tok);
 void xperror(const char *location);
 void builtin_error(const char *func, const char *name, const char *err);
+void command_not_found_error(const char *location);
 
 // tokenize.c
 typedef struct s_token t_token;

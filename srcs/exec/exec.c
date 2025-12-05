@@ -16,6 +16,7 @@
 #include <errno.h>
 #include <sys/wait.h>
 #include "minishell.h"
+#include <stdio.h>
 
 #include <string.h>
 
@@ -52,20 +53,31 @@ int	exec_nonbuiltin(t_node *node)
 	do_redirect(node->command->redirects);
 	argv = token_list_to_argv(node->command->args);
 	path = argv[0];
-	if (strchr(path, '/') == NULL)
-		path = search_path(path);
-	if (path == NULL)
+	
+	if (path == NULL || path[0] == '\0')
 	{
-		print_error(argv[0], "command not found");
+		command_not_found_error(argv[0]);
 		free_argv(argv);
 		exit(127);
 	}
+	
+	if (strchr(path, '/') == NULL)
+	{
+		path = search_path(path);
+		if (path == NULL)
+		{
+			command_not_found_error(argv[0]);
+			free_argv(argv);
+			exit(127);
+		}
+	}
+		
 	if (access(path, F_OK) < 0)
 	{
-		print_error(argv[0], "command not found");
-		free_argv(argv);
+		command_not_found_error(argv[0]);
 		if (path != argv[0])
 			free(path);
+		free_argv(argv);
 		exit(127);
 	}
 	envp = get_environ(g_envmap);
