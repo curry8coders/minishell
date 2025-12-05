@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:57:17 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/05 08:15:56 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 03:43:07 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ t_token	*new_token(char *word, t_token_kind kind)
 
 t_token	*operator(char **rest, char *line)
 {
-	static const char *const	operators[] = {">>", "<<", "||", "&&", ";;",
-		"<", ">", "&", ";", "(", ")", "|", "\n"};
+	static const char *const	operators[] = {">>", "<<",
+		"<", ">", "|", "\n"};
 	size_t						i;
 	char						*op;
 
