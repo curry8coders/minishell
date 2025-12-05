@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 13:46:09 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 13:48:55 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/29 11:24:47 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	builtin_env(char **argv)
 	t_item	*cur;
 
 	(void)argv;
-	cur = envmap->item_head.next;
+	cur = g_envmap->item_head.next;
 	while (cur)
 	{
 		if (cur->value)

@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 16:38:48 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/03 21:13:47 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,105 +14,83 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
+#include <sys/wait.h>
 #include "minishell.h"
+#include <stdio.h>
 
 #include <string.h>
 
-char	*search_path(const char *filename);
-void	validate_access(const char *path, const char *filename);
-pid_t	exec_pipeline(t_node *node);
-int		wait_pipeline(pid_t last_pid);
-int		exec(t_node *node);
+static pid_t	exec_pipeline(t_node *node);
+static int		wait_pipeline(pid_t last_pid);
 
 int	exec(t_node *node)
 {
 	pid_t	last_pid;
 	int		status;
-	
+
 	if (open_redir_file(node) < 0)
+	{
+		close_all_redirect_fds(node);
 		return (ERROR_OPEN_REDIR);
+	}
 	if (node->next == NULL && is_builtin(node))
 		status = exec_builtin(node);
 	else
 	{
 		last_pid = exec_pipeline(node);
 		status = wait_pipeline(last_pid);
+		close_all_redirect_fds(node);
 	}
 	return (status);
 }
-
-char	*search_path(const char *filename)
-{
-	char path[PATH_MAX];
-	char *value;
-	char *end;
-
-	value = xgetenv("PATH");
-	if (value == NULL)
-		return (NULL);
-	while (*value)
-	{
-		// /bin:/usr/bin
-		//     ^
-		//     end
-		bzero(path, PATH_MAX);
-		end = strchr(value, ':');
-		if (end)
-			strncpy(path, value, end - value);
-		else
-			strlcpy(path, value, PATH_MAX);
-		strlcat(path, "/", PATH_MAX);
-		strlcat(path, filename, PATH_MAX);
-		if (access(path, X_OK) == 0)
-		{
-			char	*dup;
-			
-			dup = strdup(path);
-			if (dup == NULL)
-				fatal_error("strdup");
-			return (dup);
-		}
-		if (end == NULL)
-			return (NULL);
-		value = end + 1;
-	}
-	return (NULL);
-}
-
-void	validate_access(const char *path, const char *filename)
-{
-	if (path == NULL)
-		err_exit(filename, "command not found", 127);
-	if (access(path, F_OK) < 0)
-		err_exit(filename, "command not found", 127);
-}
-//指定された `path` に実行ファイルが本当に存在するかどうかを検証する
-// accessはシステムコール
-//      int access(const char *path, int mode);
-// mode:
-//未実装:追加で 空文字,'..',ファイル無効,ディレクトリかどうか,実行権限:permission(chmodでやるやつ)の確認をする
-// man accessより
-// X_OK for execute/search permission), or the existence test (F_OK)
-// F_OK：そのパスが「存在するか？」だけを調べる chmodとかでは扱わないフラグ
 
 int	exec_nonbuiltin(t_node *node)
 {
 	char	*path;
 	char	**argv;
+	char	**envp;
 
 	do_redirect(node->command->redirects);
 	argv = token_list_to_argv(node->command->args);
 	path = argv[0];
+	
+	if (path == NULL || path[0] == '\0')
+	{
+		command_not_found_error(argv[0]);
+		free_argv(argv);
+		exit(127);
+	}
+	
 	if (strchr(path, '/') == NULL)
+	{
 		path = search_path(path);
-	validate_access(path, argv[0]);
-	execve(path, argv, get_environ(envmap));
+		if (path == NULL)
+		{
+			command_not_found_error(argv[0]);
+			free_argv(argv);
+			exit(127);
+		}
+	}
+		
+	if (access(path, F_OK) < 0)
+	{
+		command_not_found_error(argv[0]);
+		if (path != argv[0])
+			free(path);
+		free_argv(argv);
+		exit(127);
+	}
+	envp = get_environ(g_envmap);
+	execve(path, argv, envp);
+	free_argv(envp);
 	free_argv(argv);
+	if (path != argv[0])
+		free(path);
 	reset_redirect(node->command->redirects);
 	fatal_error("execve");
 }
 
-pid_t	exec_pipeline(t_node *node)
+static pid_t	exec_pipeline(t_node *node)
 {
 	pid_t	pid;
 
@@ -124,22 +102,23 @@ pid_t	exec_pipeline(t_node *node)
 		fatal_error("fork");
 	else if (pid == 0)
 	{
-		// child process
 		reset_signal();
+		close_all_redirect_fds(node->next);
 		prepare_pipe_child(node);
 		if (is_builtin(node))
 			exit(exec_builtin(node));
 		else
-		 	exec_nonbuiltin(node);
+			exec_nonbuiltin(node);
 	}
-	// parent process
 	prepare_pipe_parent(node);
+	if (node->command)
+		close_redirect_fds(node->command->redirects);
 	if (node->next)
 		return (exec_pipeline(node->next));
 	return (pid);
 }
 
-int	wait_pipeline(pid_t last_pid)
+static int	wait_pipeline(pid_t last_pid)
 {
 	pid_t	wait_result;
 	int		status;
@@ -150,12 +129,7 @@ int	wait_pipeline(pid_t last_pid)
 	{
 		wait_result = wait(&wstatus);
 		if (wait_result == last_pid)
-		{
-			if (WIFSIGNALED(wstatus))
-				status = 128 + WTERMSIG(wstatus);
-			else
-				status = WEXITSTATUS(wstatus);
-		}
+			status = get_exit_status(wstatus);
 		else if (wait_result < 0)
 		{
 			if (errno == ECHILD)
@@ -168,13 +142,3 @@ int	wait_pipeline(pid_t last_pid)
 	}
 	return (status);
 }
-
-//fork
-//pid_t fork(void);pidを取得
-//pid==0子プロセスのコードを実行
-//pid>0親プロセスのコード
-//	自分の子プロセスのどれか一つが終了するのを待つ。
-// 	今回の場合、先に`fork()` で作成した子プロセスが終了するのを待つことになる。
-// wait()はシステムコール
-// 親プロセス（シェル）がこの`wait()`を呼び出すと、その場で実行を一時停止する。
-// WEXITSTATUS()は<sys/wait.h>に含まれるマクロ

@@ -3,12 +3,15 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
+#    By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/11/22 16:37:54 by ichikawahik      ###   ########.fr        #
+#    Updated: 2025/11/30 20:20:05 by hichikaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+ 
+#Linux | Darwin
+OS := $(shell uname -s)
 
 #############
 # Variables #
@@ -16,30 +19,58 @@
 
 NAME = minishell
 CC = cc
-RLDIR = $(shell brew --prefix readline)
-INCLUDES = -I includes -I$(RLDIR)/include
+LIBFT_DIR = libft
+LIBFT = $(LIBFT_DIR)/libft.a
+
+INCLUDES = -I includes -I$(LIBFT_DIR)
 CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
-LIBS = -lreadline -L$(RLDIR)/lib
+LDFLAGS=
+
+########################
+# Platform Compatibility 
+########################
+ifeq ($(OS),Darwin)
+    # commands for macOS
+    RLDIR = $(shell brew --prefix readline)
+    INCLUDES += -I$(RLDIR)/include
+    LDFLAGS += -L$(RLDIR)/lib $(LIBS)
+endif
+
+LIBS = -lreadline $(LIBFT)
+
 SRCS = srcs/main.c\
        srcs/error_handler/error.c\
        srcs/tokenizer/tokenize.c\
+		srcs/tokenizer/tokenize_utils.c\
        srcs/destructor.c\
        srcs/tokenizer/expand.c\
+		srcs/tokenizer/expand_utils.c\
        srcs/parser/parse.c\
+       srcs/parser/parse_redirect.c\
+       srcs/parser/parse_utils.c\
+       srcs/parser/parse_append.c\
        srcs/redirection/redirect.c\
+       srcs/redirection/redirect_heredoc.c\
+       srcs/redirection/redirect_open.c\
 	   srcs/pipe/pipe.c\
 	   srcs/exec/exec.c\
+	   srcs/exec/exec_utils.c\
 	   srcs/signal/signal.c\
+	   srcs/signal/signal_handler.c\
 	   srcs/builtin/builtin.c\
 	   srcs/builtin/builtin_exit.c\
 	   srcs/builtin/builtin_export.c\
 	   srcs/builtin/builtin_unset.c\
 	   srcs/builtin/builtin_env.c\
 	   srcs/builtin/builtin_cd.c\
+	   srcs/builtin/builtin_cd_utils.c\
 	   srcs/builtin/builtin_pwd.c\
 	   srcs/builtin/builtin_echo.c\
 	   srcs/hashstamp/map.c\
+	   srcs/hashstamp/map_utils.c\
+	   srcs/hashstamp/map_item.c\
 	   srcs/hashstamp/env.c\
+
 
 OBJS = $(SRCS:%.c=%.o)
 
@@ -49,37 +80,28 @@ OBJS = $(SRCS:%.c=%.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(LIBS) -o $(NAME) $(OBJS)
+$(NAME): $(OBJS) $(LIBFT)
+	@$(CC) -o $(NAME) $(OBJS) $(LDFLAGS) $(LIBS) 
+	
+%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@
+	
+$(LIBFT):
+	@+$(MAKE) -C $(LIBFT_DIR) all bonus
 
 clean:
-	$(RM) $(OBJS)
+	@$(RM) $(OBJS)
+	@$(RM) $(SRCS:%.c=%.o.tmp) 
+	@+$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
 	$(RM) $(NAME)
+	+$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
 # We may delete the following code when we push this project to 42's remote repository.
 test: all
-	./test/test.sh
+	bash ./test/test.sh
 
 .PHONY: all clean fclean re test
-
-##########################
-# Platform Compatibility #
-##########################
-
-#Linux | Darwin
-OS := $(shell uname -s)
-
-ifeq ($(OS),Linux)
-	# commands for Linux
-endif
-
-ifeq ($(OS),Darwin)
-    # command for macOS
-    RLDIR = $(shell brew --prefix readline)
-    INCLUDES += -I$(RLDIR)/include
-    LIBS += -L$(RLDIR)/lib
-endif

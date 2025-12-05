@@ -6,13 +6,12 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 15:36:21 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/22 15:46:51 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/11/30 20:47:20 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/syslimits.h>
-#include <unistd.h>
 #include <limits.h>
+#include <unistd.h>
 #include <sys/stat.h>
 #include "minishell.h"
 
@@ -21,8 +20,8 @@
 
 bool	equal_inode(const char *path1, const char *path2)
 {
-	struct stat st1;
-	struct stat st2;
+	struct stat	st1;
+	struct stat	st2;
 
 	memset(&st1, 0, sizeof(st1));
 	memset(&st2, 0, sizeof(st2));

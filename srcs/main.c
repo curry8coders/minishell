@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:10:51 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/22 07:36:04 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/03 21:27:43 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,32 +16,45 @@
 #include <readline/history.h>
 #include "minishell.h"
 
-int	last_status;
+int	g_last_status;
 
-void interpret(char *line, int *stat_loc)
+void	interpret(char *line, int *stat_loc)
 {
 	t_token	*tok;
 	t_node	*node;
 
 	tok = tokenize(line);
-	if (at_eof(tok))
-		;
-	else if (syntax_error)
-		*stat_loc = ERROR_TOKENIZE;
-	else
+	if (g_syntax_error || at_eof(tok))
 	{
-		node = parse(tok);
-		if (syntax_error)
-			*stat_loc = ERROR_PARSE;
-		else
-		{
-			expand(node);
-			*stat_loc = exec(node);
-		}
-		free_node(node);
+		if (g_syntax_error)
+			*stat_loc = ERROR_TOKENIZE;
+		free_tok(tok);
+		return;
 	}
+	
+	node = parse(tok);
+	if (g_syntax_error)
+	{
+		*stat_loc = ERROR_PARSE;
+		free_node(node);
+		free_tok(tok);
+		return;
+	}
+	
+	expand(node);
+	if (g_syntax_error)
+	{
+		*stat_loc = ERROR_EXPAND;
+		free_node(node);
+		free_tok(tok);
+		return;
+	}
+	
+	*stat_loc = exec(node);
+	free_node(node);
 	free_tok(tok);
 }
+
 //*stat_locではメモリアクセスでステータス渡す
 //status localtion
 // なぜinterpretでexecが起動されるか
@@ -53,7 +66,7 @@ int	main(void)
 	rl_outstream = stderr;
 	initenv();
 	setup_signal();
-	last_status = 0;
+	g_last_status = 0;
 	while (1)
 	{
 		line = readline("minishell$ ");
@@ -61,9 +74,9 @@ int	main(void)
 			break ;
 		if (*line)
 			add_history(line);
-		interpret(line, &last_status);
+		interpret(line, &g_last_status);
 		free(line);
 	}
-	exit(last_status);
+	exit(g_last_status);
 }
 //interpret(line, &status)は&アドレス渡し
