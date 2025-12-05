@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 05:58:26 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/04 22:32:20 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/05 22:03:46 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ int	stashfd(int fd)
 
 	stashfd = fcntl(fd, F_DUPFD_CLOEXEC, 10);
 	if (stashfd < 0)
-		fatal_error("fcntl");
+	{
+		xperror("fcntl");
+		return (-1);
+	}
 	return (stashfd);
 }
 

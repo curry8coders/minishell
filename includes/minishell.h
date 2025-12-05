@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/05 08:15:56 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/05 22:03:46 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,11 +181,12 @@ void				close_pipeline_fds_except_current(t_node *h, t_node *cur);
 int					read_heredoc(t_shell *sh, const char *delim,
 						bool is_delim_unquoted);
 int					open_redir_file(t_shell *shell, t_node *node);
-void				prepare_pipe(t_node *node);
+int					prepare_pipe(t_node *node);
 void				prepare_pipe_child(t_node *node);
 void				prepare_pipe_parent(t_node *node);
 int					exec(t_shell *shell, t_node *node);
 char				*search_path(t_shell *shell, const char *filename);
+char				*resolve_path(t_shell *shell, char **argv);
 int					get_exit_status(int wstatus);
 int					check_state(void);
 void				setup_signal(t_shell *shell);

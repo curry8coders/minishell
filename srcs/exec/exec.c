@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/05 08:15:56 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/05 22:03:46 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,24 +42,6 @@ int	exec(t_shell *shell, t_node *node)
 	return (status);
 }
 
-static char	*resolve_path(t_shell *shell, char **argv)
-{
-	char	*path;
-
-	path = argv[0];
-	if (strchr(path, '/') == NULL)
-		path = search_path(shell, path);
-	if (path == NULL || access(path, F_OK) < 0)
-	{
-		print_error(argv[0], "command not found");
-		free_argv(argv);
-		if (path != NULL && path != argv[0])
-			free(path);
-		exit(127);
-	}
-	return (path);
-}
-
 static int	exec_nonbuiltin(t_shell *shell, t_node *node)
 {
 	char	*path;
@@ -79,26 +61,37 @@ static int	exec_nonbuiltin(t_shell *shell, t_node *node)
 	fatal_error("execve");
 }
 
-static pid_t	exec_pipeline(t_shell *shell, t_node *node)
+static pid_t	fork_and_exec(t_shell *shell, t_node *node)
 {
 	pid_t	pid;
 
-	if (node == NULL)
-		return (-1);
-	prepare_pipe(node);
 	pid = fork();
 	if (pid < 0)
-		fatal_error("fork");
-	else if (pid == 0)
+	{
+		xperror("fork");
+		return (-1);
+	}
+	if (pid == 0)
 	{
 		reset_signal();
 		close_all_redirect_fds(node->next);
 		prepare_pipe_child(node);
 		if (is_builtin(node))
 			exit(exec_builtin(shell, node));
-		else
-			exec_nonbuiltin(shell, node);
+		exec_nonbuiltin(shell, node);
 	}
+	return (pid);
+}
+
+static pid_t	exec_pipeline(t_shell *shell, t_node *node)
+{
+	pid_t	pid;
+
+	if (node == NULL || prepare_pipe(node) < 0)
+		return (-1);
+	pid = fork_and_exec(shell, node);
+	if (pid < 0)
+		return (-1);
 	prepare_pipe_parent(node);
 	if (node->command)
 		close_redirect_fds(node->command->redirects);
@@ -126,7 +119,10 @@ static int	wait_pipeline(pid_t last_pid)
 			else if (errno == EINTR)
 				continue ;
 			else
-				fatal_error("wait");
+			{
+				xperror("wait");
+				break ;
+			}
 		}
 	}
 	return (status);

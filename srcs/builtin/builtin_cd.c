@@ -6,16 +6,15 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 14:04:45 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/30 20:47:09 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/05 21:37:32 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include <limits.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include "minishell.h"
-
-#include <string.h>
 
 static int	get_target_path(t_shell *sh, char *path, char **argv)
 {

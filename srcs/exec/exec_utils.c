@@ -6,18 +6,17 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 00:00:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/05 08:15:56 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/05 22:03:46 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <limits.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <errno.h>
 #include <sys/wait.h>
 #include "minishell.h"
-
-#include <string.h>
 
 static char	*check_path_access(char *path)
 {
@@ -78,4 +77,22 @@ int	get_exit_status(int wstatus)
 		return (128 + WTERMSIG(wstatus));
 	else
 		return (WEXITSTATUS(wstatus));
+}
+
+char	*resolve_path(t_shell *shell, char **argv)
+{
+	char	*path;
+
+	path = argv[0];
+	if (strchr(path, '/') == NULL)
+		path = search_path(shell, path);
+	if (path == NULL || access(path, F_OK) < 0)
+	{
+		print_error(argv[0], "command not found");
+		free_argv(argv);
+		if (path != NULL && path != argv[0])
+			free(path);
+		exit(127);
+	}
+	return (path);
 }

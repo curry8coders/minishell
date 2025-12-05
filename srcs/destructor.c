@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   destructor.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 20:51:03 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/30 20:32:07 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/05 21:37:32 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include "minishell.h"
-
-#include <stdio.h>
 
 void	free_node(t_node *node)
 {

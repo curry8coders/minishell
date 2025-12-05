@@ -3,20 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_heredoc.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 00:00:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/11/30 20:03:15 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/05 22:03:46 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <readline/readline.h>
 #include "minishell.h"
-
-#include <string.h>
 
 static bool	process_heredoc_line(t_shell *sh, int pfd, const char *delim,
 	bool is_delim_unquoted)
@@ -48,7 +47,10 @@ int	read_heredoc(t_shell *sh, const char *delim, bool is_delim_unquoted)
 	int		pfd[2];
 
 	if (pipe(pfd) < 0)
-		fatal_error("pipe");
+	{
+		xperror("pipe");
+		return (-1);
+	}
 	sh->readline_interrupted = false;
 	while (process_heredoc_line(sh, pfd[1], delim, is_delim_unquoted))
 		;

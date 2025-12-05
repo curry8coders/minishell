@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 07:09:28 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/03 17:59:58 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/05 22:03:46 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,17 @@
 
 static	void	cpy_pipe(int dst[2], int src[2]);
 
-void	prepare_pipe(t_node *node)
+int	prepare_pipe(t_node *node)
 {
 	if (node->next == NULL)
-		return ;
+		return (0);
 	if (pipe(node->outpipe) < 0)
-		fatal_error("pipe");
+	{
+		xperror("pipe");
+		return (-1);
+	}
 	cpy_pipe(node->next->inpipe, node->outpipe);
+	return (0);
 }
 
 void	prepare_pipe_child(t_node *node)
