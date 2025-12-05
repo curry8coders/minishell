@@ -89,10 +89,9 @@ char	*resolve_path(t_shell *shell, char **argv)
 	if (path == NULL || access(path, F_OK) < 0)
 	{
 		print_error(argv[0], "command not found");
-		free_argv(argv);
 		if (path != NULL && path != argv[0])
 			free(path);
-		exit(127);
+		return (NULL);
 	}
 	return (path);
 }

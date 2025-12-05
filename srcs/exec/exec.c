@@ -51,6 +51,12 @@ static int	exec_nonbuiltin(t_shell *shell, t_node *node)
 	do_redirect(node->command->redirects);
 	argv = token_list_to_argv(node->command->args);
 	path = resolve_path(shell, argv);
+	if (path == NULL)
+	{
+		free_argv(argv);
+		reset_redirect(node->command->redirects);
+		exit(127);
+	}
 	envp = get_environ(shell->envmap);
 	execve(path, argv, envp);
 	free_argv(envp);
