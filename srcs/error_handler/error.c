@@ -44,15 +44,3 @@ void	err_exit(const char *location, const char *msg, int status)
 	print_error(location, msg);
 	exit(status);
 }
-
-void	command_not_found_error(const char *location)
-{
-	if (location == NULL || *location == '\0')
-		location = "";
-	print_error(location, "command not found");
-}
-
-void	permission_denied_error(const char *location)
-{
-	print_error(location, "Permission denied");
-}

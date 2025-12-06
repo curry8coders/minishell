@@ -27,3 +27,8 @@ void	command_not_found_error(const char *location)
 		location = "";
 	print_error(location, "command not found");
 }
+
+void	permission_denied_error(const char *location)
+{
+	print_error(location, "Permission denied");
+}
