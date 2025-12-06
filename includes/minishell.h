@@ -284,6 +284,7 @@ void				print_error(const char *location, const char *msg);
 void				err_exit(const char *loc, const char *msg, int status)
 					__attribute__((noreturn));
 void				command_not_found_error(const char *location);
+void				permission_denied_error(const char *location);
 
 //error_syntax.c
 void				tokenize_error(t_shell *sh, const char *loc,

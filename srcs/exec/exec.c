@@ -61,11 +61,6 @@ static int	exec_nonbuiltin(t_shell *shell, t_node *node)
 	}
 	envp = get_environ(shell->envmap);
 	execve(path, argv, envp);
-	free_argv(envp);
-	free_argv(argv);
-	if (path != argv[0])
-		free(path);
-	reset_redirect(node->command->redirects);
 	fatal_error("execve");
 }
 
