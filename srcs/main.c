@@ -92,6 +92,11 @@ int	main(void)
 	{
 		shell.readline_interrupted = false;
 		line = readline("minishell$ ");
+		if (g_sig == SIGINT)
+		{
+			shell.readline_interrupted = true;
+			g_sig = 0;
+		}
 		if (line == NULL)
 			break ;
 		handle_line(&shell, line);
