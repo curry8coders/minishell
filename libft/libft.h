@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 01:36:44 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/06 15:31:03 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 15:51:14 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,6 @@ char				*ft_strncat(char *dst, const char *src, size_t n);
 int					ft_strcmp(const char *s1, const char *s2);
 
 //dprintf
-int ft_dprintf(int fd, const char *format, ...);
+int					ft_dprintf(int fd, const char *format, ...);
 
 #endif
