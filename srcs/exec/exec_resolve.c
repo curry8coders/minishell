@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 15:35:00 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/06 15:29:33 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 16:47:55 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	*search_and_validate(t_shell *shell, char **argv, char *path)
 			exit(127);
 		}
 	}
-	if (access(path, F_OK) < 0)
+	if (access(path, F_OK) < 0 || access(path, X_OK) < 0)
 		handle_path_error(argv, path);
 	return (path);
 }

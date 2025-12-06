@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 15:10:00 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/06 15:17:26 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 16:46:34 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,21 +37,28 @@ static int	get_sign(const char **str)
 
 static int	check_overflow(long result, int digit, int sign, long *out)
 {
-	if (sign == 1 && (result > LONG_MAX / 10
-			|| (result == LONG_MAX / 10 && digit > LONG_MAX % 10)))
+	long	cutoff;
+	int		cutlim;
+
+	if (sign == 1)
+	{
+		cutoff = LONG_MAX / 10;
+		cutlim = LONG_MAX % 10;
+	}
+	else
+	{
+		cutoff = -(LONG_MIN / 10);
+		cutlim = -(LONG_MIN % 10);
+	}
+	if (result > cutoff || (result == cutoff && digit >= cutlim))
 	{
 		errno = ERANGE;
-		*out = LONG_MAX;
+		if (sign == 1)
+			*out = LONG_MAX;
+		else
+			*out = LONG_MIN;
 		return (1);
 	}
-	if (sign == -1 && (result > -(LONG_MIN / 10)
-			|| (result == -(LONG_MIN / 10) && digit > -(LONG_MIN % 10))))
-	{
-		errno = ERANGE;
-		*out = LONG_MIN;
-		return (1);
-	}
-	return (0);
 }
 
 static long	parse_digits(const char **str, int sign)
@@ -59,16 +66,21 @@ static long	parse_digits(const char **str, int sign)
 	long	result;
 	long	overflow_val;
 	int		digit;
+	int		overflow;
 
 	result = 0;
+	overflow = 0;
 	while (ft_isdigit(**str))
 	{
 		digit = **str - '0';
-		if (check_overflow(result, digit, sign, &overflow_val))
-			return (overflow_val);
-		result = result * 10 + digit;
+		if (!overflow && check_overflow(result, digit, sign, &overflow_val))
+			overflow = 1;
+		if (!overflow)
+			result = result * 10 + digit;
 		(*str)++;
 	}
+	if (overflow)
+		return (overflow_val);
 	return (result * sign);
 }
 
