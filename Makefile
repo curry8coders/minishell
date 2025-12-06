@@ -6,7 +6,7 @@
 #    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/12/04 22:39:33 by ichikawahik      ###   ########.fr        #
+#    Updated: 2025/12/06 15:28:30 by ichikawahik      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,7 @@ LIBS = -lreadline $(LIBFT)
 SRCS = srcs/main.c\
        srcs/error_handler/error.c\
        srcs/error_handler/error_syntax.c\
+       srcs/error_handler/error_utils.c\
        srcs/tokenizer/tokenize.c\
        srcs/tokenizer/tokenize_utils.c\
        srcs/tokenizer/tokenize_utils2.c\
@@ -61,6 +62,7 @@ SRCS = srcs/main.c\
 	   srcs/pipe/pipe.c\
 	   srcs/exec/exec.c\
 	   srcs/exec/exec_utils.c\
+	   srcs/exec/exec_resolve.c\
 	   srcs/exec/exec_wait.c\
 	   srcs/signal/signal.c\
 	   srcs/signal/signal_handler.c\

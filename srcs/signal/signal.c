@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 21:39:33 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/11/30 23:28:14 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 15:47:33 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,11 @@
 #include "minishell.h"
 
 volatile sig_atomic_t	g_sig = 0;
-static bool				*g_rl_int_ptr = NULL;
 
 int	check_state(void)
 {
-	if (g_sig == 0)
-		return (0);
-	else if (g_sig == SIGINT)
+	if (g_sig == SIGINT)
 	{
-		g_sig = 0;
-		if (g_rl_int_ptr)
-			*g_rl_int_ptr = true;
 		rl_replace_line("", 0);
 		rl_done = 1;
 		return (0);
@@ -39,7 +33,6 @@ void	setup_signal(t_shell *shell)
 {
 	extern int	_rl_echo_control_chars;
 
-	g_rl_int_ptr = &shell->readline_interrupted;
 	_rl_echo_control_chars = 0;
 	rl_outstream = stderr;
 	if (isatty(STDIN_FILENO))
@@ -48,6 +41,7 @@ void	setup_signal(t_shell *shell)
 		ignore_sig(SIGQUIT);
 	}
 	setup_sigint();
+	(void)shell;
 }
 
 void	reset_signal(void)
