@@ -6,17 +6,13 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 17:35:46 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/06 08:49:05 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 14:17:13 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
 #include "minishell.h"
-
-#define ERROR_PREFIX "minishell: "
-
-bool	g_syntax_error = false;
 
 void	perror_prefix(void)
 {
