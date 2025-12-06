@@ -16,6 +16,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include "minishell.h"
 
 static char	*check_path_access(char *path)
@@ -77,4 +78,64 @@ int	get_exit_status(int wstatus)
 		return (128 + WTERMSIG(wstatus));
 	else
 		return (WEXITSTATUS(wstatus));
+}
+
+char	*resolve_path(t_shell *shell, char **argv)
+{
+	char	*path;
+	struct	stat st;
+
+	path = argv[0];
+	if (path == NULL || path[0] == '\0')
+	{
+		command_not_found_error(argv[0]);
+		free_argv(argv);
+		exit(127);
+	}
+
+	if (ft_strcmp(path, ".") == 0 || ft_strcmp(path, "..") == 0)
+	{
+		command_not_found_error(argv[0]);
+		free_argv(argv);
+		exit(127);
+	}
+		
+	if (ft_strchr(path, '/') == NULL)
+	{
+		path = search_path(shell, path);
+		if (path == NULL)
+		{
+			command_not_found_error(argv[0]);
+			free_argv(argv);
+			exit(127);
+		}
+	}
+	
+	if (stat(path, &st) < 0)
+	{
+		command_not_found_error(argv[0]);
+		if (path != NULL && path != argv[0])
+			free(path);
+		free_argv(argv);
+		exit(127);
+	}
+	
+	if (S_ISDIR(st.st_mode))
+	{
+		print_error(argv[0], "Is a directory");
+		if (path != argv[0])
+			free(path);
+		free_argv(argv);
+		exit(126);
+	}
+	
+	if (access(path, X_OK) < 0)
+	{
+		permission_denied_error(argv[0]);
+		if (path != argv[0])
+			free(path);
+		free_argv(argv);
+		exit(126);
+	}
+	return (path);
 }
