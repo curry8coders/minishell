@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 00:00:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/06 08:49:34 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 15:31:28 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,37 +77,4 @@ int	get_exit_status(int wstatus)
 		return (128 + WTERMSIG(wstatus));
 	else
 		return (WEXITSTATUS(wstatus));
-}
-
-char	*resolve_path(t_shell *shell, char **argv)
-{
-	char	*path;
-
-	path = argv[0];
-	if (path == NULL || path[0] == '\0')
-	{
-		command_not_found_error(argv[0]);
-		free_argv(argv);
-		exit(127);
-	}
-
-	if (ft_strchr(path, '/') == NULL)
-	{
-		path = search_path(shell, path);
-		if (path == NULL)
-		{
-			command_not_found_error(argv[0]);
-			free_argv(argv);
-			exit(127);
-		}
-	}
-	if (access(path, F_OK) < 0)
-	{
-		command_not_found_error(argv[0]);
-		if (path != NULL && path != argv[0])
-			free(path);
-		free_argv(argv);
-		exit(127);
-	}
-	return (path);
 }

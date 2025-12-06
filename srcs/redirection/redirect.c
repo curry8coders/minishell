@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 05:58:26 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/05 22:03:46 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 15:42:49 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,26 @@
 
 int	stashfd(int fd)
 {
-	int	stashfd;
+	int	new_fd;
 
-	stashfd = fcntl(fd, F_DUPFD_CLOEXEC, 10);
-	if (stashfd < 0)
+	new_fd = dup(fd);
+	if (new_fd < 0)
 	{
-		xperror("fcntl");
+		xperror("dup");
 		return (-1);
 	}
-	return (stashfd);
+	if (new_fd < 10)
+	{
+		if (dup2(new_fd, 10) < 0)
+		{
+			xperror("dup2");
+			close(new_fd);
+			return (-1);
+		}
+		close(new_fd);
+		return (10);
+	}
+	return (new_fd);
 }
 
 bool	is_redirect(t_node *node)
