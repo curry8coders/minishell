@@ -41,6 +41,7 @@ SRCS =	ft_isalpha.c \
 		ft_strncat.c \
 		ft_strcmp.c	\
 		ft_strtol.c \
+		ft_realloc.c \
 		$(DPRINTF_SRCS)
 
 SRCSB = ft_lstnew.c \

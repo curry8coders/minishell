@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 01:36:44 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/06 15:19:58 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 15:31:03 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ char				*ft_strnstr(const char *big, const char *little,
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 int					ft_atoi(const char *nptr);
 long				ft_strtol(const char *str, char **endptr, int base);
+void				*ft_realloc(void *ptr, size_t old_size, size_t new_size);
 
 int					ft_isalpha(int c);
 int					ft_isdigit(int c);

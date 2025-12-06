@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/06 14:17:23 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 15:30:49 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@
 # define BUILTIN_EXIT_REQUEST 256
 # define STRBUF_INIT_CAP 16
 # define ERROR_PREFIX "minishell: "
-
 
 typedef struct s_token			t_token;
 typedef struct s_node			t_node;
