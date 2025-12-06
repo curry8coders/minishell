@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 10:38:10 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/06 15:19:36 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 17:10:21 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static int	parse_exit_arg(t_shell *shell, char *arg)
 			return (BUILTIN_EXIT_REQUEST);
 		}
 	}
-	xperror("exit: numeric argument required");
+	builtin_error("exit", arg, "numeric argument required");
 	shell->exit_status = 2;
 	return (BUILTIN_EXIT_REQUEST);
 }

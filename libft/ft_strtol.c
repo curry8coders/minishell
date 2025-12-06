@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 15:10:00 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/06 16:46:34 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 17:10:21 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	check_overflow(long result, int digit, int sign, long *out)
 		cutoff = -(LONG_MIN / 10);
 		cutlim = -(LONG_MIN % 10);
 	}
-	if (result > cutoff || (result == cutoff && digit >= cutlim))
+	if (result > cutoff || (result == cutoff && digit > cutlim))
 	{
 		errno = ERANGE;
 		if (sign == 1)
@@ -59,6 +59,7 @@ static int	check_overflow(long result, int digit, int sign, long *out)
 			*out = LONG_MIN;
 		return (1);
 	}
+	return (0);
 }
 
 static long	parse_digits(const char **str, int sign)
