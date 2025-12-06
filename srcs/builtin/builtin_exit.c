@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 10:38:10 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/05 08:15:56 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/06 15:19:36 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int	parse_exit_arg(t_shell *shell, char *arg)
 	if (is_numeric(arg))
 	{
 		errno = 0;
-		res = strtol(arg, &endptr, 10);
+		res = ft_strtol(arg, &endptr, 10);
 		if (errno == 0 && *endptr == '\0')
 		{
 			shell->exit_status = (int)res;
