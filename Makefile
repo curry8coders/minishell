@@ -39,18 +39,18 @@ endif
 LIBS = -lreadline $(LIBFT)
 
 SRCS = srcs/main.c\
+       srcs/destructor.c\
        srcs/error_handler/error.c\
        srcs/error_handler/error_syntax.c\
        srcs/error_handler/error_utils.c\
        srcs/tokenizer/tokenize.c\
        srcs/tokenizer/tokenize_utils.c\
        srcs/tokenizer/tokenize_utils2.c\
-       srcs/destructor.c\
-       srcs/tokenizer/expand.c\
-       srcs/tokenizer/expand_strbuf.c\
-       srcs/tokenizer/expand_var.c\
-       srcs/tokenizer/expand_quote.c\
-       srcs/tokenizer/expand_utils.c\
+       srcs/expand/expand.c\
+       srcs/expand/expand_strbuf.c\
+       srcs/expand/expand_var.c\
+       srcs/expand/expand_quote.c\
+       srcs/expand/expand_utils.c\
        srcs/parser/parse.c\
        srcs/parser/parse_redirect.c\
        srcs/parser/parse_utils.c\
@@ -75,10 +75,10 @@ SRCS = srcs/main.c\
 	   srcs/builtin/builtin_cd_utils.c\
 	   srcs/builtin/builtin_pwd.c\
 	   srcs/builtin/builtin_echo.c\
-	   srcs/hashstamp/map.c\
-	   srcs/hashstamp/map_utils.c\
-	   srcs/hashstamp/map_item.c\
-	   srcs/hashstamp/env.c\
+	   srcs/env/map.c\
+	   srcs/env/map_utils.c\
+	   srcs/env/map_item.c\
+	   srcs/env/env.c\
 
 
 OBJS = $(SRCS:%.c=%.o)
