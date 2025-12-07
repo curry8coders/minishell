@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 00:00:00 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/06 04:07:51 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/07 18:54:56 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,11 @@ static bool	process_heredoc_line(t_shell *sh, int pfd, const char *delim,
 	char	*line;
 
 	line = readline("> ");
+	if (g_sig == SIGINT)
+	{
+		sh->readline_interrupted = true;
+		g_sig = 0;
+	}
 	if (line == NULL)
 		return (false);
 	if (sh->readline_interrupted)

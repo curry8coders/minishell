@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_resolve.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 15:35:00 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/06 16:47:55 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/07 20:32:03 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
