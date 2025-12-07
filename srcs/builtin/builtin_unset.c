@@ -23,8 +23,7 @@ int	builtin_unset(t_shell *shell, char **argv)
 	{
 		if (map_unset(shell->envmap, argv[i]) < 0)
 		{
-			builtin_error("unset", argv[i], "not a valid identifier");
-			status = 1;
+			status = 0;
 		}
 		else
 			status = 0;
