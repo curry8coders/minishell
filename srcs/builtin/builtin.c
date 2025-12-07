@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 05:15:00 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/05 08:15:56 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/07 16:54:40 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	exec_builtin(t_shell *shell, t_node *node)
 	if (status == BUILTIN_EXIT_REQUEST)
 	{
 		write(STDERR_FILENO, "exit\n", 5);
-		exit(shell->exit_status);
+		exit_shell(shell, shell->exit_status);
 	}
 	return (status);
 }

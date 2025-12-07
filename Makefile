@@ -6,7 +6,7 @@
 #    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/12/06 15:28:30 by ichikawahik      ###   ########.fr        #
+#    Updated: 2025/12/07 16:54:40 by ichikawahik      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,6 +40,7 @@ LIBS = -lreadline $(LIBFT)
 
 SRCS = srcs/main.c\
        srcs/destructor.c\
+       srcs/cleanup.c\
        srcs/error_handler/error.c\
        srcs/error_handler/error_syntax.c\
        srcs/error_handler/error_utils.c\

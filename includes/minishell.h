@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/06 19:54:21 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/07 16:54:40 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -296,5 +296,13 @@ void				builtin_error(const char *f, const char *n, const char *e);
 void				free_node(t_node *node);
 void				free_tok(t_token *tok);
 void				free_argv(char **argv);
+
+/* ************************************************************************** */
+/*                             CLEANUP                                        */
+/* ************************************************************************** */
+
+void				free_map(t_map *map);
+void				cleanup_shell(t_shell *shell);
+void				exit_shell(t_shell *shell, int status);
 
 #endif
