@@ -10,45 +10,41 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <unistd.h>
+#include <limits.h>
+#include <errno.h>
+#include <sys/stat.h>
 #include "minishell.h"
 
-// static void	handle_path_error(char **argv, char *path)
-// {
-// 	command_not_found_error(argv[0]);
-// 	if (path != NULL && path != argv[0])
-// 		free(path);
-// 	free_argv(argv);
-// 	exit(127);
+static void	handle_resolve_error(char *path, char **argv,
+	const char *errmsg, int exit_code)
+{
+	print_error(*argv, errmsg);
+	if (path != argv[0])
+		free(path);
+	free_argv(argv);
+	exit(exit_code);
+}
 
-// static char	*search_and_validate(t_shell *shell, char **argv, char *path)
-// {
-// 	if (ft_strchr(path, '/') == NULL)
-// 	{
-// 		path = search_path(shell, path);
-// 		if (path == NULL)
-// 		{
-// 			command_not_found_error(argv[0]);
-// 			free_argv(argv);
-// 			exit(127);
-// 		}
-// 	}
-// 	if (access(path, F_OK) < 0 || access(path, X_OK) < 0)
-// 		handle_path_error(argv, path);
-// 	return (path);
-// }
+char	*resolve_path(t_shell *shell, char **argv)
+{
+	char		*path;
+	struct stat	st;
 
-// char	*resolve_path(t_shell *shell, char **argv)
-// {
-// 	char	*path;
-
-// 	path = argv[0];
-// 	if (path == NULL || path[0] == '\0')
-// 	{
-// 		command_not_found_error(argv[0]);
-// 		free_argv(argv);
-// 		exit(127);
-// 	}
-// 	return (search_and_validate(shell, argv, path));
-// }
+	path = argv[0];
+	if (path == NULL || path[0] == '\0'
+		|| ft_strcmp(path, ".") == 0 || ft_strcmp(path, "..") == 0)
+		handle_resolve_error(path, argv, "command not found", 127);
+	if (ft_strchr(path, '/') == NULL)
+	{
+		path = search_path(shell, path);
+		if (path == NULL)
+			handle_resolve_error(path, argv, "command not found", 127);
+	}
+	if (stat(path, &st) < 0)
+		handle_resolve_error(path, argv, "command not found", 127);
+	if (S_ISDIR(st.st_mode))
+		handle_resolve_error(path, argv, "Is a directory", 126);
+	if (access(path, X_OK) < 0)
+		handle_resolve_error(path, argv, "Permission denied", 126);
+	return (path);
+}
