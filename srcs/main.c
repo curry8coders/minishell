@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:10:51 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/05 08:15:56 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/07 18:54:55 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ static void	init_shell(t_shell *shell)
 
 static void	handle_line(t_shell *shell, char *line)
 {
+	if (line == NULL)
+		return ;
 	if (shell->readline_interrupted)
 	{
 		shell->last_status = 128 + SIGINT;

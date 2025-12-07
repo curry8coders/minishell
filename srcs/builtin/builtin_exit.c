@@ -6,7 +6,7 @@
 /*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 10:38:10 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/06 17:10:21 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/07 18:54:56 by ichikawahik      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 
 bool	is_numeric(char *s)
 {
+	if (s == NULL || *s == '\0')
+		return (false);
 	if (!isdigit(*s))
 		return (false);
 	while (*s)
