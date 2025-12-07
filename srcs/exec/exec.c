@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: kenakamu <kenakamu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/18 21:55:05 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/06 02:48:38 by ichikawahik      ###   ########.fr       */
+/*   Created: 2025/12/07 16:28:11 by kenakamu          #+#    #+#             */
+/*   Updated: 2025/12/07 16:28:12 by kenakamu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

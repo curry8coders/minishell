@@ -11,12 +11,6 @@
 /* ************************************************************************** */
 
 #include <limits.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <errno.h>
-#include <sys/wait.h>
-#include <sys/stat.h>
 #include "minishell.h"
 
 static char	*check_path_access(char *path)
