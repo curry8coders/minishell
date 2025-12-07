@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <limits.h>
 #include <errno.h>
 #include <sys/stat.h>
 #include "minishell.h"
