@@ -46,8 +46,7 @@ int	builtin_export(t_shell *shell, char **argv)
 		if (map_put(shell->envmap, argv[i], true) < 0)
 		{
 			builtin_error("export", argv[i], "not a valid identifier");
-			status = 1;
-		}
+			status = 1;		}
 		i++;
 	}
 	return (status);

@@ -18,7 +18,8 @@
 static void	handle_resolve_error(char *path, char **argv,
 	const char *errmsg, int exit_code)
 {
-	print_error(*argv, errmsg);
+	if (!(argv[0] == NULL))
+		print_error(*argv, errmsg);
 	if (path != argv[0])
 		free(path);
 	free_argv(argv);
