@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "libft.h"
 #include "minishell.h"
 
 static void	envmap_init(t_map *map, char **ep);

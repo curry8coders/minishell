@@ -11,8 +11,8 @@
 /* ************************************************************************** */
 
 #include <unistd.h>
+#include "libft.h"
 #include "minishell.h"
-
 #include <string.h>
 
 bool	check_only_n_options(char *arg)

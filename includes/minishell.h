@@ -13,8 +13,6 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "libft.h"
-# include <errno.h>
 # include <signal.h>
 # include <stdbool.h>
 # include <stddef.h>

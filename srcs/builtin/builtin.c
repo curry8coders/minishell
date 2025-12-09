@@ -12,6 +12,8 @@
 
 #include <stdlib.h>
 #include <unistd.h>
+
+#include "libft.h"
 #include "minishell.h"
 
 static int	dispatch_builtin(t_shell *shell, char **argv)

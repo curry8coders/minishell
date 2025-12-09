@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
+#include "libft.h"
 #include "minishell.h"
 
 static int	get_target_path(t_shell *sh, char *path, char **argv)

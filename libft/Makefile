@@ -56,7 +56,8 @@ SRCSB = ft_lstnew.c \
 
 NAME = libft.a
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I. -I$(DPRINTF_DIR)
+INCLUDES = -I. -I$(DPRINTF_DIR)
+CFLAGS = -Wall -Wextra -Werror $(INCLUDES)
 OBJC = $(SRCS:.c=.o)
 OBJCB = $(SRCSB:.c=.o)
 RM = rm -f

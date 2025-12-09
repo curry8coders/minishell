@@ -12,6 +12,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include "libft.h"
 #include "minishell.h"
 
 t_token	*new_token(char *word, t_token_kind kind)

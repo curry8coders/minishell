@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+#include "libft.h"
 #include "minishell.h"
 
 void	tokenize_error(t_shell *sh, const char *loc, char **rest, char *line)

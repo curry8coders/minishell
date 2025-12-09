@@ -15,7 +15,6 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/wait.h>
-#include <string.h>
 #include "minishell.h"
 
 static pid_t	exec_pipeline(t_shell *shell, t_node *node);

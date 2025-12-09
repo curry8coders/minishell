@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "libft.h"
 #include "minishell.h"
 
 bool	is_identifier(const char *s)

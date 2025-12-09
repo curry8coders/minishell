@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include "libft.h"
 #include "minishell.h"
 
 void	strbuf_init(t_strbuf *buf)

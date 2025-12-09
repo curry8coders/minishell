@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <limits.h>
+#include "libft.h"
 #include "minishell.h"
 
 static char	*check_path_access(char *path)

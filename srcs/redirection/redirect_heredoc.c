@@ -10,11 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 #include <readline/readline.h>
+#include "libft.h"
 #include "minishell.h"
 
 static bool	process_heredoc_line(t_shell *sh, int pfd, const char *delim,

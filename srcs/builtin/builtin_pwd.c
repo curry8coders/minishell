@@ -11,10 +11,9 @@
 /* ************************************************************************** */
 
 #include <limits.h>
-#include <stdio.h>
-#include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include "libft.h"
 #include "minishell.h"
 
 bool	equal_inode(const char *path1, const char *path2)

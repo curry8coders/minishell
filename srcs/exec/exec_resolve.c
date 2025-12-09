@@ -11,8 +11,8 @@
 /* ************************************************************************** */
 
 #include <limits.h>
-#include <errno.h>
 #include <sys/stat.h>
+#include "libft.h"
 #include "minishell.h"
 
 static void	handle_resolve_error(char *path, char **argv,

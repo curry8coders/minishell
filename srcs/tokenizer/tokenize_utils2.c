@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string.h>
-#include <stdlib.h>
+#include "libft.h"
 #include "minishell.h"
 
 static void	skip_single_quote(t_shell *sh, char **line, char **rest)

@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 #include <stdio.h>
 
 int	builtin_env(t_shell *shell, char **argv)

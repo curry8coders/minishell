@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include <string.h>
+#include "libft.h"
 #include "minishell.h"
 
 void	update_existing_item(t_item *cur, const char *value)

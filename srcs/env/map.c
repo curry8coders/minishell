@@ -10,9 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include "libft.h"
 #include "minishell.h"
 
 t_map	*map_new(void)

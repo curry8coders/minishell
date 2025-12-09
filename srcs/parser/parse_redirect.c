@@ -10,9 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include <unistd.h>
-#include <string.h>
+#include "libft.h"
 #include "minishell.h"
 
 t_node	*redirect_out(t_token **rest, t_token *tok)

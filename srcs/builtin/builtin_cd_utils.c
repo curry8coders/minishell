@@ -12,8 +12,8 @@
 
 #include <stdlib.h>
 #include <limits.h>
+#include "libft.h"
 #include "minishell.h"
-
 #include <string.h>
 
 void	delete_last_elm(char *path)

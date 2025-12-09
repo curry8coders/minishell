@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include <errno.h>
 #include <unistd.h>
 #include <ctype.h>
+#include "libft.h"
 #include "minishell.h"
 
 bool	is_numeric(char *s)
