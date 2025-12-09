@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 16:58:40 by hichikaw          #+#    #+#             */
-/*   Updated: 2025/12/06 19:54:21 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/09 21:02:38 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@
 # include <stdbool.h>
 # include <stddef.h>
 
-# define ERROR_TOKENIZE 258
-# define ERROR_PARSE 258
-# define ERROR_EXPAND 258
+# define ERROR_TOKENIZE 2
+# define ERROR_PARSE 2
+# define ERROR_EXPAND 1
 # define ERROR_OPEN_REDIR 1
 # define SINGLE_QUOTE_CHAR '\''
 # define DOUBLE_QUOTE_CHAR '"'
