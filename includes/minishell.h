@@ -23,6 +23,8 @@
 # define ERROR_OPEN_REDIR 1
 # define SINGLE_QUOTE_CHAR '\''
 # define DOUBLE_QUOTE_CHAR '"'
+# define LITERAL_SINGLE_QUOTE '\x01'
+# define LITERAL_DOUBLE_QUOTE '\x02'
 # define BUILTIN_EXIT_REQUEST 256
 # define STRBUF_INIT_CAP 16
 # define ERROR_PREFIX "minishell: "
@@ -131,7 +133,7 @@ void				expand_quote_removal(t_node *node);
 void				expand_variable_tok(t_shell *shell, t_token *tok);
 void				expand_variable_node(t_shell *shell, t_node *node);
 void				expand_variable(t_shell *sh, t_strbuf *buf,
-						char **rest, char *p);
+						char **rest, bool convert_quotes);
 void				expand_special_param(t_shell *sh, t_strbuf *buf,
 						char **rest, char *p);
 void				remove_quote(t_token *tok);
@@ -140,6 +142,7 @@ void				remove_double_quote(t_strbuf *buf, char **rest, char *p);
 void				append_single_quote(t_strbuf *buf, char **rest, char *p);
 void				append_double_quote(t_shell *sh, t_strbuf *buf,
 						char **rest, char *p);
+void				restore_literal_quotes_tok(t_token *tok);
 bool				is_alpha_under(char c);
 bool				is_alpha_num_under(char c);
 bool				is_variable(char *s);

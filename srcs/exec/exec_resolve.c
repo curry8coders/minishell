@@ -32,8 +32,12 @@ char	*resolve_path(t_shell *shell, char **argv)
 	struct stat	st;
 
 	path = argv[0];
-	if (path == NULL || path[0] == '\0'
-		|| ft_strcmp(path, ".") == 0 || ft_strcmp(path, "..") == 0)
+	if (path == NULL || path[0] == '\0')
+	{
+		free_argv(argv);
+		exit(0);
+	}
+	if (ft_strcmp(path, ".") == 0 || ft_strcmp(path, "..") == 0)
 		handle_resolve_error(path, argv, "command not found", 127);
 	if (ft_strchr(path, '/') == NULL)
 	{

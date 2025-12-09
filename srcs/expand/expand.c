@@ -20,6 +20,9 @@ void	expand_quote_removal(t_node *node)
 	remove_quote(node->args);
 	remove_quote(node->filename);
 	remove_quote(node->delimiter);
+	restore_literal_quotes_tok(node->args);
+	restore_literal_quotes_tok(node->filename);
+	restore_literal_quotes_tok(node->delimiter);
 	expand_quote_removal(node->redirects);
 	expand_quote_removal(node->command);
 	expand_quote_removal(node->next);
@@ -41,7 +44,7 @@ char	*expand_heredoc_line(t_shell *shell, char *line)
 	while (*p)
 	{
 		if (is_variable(p))
-			expand_variable(shell, &buf, &p, p);
+			expand_variable(shell, &buf, &p, false);
 		else if (is_special_parameter(p))
 			expand_special_param(shell, &buf, &p, p);
 		else

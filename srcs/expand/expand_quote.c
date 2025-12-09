@@ -100,7 +100,7 @@ void	append_double_quote(t_shell *sh, t_strbuf *buf, char **rest, char *p)
 			if (*p == '\0')
 				assert_error("Unclosed double quote in append_double_quote");
 			else if (is_variable(p))
-				expand_variable(sh, buf, &p, p);
+				expand_variable(sh, buf, &p, true);
 			else if (is_special_parameter(p))
 				expand_special_param(sh, buf, &p, p);
 			else

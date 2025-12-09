@@ -34,11 +34,32 @@ void	expand_special_param(t_shell *sh, t_strbuf *buf, char **rest, char *p)
 	*rest = p;
 }
 
-void	expand_variable(t_shell *shell, t_strbuf *buf, char **rest, char *p)
+static void	append_char_convert_quote(t_strbuf *buf, char c,
+	bool convert_quotes)
+{
+	if (convert_quotes)
+	{
+		if (c == SINGLE_QUOTE_CHAR)
+			strbuf_append_char(buf, LITERAL_SINGLE_QUOTE);
+		else if (c == DOUBLE_QUOTE_CHAR)
+			strbuf_append_char(buf, LITERAL_DOUBLE_QUOTE);
+		else
+			strbuf_append_char(buf, c);
+	}
+	else
+	{
+		strbuf_append_char(buf, c);
+	}
+}
+
+void	expand_variable(t_shell *shell, t_strbuf *buf, char **rest,
+		bool convert_quotes)
 {
 	t_strbuf	name_buf;
+	char		*p;
 	char		*value;
 
+	p = *rest;
 	strbuf_init(&name_buf);
 	if (*p != '$')
 		assert_error("Expected dollar sign");
@@ -50,8 +71,11 @@ void	expand_variable(t_shell *shell, t_strbuf *buf, char **rest, char *p)
 		strbuf_append_char(&name_buf, *p++);
 	value = xgetenv(shell, name_buf.data);
 	free(name_buf.data);
-	if (value)
-		strbuf_append_str(buf, value);
+	while (value && *value)
+	{
+		append_char_convert_quote(buf, *value, convert_quotes);
+		value++;
+	}
 	*rest = p;
 }
 
@@ -71,7 +95,7 @@ void	expand_variable_tok(t_shell *shell, t_token *tok)
 		else if (*p == DOUBLE_QUOTE_CHAR)
 			append_double_quote(shell, &buf, &p, p);
 		else if (is_variable(p))
-			expand_variable(shell, &buf, &p, p);
+			expand_variable(shell, &buf, &p, true);
 		else if (is_special_parameter(p))
 			expand_special_param(shell, &buf, &p, p);
 		else
@@ -80,15 +104,4 @@ void	expand_variable_tok(t_shell *shell, t_token *tok)
 	free(tok->word);
 	tok->word = strbuf_finish(&buf);
 	expand_variable_tok(shell, tok->next);
-}
-
-void	expand_variable_node(t_shell *shell, t_node *node)
-{
-	if (node == NULL)
-		return ;
-	expand_variable_tok(shell, node->args);
-	expand_variable_tok(shell, node->filename);
-	expand_variable_node(shell, node->redirects);
-	expand_variable_node(shell, node->command);
-	expand_variable_node(shell, node->next);
 }
