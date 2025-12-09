@@ -3,24 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 22:00:00 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/04 22:35:55 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/10 03:07:09 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ctype.h>
+# include "libft.h"
 #include "minishell.h"
 
 bool	is_alpha_under(char c)
 {
-	return (isalpha(c) || c == '_');
+	return (ft_isalpha(c) || c == '_');
 }
 
 bool	is_alpha_num_under(char c)
 {
-	return (is_alpha_under(c) || isdigit(c));
+	return (is_alpha_under(c) || ft_isdigit(c));
 }
 
 bool	is_variable(char *s)

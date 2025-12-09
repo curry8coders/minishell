@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+        */
+/*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 10:38:10 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/07 18:54:56 by ichikawahik      ###   ########.fr       */
+/*   Updated: 2025/12/10 03:01:17 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ bool	is_numeric(char *s)
 {
 	if (s == NULL || *s == '\0')
 		return (false);
-	if (!isdigit(*s))
+	if (!ft_isdigit(*s))
 		return (false);
 	while (*s)
 	{
-		if (!isdigit(*s))
+		if (!ft_isdigit(*s))
 			return (false);
 		s++;
 	}
