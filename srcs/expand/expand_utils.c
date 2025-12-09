@@ -6,11 +6,11 @@
 /*   By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 22:00:00 by ichikawahik       #+#    #+#             */
-/*   Updated: 2025/12/10 03:07:09 by hichikaw         ###   ########.fr       */
+/*   Updated: 2025/12/10 03:15:54 by hichikaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "libft.h"
+#include "libft.h"
 #include "minishell.h"
 
 bool	is_alpha_under(char c)
