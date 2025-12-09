@@ -19,9 +19,9 @@
 # include <stdbool.h>
 # include <stddef.h>
 
-# define ERROR_TOKENIZE 258
-# define ERROR_PARSE 258
-# define ERROR_EXPAND 258
+# define ERROR_TOKENIZE 2
+# define ERROR_PARSE 2
+# define ERROR_EXPAND 1
 # define ERROR_OPEN_REDIR 1
 # define SINGLE_QUOTE_CHAR '\''
 # define DOUBLE_QUOTE_CHAR '"'
