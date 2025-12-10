@@ -29,4 +29,3 @@ void	handle_child_status(pid_t wait_result, pid_t last_pid,
 		signaled_newline_printed = 1;
 	}
 }
-
