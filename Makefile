@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ichikawahikaru <ichikawahikaru@student.    +#+  +:+       +#+         #
+#    By: hichikaw <hichikaw@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/14 16:40:32 by ichikawahik       #+#    #+#              #
-#    Updated: 2025/12/06 15:28:30 by ichikawahik      ###   ########.fr        #
+#    Updated: 2025/12/10 10:16:30 by hichikaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
