@@ -13,13 +13,17 @@
 #include <stdlib.h>
 #include "minishell.h"
 
-static bool	has_quotes(const char *word)
+static bool	word_had_quotes(const char *word)
 {
-	while (*word)
+	const char	*p;
+
+	p = word;
+	while (*p)
 	{
-		if (*word == SINGLE_QUOTE_CHAR || *word == DOUBLE_QUOTE_CHAR)
+		if (*p == SINGLE_QUOTE_CHAR || *p == DOUBLE_QUOTE_CHAR
+			|| *p == LITERAL_SINGLE_QUOTE || *p == LITERAL_DOUBLE_QUOTE)
 			return (true);
-		word++;
+		p++;
 	}
 	return (false);
 }
@@ -32,7 +36,8 @@ static void	remove_empty_tokens_recursive(t_token **head_ref)
 	if (*head_ref == NULL)
 		return ;
 	current = *head_ref;
-	if (current->word && current->word[0] == '\0' && !has_quotes(current->word))
+	if (current->word && current->word[0] == '\0'
+		&& !word_had_quotes(current->word))
 	{
 		next = current->next;
 		free(current->word);

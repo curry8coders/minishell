@@ -53,6 +53,7 @@ SRCS = srcs/main.c\
        srcs/expand/expand_quote.c\
        srcs/expand/expand_quote2.c\
        srcs/expand/expand_utils.c\
+       srcs/expand/expand_remove_empty.c\
        srcs/parser/parse.c\
        srcs/parser/parse_redirect.c\
        srcs/parser/parse_utils.c\

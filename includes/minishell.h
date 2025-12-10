@@ -136,6 +136,8 @@ void				expand_variable(t_shell *sh, t_strbuf *buf,
 						char **rest, bool convert_quotes);
 void				expand_special_param(t_shell *sh, t_strbuf *buf,
 						char **rest, char *p);
+void				remove_empty_tokens(t_token **tok);
+void				remove_empty_tokens_node(t_node *node);
 void				remove_quote(t_token *tok);
 void				remove_single_quote(t_strbuf *buf, char **rest, char *p);
 void				remove_double_quote(t_strbuf *buf, char **rest, char *p);

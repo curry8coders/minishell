@@ -31,6 +31,7 @@ void	expand_quote_removal(t_node *node)
 void	expand(t_shell *shell, t_node *node)
 {
 	expand_variable_node(shell, node);
+	remove_empty_tokens_node(node);
 	expand_quote_removal(node);
 }
 
